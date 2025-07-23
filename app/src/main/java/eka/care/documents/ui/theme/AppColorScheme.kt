@@ -1,0 +1,43 @@
+package eka.care.documents.ui.theme
+
+import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.lightColorScheme
+import androidx.compose.ui.graphics.Color
+
+val RecordsColorScheme = lightColorScheme(
+    primary = StyleDictionaryColor.colorDanger500,
+    surfaceTint = StyleDictionaryColor.colorBackgroundPrimarySubtle,
+    onPrimary = StyleDictionaryColor.colorForegroundOnPrimary,
+    primaryContainer = StyleDictionaryColor.colorBackgroundPrimarySubtle,
+    onPrimaryContainer = StyleDictionaryColor.colorForegroundPrimary,
+    secondary = StyleDictionaryColor.colorBackgroundPrimary,
+    onSecondary = StyleDictionaryColor.colorForegroundOnPrimary,
+    secondaryContainer = StyleDictionaryColor.colorBackgroundPrimarySubtle,
+    onSecondaryContainer = StyleDictionaryColor.colorForegroundPrimary,
+    tertiary = StyleDictionaryColor.colorBackgroundPrimary,
+    onTertiary = StyleDictionaryColor.colorForegroundOnPrimary,
+    tertiaryContainer = StyleDictionaryColor.colorBackgroundPrimarySubtle,
+    onTertiaryContainer = StyleDictionaryColor.colorForegroundPrimary,
+    error = StyleDictionaryColor.colorBackgroundDanger,
+    onError = StyleDictionaryColor.colorForegroundOnDanger,
+    errorContainer = StyleDictionaryColor.colorBackgroundDangerSubtle,
+    onErrorContainer = StyleDictionaryColor.colorForegroundDanger,
+    background = StyleDictionaryColor.colorBackgroundStrong,
+    onBackground = StyleDictionaryColor.colorForegroundHeading,
+    surface = StyleDictionaryColor.colorBackgroundSubtle,
+    onSurface = StyleDictionaryColor.colorForegroundHeading,
+    surfaceVariant = StyleDictionaryColor.colorBackgroundStrong,
+    onSurfaceVariant = StyleDictionaryColor.colorForegroundBody,
+    outline = StyleDictionaryColor.colorBorderDefault,
+    outlineVariant = StyleDictionaryColor.colorBorderSubtle,
+    inverseSurface = StyleDictionaryColor.colorForegroundHeading,
+    inverseOnSurface = StyleDictionaryColor.colorBackgroundSurface,
+    inversePrimary = StyleDictionaryColor.colorBackgroundPrimarySubtle,
+    surfaceDim = StyleDictionaryColor.colorBackgroundStrong,
+    surfaceBright = StyleDictionaryColor.colorBackgroundSurface,
+    surfaceContainerLowest = StyleDictionaryColor.colorBackgroundSurface,
+    surfaceContainerLow = StyleDictionaryColor.colorBackgroundPrimarySubtle,
+    surfaceContainer = StyleDictionaryColor.colorBackgroundStrong,
+    surfaceContainerHigh = StyleDictionaryColor.colorBorderDefault,
+    surfaceContainerHighest = StyleDictionaryColor.colorForegroundPlaceholder
+)
