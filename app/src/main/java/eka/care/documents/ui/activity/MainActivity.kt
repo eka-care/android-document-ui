@@ -3,6 +3,7 @@ package eka.care.documents.ui.activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import eka.care.documents.ui.screens.RecordsMainScreen
 
 class MainActivity : ComponentActivity() {
 
@@ -10,7 +11,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-
+            RecordsMainScreen()
         }
     }
 

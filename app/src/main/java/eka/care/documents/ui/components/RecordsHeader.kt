@@ -38,8 +38,6 @@ fun RecordsHeader() {
         modifier = Modifier.fillMaxWidth().background(EkaTheme.colors.surfaceContainer)
     ) {
         RecordsSearchBar()
-        Spacer(Modifier.height(4.dp))
-        RecordsTab()
     }
 }
 
@@ -109,10 +107,4 @@ private fun RecordsSearchBar() {
             }
         )
     }
-}
-
-@Composable
-@Preview
-private fun RecordsTab() {
-
 }

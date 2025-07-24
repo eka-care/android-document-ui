@@ -45,6 +45,8 @@ dependencies {
     implementation(libs.material)
     implementation(libs.eka.health.records)
     implementation(libs.eka.ui.kit)
+    implementation(libs.compose.shimmer)
+    implementation(libs.coil.compose)
     implementation(libs.androidx.navigation.runtime.android)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.material3.navigation)
