@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
@@ -12,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eka.ui.theme.EkaTheme
@@ -20,20 +23,26 @@ import eka.care.documents.ui.model.TabItem
 @Preview
 @Composable
 fun RecordTabs(
+    modifier: Modifier = Modifier,
     tabs: List<TabItem> = listOf(
         TabItem(id = "all_files", title = "All Files", isSelected = false),
         TabItem(id = "medical_cases", title = "Medical Cases", isSelected = true)
     ),
-    onTabClick: (String) -> Unit = {},
-    modifier: Modifier = Modifier
+    onTabClick: (String) -> Unit = {}
 ) {
     val selectedTabIndex = tabs.indexOfFirst { it.isSelected }.takeIf { it >= 0 } ?: 0
 
     TabRow(
         selectedTabIndex = selectedTabIndex,
         modifier = modifier.fillMaxWidth(),
-        containerColor = EkaTheme.colors.surfaceContainer,
-        contentColor = EkaTheme.colors.primary,
+        containerColor = EkaTheme.colors.surface,
+        divider = {
+            HorizontalDivider(
+                modifier = Modifier.fillMaxWidth(),
+                color = EkaTheme.colors.outlineVariant,
+                thickness = 1.dp
+            )
+        },
         indicator = { tabPositions ->
             if (tabPositions.isNotEmpty() && selectedTabIndex < tabPositions.size) {
                 Box(
@@ -43,7 +52,7 @@ fun RecordTabs(
                         .wrapContentSize(Alignment.Center)
                 ) {
                     TabRowDefaults.SecondaryIndicator(
-                        modifier = Modifier.width(48.dp),
+                        modifier = Modifier.width(90.dp).clip(RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp)),
                         height = 3.dp,
                         color = EkaTheme.colors.primary
                     )

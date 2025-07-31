@@ -1,8 +1,6 @@
 package eka.care.documents.ui.theme
 
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.lightColorScheme
-import androidx.compose.ui.graphics.Color
 
 val RecordsColorScheme = lightColorScheme(
     primary = StyleDictionaryColor.colorDanger500,

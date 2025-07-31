@@ -14,49 +14,48 @@ import androidx.compose.ui.unit.dp
 import com.eka.ui.theme.EkaTheme
 import eka.care.documents.ui.components.RecordSortSection
 import eka.care.documents.ui.components.RecordTabs
-import eka.care.documents.ui.components.RecordsHeader
-import eka.care.documents.ui.components.recordListView.RecordsListItem
+import eka.care.documents.ui.components.RecordsSearchBar
 import eka.care.documents.ui.model.TabItem
-import eka.care.documents.ui.theme.RecordsColorScheme
 
 @Composable
 @Preview
 fun RecordsMainScreen() {
-    EkaTheme(
-        colorScheme = RecordsColorScheme
-    ) {
-        Scaffold(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White),
-            topBar = {
-                RecordsHeader()
-            },
-            content = { paddingValues ->
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues),
-                    contentPadding = PaddingValues(0.dp)
-                ) {
-                    stickyHeader {
-                        RecordTabs(
-                            tabs = listOf(
-                                TabItem(id = "all_files", title = "All Files", isSelected = true),
-                                TabItem(id = "medical_cases", title = "Medical Cases", isSelected = false)
+    Scaffold(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(EkaTheme.colors.surface),
+        topBar = {
+            RecordsSearchBar()
+        },
+        content = { paddingValues ->
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.White)
+                    .padding(paddingValues),
+                contentPadding = PaddingValues(0.dp)
+            ) {
+                stickyHeader {
+                    RecordTabs(
+                        tabs = listOf(
+                            TabItem(id = "all_files", title = "All Files", isSelected = true),
+                            TabItem(
+                                id = "medical_cases",
+                                title = "Medical Cases",
+                                isSelected = false
                             )
                         )
-                    }
-                    item {
-                        RecordSortSection(
-                            sortBy = "Upload date",
-                            onSortByChange = {},
-                            onViewModeToggle = {},
-                            isGridView = true
-                        )
-                    }
+                    )
+                }
+                item {
+                    RecordSortSection(
+                        sortBy = "Upload date",
+                        onSortByChange = {},
+                        onViewModeToggle = {},
+                        isGridView = true
+                    )
                 }
             }
-        )
-    }
+        }
+    )
 }
