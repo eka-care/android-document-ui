@@ -21,8 +21,8 @@ import eka.care.documents.ui.model.TabItem
 @Composable
 fun RecordTabs(
     tabs: List<TabItem> = listOf(
-        TabItem(id = "all_files", title = "All Files", isSelected = true),
-        TabItem(id = "medical_cases", title = "Medical Cases", isSelected = false)
+        TabItem(id = "all_files", title = "All Files", isSelected = false),
+        TabItem(id = "medical_cases", title = "Medical Cases", isSelected = true)
     ),
     onTabClick: (String) -> Unit = {},
     modifier: Modifier = Modifier

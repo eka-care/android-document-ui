@@ -188,3 +188,20 @@ fun GetIconById(
         }
     }
 }
+
+enum class CaseType(
+    val displayName: String,
+    val iconRes: Int
+) {
+    DOCTOR_VISIT("Doctor Visit (OPD)", R.drawable.ic_user_doctor),
+    HOSPITAL_ADMIT("Hospital Admit (IPD)", R.drawable.ic_bed),
+    HEALTH_CHECKUP("Health Check-up", R.drawable.ic_stethoscope),
+    HOME_VISIT("Home Visit", R.drawable.ic_house),
+    TELECONSULTATION("Teleconsultation", R.drawable.ic_video),
+    EMERGENCY("Emergency", R.drawable.ic_ambulance),
+    SURGERY("Surgery / Procedure", R.drawable.ic_scalpel),
+    DENTAL("Dental", R.drawable.ic_tooth),
+    SECOND_OPINION("Second Opinion", R.drawable.ic_users),
+    OTHER("Other", R.drawable.ic_folder),
+    CREATE_OWN("Create own", R.drawable.ic_folder)
+}
