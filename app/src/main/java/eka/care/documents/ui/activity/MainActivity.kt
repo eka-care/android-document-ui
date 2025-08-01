@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.lifecycle.ViewModelProvider
 import com.eka.ui.theme.EkaTheme
-import eka.care.documents.ui.screens.RecordsMainScreen
 import eka.care.documents.ui.theme.RecordsColorScheme
 import eka.care.documents.ui.viewmodel.RecordsViewModel
 
@@ -17,7 +16,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             EkaTheme(colorScheme = RecordsColorScheme) {
-                RecordsMainScreen(viewModel)
+//                RecordsMainScreen(viewModel)
             }
         }
     }
