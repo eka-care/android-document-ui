@@ -1,6 +1,5 @@
 package eka.care.documents.ui.components.common
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -21,10 +20,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import eka.care.doctor.theme.color.DarwinTouchNeutral0
-import eka.care.doctor.theme.color.DarwinTouchNeutral1000
-import eka.care.doctor.theme.color.DarwinTouchNeutral600
-import eka.care.doctor.typography.touchTitle3Bold
 
 @Composable
 fun BottomSheetContentLayout(
@@ -38,10 +33,8 @@ fun BottomSheetContentLayout(
     val screenHeight: Dp = LocalConfiguration.current.screenHeightDp.dp
 
     Scaffold(
-        containerColor = DarwinTouchNeutral0,
         modifier = modifier
             .fillMaxWidth()
-            .background(DarwinTouchNeutral0)
             .height(screenHeight.times(height)),
         topBar = {
             if (topBar != null)
@@ -63,8 +56,6 @@ fun BottomSheetContentLayout(
                         Text(
                             text = title,
                             modifier = Modifier.padding(start = 16.dp, bottom = 16.dp),
-                            color = DarwinTouchNeutral1000,
-                            style = touchTitle3Bold
                         )
                     }
                 }
@@ -83,7 +74,6 @@ fun SheetTopBar() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(DarwinTouchNeutral0)
             .padding(16.dp),
         verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.Center
@@ -93,7 +83,6 @@ fun SheetTopBar() {
                 .clip(RoundedCornerShape(100.dp))
                 .width(32.dp)
                 .height(4.dp)
-                .background(DarwinTouchNeutral600)
         )
     }
 }
@@ -109,14 +98,12 @@ private fun Preview() {
                     .fillMaxWidth()
                     .padding(16.dp)
                     .height(48.dp)
-                    .background(DarwinTouchNeutral600)
             )
         }
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(DarwinTouchNeutral0)
         )
     }
 }

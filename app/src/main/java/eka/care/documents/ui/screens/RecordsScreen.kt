@@ -71,7 +71,7 @@ import eka.care.records.ui.presentation.components.RecordFilter
 import eka.care.records.ui.presentation.components.RecordsBottomSheetContent
 import eka.care.records.ui.presentation.components.RecordsScreenContent
 import eka.care.documents.ui.components.bottomSheet.DocumentBottomSheetType
-import eka.care.records.ui.presentation.components.common.SortAndChangeView
+import eka.care.documents.ui.components.common.SortAndChangeView
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.state.RecordsState
 import eka.care.documents.ui.viewmodel.RecordsViewModel
@@ -80,19 +80,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
-enum class Mode {
-    VIEW, SELECTION;
-
-    companion object {
-        fun valueOf(value: Int): Mode {
-            return if (value == SELECTION.ordinal) {
-                SELECTION
-            } else {
-                VIEW
-            }
-        }
-    }
-}
 
 @OptIn(
     ExperimentalPermissionsApi::class,

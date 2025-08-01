@@ -12,6 +12,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import eka.care.documents.ui.components.recordListView.RecordsListView
+import eka.care.documents.ui.components.recordgridview.RecordsGridView
+import eka.care.documents.ui.utility.DocumentBottomSheetType
 import eka.care.documents.ui.utility.DocumentViewType
 import eka.care.documents.ui.utility.Mode
 import eka.care.records.client.model.RecordModel
@@ -52,7 +55,6 @@ fun RecordsScreenContent(
             .fillMaxSize()
             .padding(paddingValues)
             .pullRefresh(pullRefreshState)
-            .background(DarwinTouchNeutral50)
     ) {
         when (viewModel.documentViewType) {
             DocumentViewType.GridView -> RecordsGridView(
@@ -85,7 +87,6 @@ fun RecordsScreenContent(
             modifier = Modifier.align(Alignment.TopCenter),
             refreshing = isRefreshing,
             state = pullRefreshState,
-            contentColor = DarwinTouchNeutral1000,
             scale = true
         )
     }

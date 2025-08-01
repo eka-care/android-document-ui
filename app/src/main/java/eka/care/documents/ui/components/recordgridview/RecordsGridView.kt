@@ -2,10 +2,10 @@ package eka.care.documents.ui.components.recordgridview
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import eka.care.records.client.model.RecordModel
-import eka.care.records.ui.presentation.screens.Mode
-import eka.care.records.ui.presentation.screens.RecordEmptyState
 import eka.care.documents.ui.state.RecordsState
+import eka.care.documents.ui.utility.Mode
+import eka.care.records.client.model.RecordModel
+import eka.care.records.ui.presentation.screens.RecordEmptyState
 
 @Composable
 fun RecordsGridView(

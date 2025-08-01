@@ -29,8 +29,7 @@ fun RecordsGrid(
         contentPadding = PaddingValues(top = 0.dp, bottom = 80.dp, start = 12.dp, end = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = Modifier.background(DarwinTouchNeutral50)
-            .fillMaxWidth()
+        modifier = Modifier.fillMaxWidth()
     ) {
         items(records) { record ->
             RecordsGridItem(
