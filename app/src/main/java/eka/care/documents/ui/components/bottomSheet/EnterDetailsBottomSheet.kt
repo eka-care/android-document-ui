@@ -36,7 +36,7 @@ import androidx.compose.foundation.lazy.items
 import com.eka.ui.theme.EkaTheme
 import eka.care.documents.ui.R
 import eka.care.documents.ui.components.common.BottomSheetContentLayout
-import eka.care.documents.ui.components.common.DatePickerWrapper
+import eka.care.documents.ui.components.common.NativeDatePickerField
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.state.UpsertRecordState
 import eka.care.documents.ui.utility.RecordType
@@ -210,15 +210,20 @@ fun EnterDetailsBottomSheet(
                     )
                 }
                 Spacer(modifier = Modifier.width(12.dp))
-                DatePickerWrapper(
+                NativeDatePickerField(
                     selectedDate = date,
-                    label = "",
-                    datePickerState = datePickerStateRecord,
                     format = "EEE, dd MMM, yyyy",
-                    onDateSelected = {
-                        selectedDate.value = it
-                    }
+                    onDateSelected = { selectedDate.value = it }
                 )
+//                DatePickerWrapper(
+//                    selectedDate = date,
+//                    label = "",
+//                    datePickerState = datePickerStateRecord,
+//                    format = "EEE, dd MMM, yyyy",
+//                    onDateSelected = {
+//                        selectedDate.value = it
+//                    }
+//                )
             }
         }
     }
