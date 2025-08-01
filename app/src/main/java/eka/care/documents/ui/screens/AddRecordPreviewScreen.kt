@@ -52,8 +52,8 @@ import eka.care.doctor.typography.touchLabelBold
 import eka.care.doctor.ui.molecule.IconButtonWrapper
 import eka.care.doctor.ui.organism.AppBar
 import eka.care.documents.ui.components.bottomSheet.EnterDetailsBottomSheet
-import eka.care.records.ui.presentation.naviagtion.AddRecordPreviewNavModel
-import eka.care.records.ui.presentation.naviagtion.MedicalRecordsNavModel
+import eka.care.documents.ui.navigation.AddRecordPreviewNavModel
+import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.records.ui.presentation.viewmodel.RecordsViewModel
 import eka.care.records.ui.utility.RecordsUtility
 import kotlinx.coroutines.launch

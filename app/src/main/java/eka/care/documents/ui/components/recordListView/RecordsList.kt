@@ -1,4 +1,4 @@
-package eka.care.documents.ui.components.listView
+package eka.care.documents.ui.components.recordListView
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
+import eka.care.documents.ui.components.listView.RecordsListItem
 import eka.care.documents.ui.utility.DocumentUtility.Companion.getDocumentDate
 import eka.care.records.client.model.RecordModel
 

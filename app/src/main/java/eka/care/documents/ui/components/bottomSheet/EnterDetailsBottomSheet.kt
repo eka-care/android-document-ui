@@ -11,9 +11,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.material.Text
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SelectableDates
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,20 +26,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import eka.care.doctor.icons.R
-import eka.care.doctor.theme.color.DarwinTouchPrimary
-import eka.care.doctor.theme.color.DarwinTouchRed
-import eka.care.doctor.ui.atom.DatePickerWrapper
-import eka.care.doctor.ui.atom.IconWrapper
-import eka.care.doctor.ui.molecule.ButtonWrapper
-import eka.care.doctor.ui.molecule.InputChipWrapper
-import eka.care.doctor.ui.organism.BottomSheetContentLayout
-import eka.care.records.ui.presentation.naviagtion.MedicalRecordsNavModel
+import eka.care.documents.ui.R
+import eka.care.documents.ui.components.common.BottomSheetContentLayout
+import eka.care.documents.ui.components.common.DatePickerWrapper
+import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.state.UpsertRecordState
+import eka.care.documents.ui.utility.RecordType
+import eka.care.documents.ui.utility.formatLocalDateToCustomFormat
+import eka.care.documents.ui.utility.timestampToLong
 import eka.care.records.ui.presentation.viewmodel.RecordsViewModel
-import eka.care.records.ui.utility.RecordType
-import eka.care.records.ui.utility.RecordsUtility.Companion.formatLocalDateToCustomFormat
-import eka.care.records.ui.utility.RecordsUtility.Companion.timestampToLong
 import java.io.File
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -168,7 +163,7 @@ fun EnterDetailsBottomSheet(
                 Spacer(modifier = Modifier.width(12.dp))
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     items(RecordType.entries) { recordInfo ->
-                        InputChipWrapper(
+                        In(
                             onClick = { selectedChip = recordInfo.code },
                             label = recordInfo.title,
                             selected = selectedChip == recordInfo.code
@@ -210,12 +205,4 @@ fun EnterDetailsBottomSheet(
             }
         }
     }
-}
-
-enum class DocumentBottomSheetType {
-    DocumentUpload, DocumentOptions, DocumentSort, EnterFileDetails
-}
-
-enum class DocumentViewType {
-    ListView, GridView
 }

@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.eka.ui.theme.EkaTheme
 import eka.care.documents.ui.R
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 class DocumentUtility {
@@ -192,6 +193,25 @@ fun GetIconById(
             }
         }
     }
+}
+
+fun timestampToLong(timestamp: String, format: String = "EEE, dd MMM, yyyy"): Long? {
+    if (timestamp == "Add Date") {
+        return null
+    }
+    val dateFormat = SimpleDateFormat(format, Locale.getDefault())
+    val date =
+        dateFormat.parse(timestamp) ?: throw IllegalArgumentException("Invalid date format")
+    return date.time / 1000
+}
+
+fun formatLocalDateToCustomFormat(date: Date): String? {
+    val formatter = SimpleDateFormat("EEE, dd MMM, yyyy", Locale.getDefault())
+    return formatter.format(date)
+}
+
+enum class DocumentBottomSheetType {
+    DocumentUpload, DocumentOptions, DocumentSort, EnterFileDetails
 }
 
 enum class CaseType(

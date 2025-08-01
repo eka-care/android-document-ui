@@ -72,7 +72,7 @@ import eka.care.records.ui.presentation.components.RecordsBottomSheetContent
 import eka.care.records.ui.presentation.components.RecordsScreenContent
 import eka.care.documents.ui.components.bottomSheet.DocumentBottomSheetType
 import eka.care.records.ui.presentation.components.common.SortAndChangeView
-import eka.care.records.ui.presentation.naviagtion.MedicalRecordsNavModel
+import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.state.RecordsState
 import eka.care.records.ui.presentation.viewmodel.RecordsViewModel
 import eka.care.records.ui.utility.RecordsAction

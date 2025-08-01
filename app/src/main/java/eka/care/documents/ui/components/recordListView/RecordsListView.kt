@@ -1,4 +1,4 @@
-package eka.care.documents.ui.components.listView
+package eka.care.documents.ui.components.recordListView
 
 import androidx.compose.runtime.Composable
 import eka.care.documents.ui.state.RecordsState

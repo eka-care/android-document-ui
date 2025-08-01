@@ -1,9 +1,7 @@
 package eka.care.documents.ui.components.bottomSheet
 
 import androidx.compose.runtime.Composable
-import eka.care.doctor.ui.organism.BottomSheetContentLayout
 import eka.care.records.client.model.SortOrder
-import eka.care.records.ui.presentation.components.BottomSheetItemSortDocument
 
 @Composable
 fun RecordSortBottomSheet(

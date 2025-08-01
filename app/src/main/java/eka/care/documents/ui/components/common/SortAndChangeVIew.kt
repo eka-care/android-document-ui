@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -19,9 +21,12 @@ import eka.care.doctor.theme.color.DarwinTouchNeutral50
 import eka.care.doctor.typography.touchCalloutBold
 import eka.care.doctor.ui.atom.IconWrapper
 import eka.care.doctor.ui.molecule.IconButtonWrapper
+import eka.care.documents.ui.R
 import eka.care.records.client.model.SortOrder
 import eka.care.documents.ui.components.bottomSheet.DocumentBottomSheetType
 import eka.care.documents.ui.components.bottomSheet.DocumentViewType
+import eka.care.documents.ui.utility.DocumentBottomSheetType
+import eka.care.documents.ui.utility.DocumentViewType
 import eka.care.records.ui.presentation.viewmodel.RecordsViewModel
 
 @Composable
