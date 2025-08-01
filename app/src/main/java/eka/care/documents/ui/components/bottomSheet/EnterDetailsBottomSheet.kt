@@ -11,7 +11,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.InputChip
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
@@ -24,8 +28,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.lazy.items
+import com.eka.ui.theme.EkaTheme
 import eka.care.documents.ui.R
 import eka.care.documents.ui.components.common.BottomSheetContentLayout
 import eka.care.documents.ui.components.common.DatePickerWrapper
@@ -127,15 +135,24 @@ fun EnterDetailsBottomSheet(
         title = if (editDocument) "Edit Medical Record" else "Add Record Details",
         height = .4f,
         bottomStickyContent = {
-            ButtonWrapper(
+            Button(
+                onClick = onAddMedicalRecord,
+                enabled = selectedChip != null && !loadingState,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 32.dp),
-                showLoader = loadingState,
-                text = "Save",
-                enabled = selectedChip != null,
-                onClick = onAddMedicalRecord
-            )
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 32.dp)
+            ) {
+                if (loadingState) {
+                    CircularProgressIndicator(
+                        color = Color.White,
+                        strokeWidth = 2.dp,
+                        modifier = Modifier
+                            .size(20.dp)
+                    )
+                } else {
+                    Text(text = "Save")
+                }
+            }
         }
     ) {
         Column {
@@ -147,26 +164,27 @@ fun EnterDetailsBottomSheet(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(contentAlignment = Alignment.TopEnd) {
-                    IconWrapper(
-                        icon = R.drawable.ic_file_regular,
-                        tint = DarwinTouchPrimary,
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_file_regular),
                         contentDescription = "File",
-                        modifier = Modifier
-                            .size(16.dp)
+                        tint = EkaTheme.colors.onPrimary,
+                        modifier = Modifier.size(16.dp)
                     )
                     Text(
                         text = "*",
-                        color = DarwinTouchRed,
+                        color = EkaTheme.colors.error,
                         modifier = Modifier.padding(start = 16.dp, bottom = 22.dp)
                     )
                 }
                 Spacer(modifier = Modifier.width(12.dp))
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     items(RecordType.entries) { recordInfo ->
-                        In(
+                        InputChip(
+                            selected = selectedChip == recordInfo.code,
                             onClick = { selectedChip = recordInfo.code },
-                            label = recordInfo.title,
-                            selected = selectedChip == recordInfo.code
+                            label = {
+                                Text(text = recordInfo.title)
+                            }
                         )
                     }
                 }
@@ -179,16 +197,15 @@ fun EnterDetailsBottomSheet(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(contentAlignment = Alignment.TopEnd) {
-                    IconWrapper(
-                        icon = R.drawable.ic_calendar_regular,
-                        tint = DarwinTouchPrimary,
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_calendar_regular),
                         contentDescription = "File",
-                        modifier = Modifier
-                            .size(16.dp)
+                        tint = EkaTheme.colors.onPrimary,
+                        modifier = Modifier.size(16.dp)
                     )
                     Text(
                         text = "*",
-                        color = DarwinTouchRed,
+                        color = EkaTheme.colors.error,
                         modifier = Modifier.padding(start = 16.dp, bottom = 22.dp)
                     )
                 }
