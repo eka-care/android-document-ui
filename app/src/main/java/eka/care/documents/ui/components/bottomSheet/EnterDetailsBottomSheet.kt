@@ -34,7 +34,7 @@ import eka.care.documents.ui.state.UpsertRecordState
 import eka.care.documents.ui.utility.RecordType
 import eka.care.documents.ui.utility.formatLocalDateToCustomFormat
 import eka.care.documents.ui.utility.timestampToLong
-import eka.care.records.ui.presentation.viewmodel.RecordsViewModel
+import eka.care.documents.ui.viewmodel.RecordsViewModel
 import java.io.File
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -52,7 +52,7 @@ fun EnterDetailsBottomSheet(
     editDocument: Boolean
 ) {
     val context = LocalContext.current
-    var selectedChip by remember { mutableStateOf<String?>(viewModel.cardClickData.value?.documentType) }
+    var selectedChip by remember { mutableStateOf(viewModel.cardClickData.value?.documentType) }
     var loadingState by remember { mutableStateOf(false) }
     val selectedDate = remember { mutableStateOf("") }
     val state by viewModel.upsertRecordsState.collectAsState()

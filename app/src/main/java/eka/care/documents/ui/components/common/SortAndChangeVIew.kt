@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -15,7 +13,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.unit.dp
-import eka.care.doctor.icons.R
 import eka.care.doctor.theme.color.DarwinTouchNeutral1000
 import eka.care.doctor.theme.color.DarwinTouchNeutral50
 import eka.care.doctor.typography.touchCalloutBold
@@ -23,11 +20,9 @@ import eka.care.doctor.ui.atom.IconWrapper
 import eka.care.doctor.ui.molecule.IconButtonWrapper
 import eka.care.documents.ui.R
 import eka.care.records.client.model.SortOrder
-import eka.care.documents.ui.components.bottomSheet.DocumentBottomSheetType
-import eka.care.documents.ui.components.bottomSheet.DocumentViewType
 import eka.care.documents.ui.utility.DocumentBottomSheetType
 import eka.care.documents.ui.utility.DocumentViewType
-import eka.care.records.ui.presentation.viewmodel.RecordsViewModel
+import eka.care.documents.ui.viewmodel.RecordsViewModel
 
 @Composable
 fun SortAndChangeView(viewModel: RecordsViewModel) {

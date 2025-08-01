@@ -2,10 +2,7 @@ package eka.care.documents.ui.model
 
 import androidx.annotation.Keep
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
-import eka.care.doctor.theme.color.DarwinTouchNeutral1000
-import eka.care.doctor.theme.color.DarwinTouchNeutral800
 
 @Keep
 data class DocumentBottomSheetItemModel(

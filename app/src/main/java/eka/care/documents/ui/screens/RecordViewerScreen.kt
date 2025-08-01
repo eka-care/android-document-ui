@@ -27,7 +27,7 @@ import eka.care.records.ui.presentation.components.RecordSuccessState
 import eka.care.records.ui.presentation.components.handleFileDownload
 import eka.care.documents.ui.navigation.RecordViewerNavModel
 import eka.care.documents.ui.state.DocumentPreviewState
-import eka.care.records.ui.presentation.viewmodel.RecordPreviewViewModel
+import eka.care.documents.ui.viewmodel.RecordPreviewViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

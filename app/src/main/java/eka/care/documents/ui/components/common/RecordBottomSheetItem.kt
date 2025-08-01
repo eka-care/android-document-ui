@@ -9,25 +9,25 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import eka.care.doctor.records.R
-import eka.care.doctor.theme.color.DarwinTouchNeutral0
-import eka.care.doctor.typography.touchBodyRegular
-import eka.care.doctor.ui.atom.IconWrapper
 import eka.care.documents.ui.model.DocumentBottomSheetItemModel
-import eka.care.records.ui.presentation.model.DocumentBottomSheetItemModel
 
 @Composable
 fun RecordBottomSheetItem(
@@ -37,7 +37,7 @@ fun RecordBottomSheetItem(
     ListItem(
         modifier = Modifier.clickable(
             interactionSource = remember { MutableInteractionSource() },
-            indication = rememberRipple(
+            indication = ripple(
                 bounded = true
             ),
             onClick = onClick
@@ -50,8 +50,8 @@ fun RecordBottomSheetItem(
             )
         },
         leadingContent = {
-            IconWrapper(
-                icon = item.leadingIcon,
+            Icon(
+                painter = painterResource(item.leadingIcon),
                 contentDescription = "",
                 tint = item.leadingIconTint,
                 modifier = Modifier.size(16.dp)
@@ -65,8 +65,8 @@ fun RecordBottomSheetItem(
                 if (item.isRecommended) {
                     RecommendedChip(text = stringResource(id = R.string.recommended))
                 }
-                IconWrapper(
-                    icon = item.trailingIcon,
+                Icon(
+                    painter = painterResource(item.trailingIcon),
                     modifier = Modifier.size(16.dp),
                     contentDescription = "action"
                 )

@@ -74,7 +74,7 @@ import eka.care.documents.ui.components.bottomSheet.DocumentBottomSheetType
 import eka.care.records.ui.presentation.components.common.SortAndChangeView
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.state.RecordsState
-import eka.care.records.ui.presentation.viewmodel.RecordsViewModel
+import eka.care.documents.ui.viewmodel.RecordsViewModel
 import eka.care.records.ui.utility.RecordsAction
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

@@ -1,4 +1,4 @@
-package eka.care.records.ui.presentation.viewmodel
+package eka.care.documents.ui.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -13,9 +13,8 @@ import eka.care.documents.ui.state.DocumentPreviewState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import org.koin.core.component.KoinComponent
 
-class RecordPreviewViewModel(val app: Application) : AndroidViewModel(app), KoinComponent {
+class RecordPreviewViewModel(val app: Application) : AndroidViewModel(app) {
 
     private val recordsManager = Records.getInstance(
         context = app.applicationContext,

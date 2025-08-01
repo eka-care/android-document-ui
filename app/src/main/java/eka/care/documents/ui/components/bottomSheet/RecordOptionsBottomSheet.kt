@@ -4,8 +4,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.runtime.Composable
 import eka.care.documents.ui.R
+import eka.care.documents.ui.components.common.BottomSheetContentLayout
+import eka.care.documents.ui.components.common.RecordBottomSheetItem
 import eka.care.documents.ui.model.CTA
 import eka.care.documents.ui.model.DocumentBottomSheetItemModel
+import eka.care.documents.ui.theme.StyleDictionaryColor
 import eka.care.documents.ui.utility.RecordsAction
 
 val documentOptionsItems = arrayOf(
@@ -23,10 +26,10 @@ val documentOptionsItems = arrayOf(
     ),
     DocumentBottomSheetItemModel(
         itemName = "Delete document",
-        itemNameColor = DarwinTouchRed,
+        itemNameColor = StyleDictionaryColor.colorBackgroundDanger,
         itemType = CTA(action = RecordsAction.ACTION_DELETE_RECORD),
         leadingIcon = R.drawable.ic_trash_regular,
-        leadingIconTint = DarwinTouchRed,
+        leadingIconTint = StyleDictionaryColor.colorBackgroundDanger,
         trailingIcon = Icons.Default.KeyboardArrowRight
     )
 )

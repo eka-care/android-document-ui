@@ -1,4 +1,4 @@
-package eka.care.records.ui.presentation.viewmodel
+package eka.care.documents.ui.viewmodel
 
 import android.app.Application
 import android.net.Uri
@@ -7,23 +7,22 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import eka.care.records.client.model.RecordModel
-import eka.care.records.client.model.SortOrder
-import eka.care.records.client.utils.Records
-import eka.care.documents.ui.components.bottomSheet.DocumentBottomSheetType
-import eka.care.documents.ui.components.bottomSheet.DocumentViewType
 import eka.care.documents.ui.state.RecordsCountByType
 import eka.care.documents.ui.state.RecordsState
 import eka.care.documents.ui.state.UpsertRecordState
+import eka.care.documents.ui.utility.DocumentBottomSheetType
+import eka.care.documents.ui.utility.DocumentViewType
+import eka.care.records.client.model.RecordModel
+import eka.care.records.client.model.SortOrder
+import eka.care.records.client.utils.Records
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.launch
-import org.koin.core.component.KoinComponent
 import java.io.File
 
-class RecordsViewModel(val app: Application) : AndroidViewModel(app), KoinComponent {
+class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
     private val recordsManager = Records.getInstance(
         context = app.applicationContext,
         token = ""
