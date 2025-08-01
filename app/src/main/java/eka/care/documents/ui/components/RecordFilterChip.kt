@@ -20,9 +20,9 @@ import com.eka.ui.theme.EkaTheme
 @Preview
 @Composable
 fun RecordFilterChip(
+    modifier: Modifier = Modifier,
     filteredText: String = "Upload date",
-    onSortByChange: (String) -> Unit = {},
-    modifier: Modifier = Modifier
+    onSortByChange: (String) -> Unit = {}
 ) {
     AssistChip(
         onClick = { onSortByChange(filteredText) },

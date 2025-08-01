@@ -6,28 +6,26 @@ import androidx.compose.runtime.Composable
 import eka.care.documents.ui.R
 import eka.care.documents.ui.components.common.BottomSheetContentLayout
 import eka.care.documents.ui.components.common.RecordBottomSheetItem
-import eka.care.documents.ui.model.CTA
 import eka.care.documents.ui.model.DocumentBottomSheetItemModel
 import eka.care.documents.ui.theme.StyleDictionaryColor
-import eka.care.documents.ui.utility.RecordsAction
 
 val documentOptionsItems = arrayOf(
     DocumentBottomSheetItemModel(
         itemName = "Edit document",
-        itemType = CTA(action = RecordsAction.ACTION_EDIT_DOCUMENT),
+//        itemType = CTA(action = RecordsAction.ACTION_EDIT_DOCUMENT),
         leadingIcon = R.drawable.ic_pen_regular,
         trailingIcon = Icons.Default.KeyboardArrowRight
     ),
     DocumentBottomSheetItemModel(
         itemName = "Share document",
-        itemType = CTA(action = RecordsAction.ACTION_SHARE_DOCUMENT),
+//        itemType = CTA(action = RecordsAction.ACTION_SHARE_DOCUMENT),
         leadingIcon = R.drawable.ic_share_nodes_regular,
         trailingIcon = Icons.Default.KeyboardArrowRight
     ),
     DocumentBottomSheetItemModel(
         itemName = "Delete document",
         itemNameColor = StyleDictionaryColor.colorBackgroundDanger,
-        itemType = CTA(action = RecordsAction.ACTION_DELETE_RECORD),
+//        itemType = CTA(action = RecordsAction.ACTION_DELETE_RECORD),
         leadingIcon = R.drawable.ic_trash_regular,
         leadingIconTint = StyleDictionaryColor.colorBackgroundDanger,
         trailingIcon = Icons.Default.KeyboardArrowRight
@@ -35,14 +33,14 @@ val documentOptionsItems = arrayOf(
 )
 
 @Composable
-fun RecordOptionsBottomSheet(onClick: (CTA?) -> Unit) {
+fun RecordOptionsBottomSheet(/*onClick: (CTA?) -> Unit*/) {
     BottomSheetContentLayout(
         height = 0.125f * documentOptionsItems.size,
         title = "Choose an option"
     ) {
         documentOptionsItems.map { item ->
             RecordBottomSheetItem(item) {
-                onClick(item.itemType)
+//                onClick(item.itemType)
             }
         }
     }
