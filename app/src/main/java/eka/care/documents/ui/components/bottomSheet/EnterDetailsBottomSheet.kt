@@ -1,0 +1,221 @@
+package eka.care.documents.ui.components.bottomSheet
+
+import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.material.Text
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SelectableDates
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import eka.care.doctor.icons.R
+import eka.care.doctor.theme.color.DarwinTouchPrimary
+import eka.care.doctor.theme.color.DarwinTouchRed
+import eka.care.doctor.ui.atom.DatePickerWrapper
+import eka.care.doctor.ui.atom.IconWrapper
+import eka.care.doctor.ui.molecule.ButtonWrapper
+import eka.care.doctor.ui.molecule.InputChipWrapper
+import eka.care.doctor.ui.organism.BottomSheetContentLayout
+import eka.care.records.ui.presentation.naviagtion.MedicalRecordsNavModel
+import eka.care.documents.ui.state.UpsertRecordState
+import eka.care.records.ui.presentation.viewmodel.RecordsViewModel
+import eka.care.records.ui.utility.RecordType
+import eka.care.records.ui.utility.RecordsUtility.Companion.formatLocalDateToCustomFormat
+import eka.care.records.ui.utility.RecordsUtility.Companion.timestampToLong
+import java.io.File
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EnterDetailsBottomSheet(
+    onClick: () -> Unit,
+    viewModel: RecordsViewModel,
+    fileList: ArrayList<File>,
+    paramsModel: MedicalRecordsNavModel,
+    editDocument: Boolean
+) {
+    val context = LocalContext.current
+    var selectedChip by remember { mutableStateOf<String?>(viewModel.cardClickData.value?.documentType) }
+    var loadingState by remember { mutableStateOf(false) }
+    val selectedDate = remember { mutableStateOf("") }
+    val state by viewModel.upsertRecordsState.collectAsState()
+
+    val dateInMillis = Calendar.getInstance().timeInMillis
+    val sdf = SimpleDateFormat("EEE, dd MMM, yyyy", Locale.getDefault())
+
+    val date = if (editDocument) {
+        if (selectedDate.value.length > 1) selectedDate.value else Date(dateInMillis).run { sdf.format(this) } ?: "Add Date"
+    } else {
+        if (selectedDate.value.length > 1) selectedDate.value else "Add Date"
+    }
+
+    LaunchedEffect(state) {
+        when (state) {
+            is UpsertRecordState.Loading -> {
+                loadingState = true
+            }
+
+            is UpsertRecordState.Error -> {
+                loadingState = false
+                Toast.makeText(context, (state as? UpsertRecordState.Error)?.error, Toast.LENGTH_SHORT).show()
+            }
+
+            is UpsertRecordState.Success -> {
+                loadingState = false
+                onClick()
+            }
+
+            else -> {}
+        }
+    }
+
+    val onAddMedicalRecord = {
+        if (editDocument) {
+            viewModel.updateRecord(
+                localId = viewModel.cardClickData.value?.id ?: "",
+                docType = selectedChip ?: "ot",
+                docDate = timestampToLong(date) ?: 0L
+            )
+            onClick()
+        } else {
+            if (selectedChip != null && fileList.isNotEmpty()) {
+                viewModel.createRecord(
+                    files = fileList,
+                    ownerId = paramsModel.ownerId,
+                    filterId = paramsModel.filterId,
+                    documentType = selectedChip ?: "ot",
+                    documentDate = timestampToLong(date)
+                )
+            }
+        }
+    }
+
+    val datePickerStateRecord = rememberDatePickerState(
+        initialSelectedDateMillis = LocalDate.now().toEpochDay() * 24 * 60 * 60 * 1000,
+        selectableDates = object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return utcTimeMillis <= System.currentTimeMillis()
+            }
+        }
+    )
+
+    LaunchedEffect(datePickerStateRecord.selectedDateMillis) {
+        datePickerStateRecord.selectedDateMillis?.let { selectedMillis ->
+            val selectedDateObj = Date(selectedMillis)
+            selectedDate.value = formatLocalDateToCustomFormat(selectedDateObj) ?: ""
+        }
+    }
+
+    BottomSheetContentLayout(
+        title = if (editDocument) "Edit Medical Record" else "Add Record Details",
+        height = .4f,
+        bottomStickyContent = {
+            ButtonWrapper(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 32.dp),
+                showLoader = loadingState,
+                text = "Save",
+                enabled = selectedChip != null,
+                onClick = onAddMedicalRecord
+            )
+        }
+    ) {
+        Column {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(contentAlignment = Alignment.TopEnd) {
+                    IconWrapper(
+                        icon = R.drawable.ic_file_regular,
+                        tint = DarwinTouchPrimary,
+                        contentDescription = "File",
+                        modifier = Modifier
+                            .size(16.dp)
+                    )
+                    Text(
+                        text = "*",
+                        color = DarwinTouchRed,
+                        modifier = Modifier.padding(start = 16.dp, bottom = 22.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.width(12.dp))
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    items(RecordType.entries) { recordInfo ->
+                        InputChipWrapper(
+                            onClick = { selectedChip = recordInfo.code },
+                            label = recordInfo.title,
+                            selected = selectedChip == recordInfo.code
+                        )
+                    }
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(contentAlignment = Alignment.TopEnd) {
+                    IconWrapper(
+                        icon = R.drawable.ic_calendar_regular,
+                        tint = DarwinTouchPrimary,
+                        contentDescription = "File",
+                        modifier = Modifier
+                            .size(16.dp)
+                    )
+                    Text(
+                        text = "*",
+                        color = DarwinTouchRed,
+                        modifier = Modifier.padding(start = 16.dp, bottom = 22.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.width(12.dp))
+                DatePickerWrapper(
+                    selectedDate = date,
+                    label = "",
+                    datePickerState = datePickerStateRecord,
+                    format = "EEE, dd MMM, yyyy",
+                    onDateSelected = {
+                        selectedDate.value = it
+                    }
+                )
+            }
+        }
+    }
+}
+
+enum class DocumentBottomSheetType {
+    DocumentUpload, DocumentOptions, DocumentSort, EnterFileDetails
+}
+
+enum class DocumentViewType {
+    ListView, GridView
+}

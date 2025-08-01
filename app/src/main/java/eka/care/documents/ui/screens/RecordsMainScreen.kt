@@ -55,6 +55,9 @@ fun RecordsMainScreen() {
                         isGridView = true
                     )
                 }
+                item {
+                    RecordsScreenContent()
+                }
             }
         }
     )

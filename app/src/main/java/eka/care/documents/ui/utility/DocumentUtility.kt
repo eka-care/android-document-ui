@@ -50,6 +50,11 @@ enum class TagState {
     SMART_REPORT,
 }
 
+
+enum class DocumentViewType {
+    ListView, GridView
+}
+
 enum class RecordType(val code: String, val title: String) {
     LAB_REPORT("lr", "Lab Report"),
     PRESCRIPTION("ps", "Prescription"),

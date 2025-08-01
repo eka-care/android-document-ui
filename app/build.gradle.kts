@@ -1,7 +1,8 @@
 plugins {
-    alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose.compiler)
+    id("com.android.library")
+    id("maven-publish")
 }
 
 android {
@@ -9,11 +10,8 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "eka.care.documents.ui"
-        minSdk = 24
+        minSdk = 23
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -27,15 +25,27 @@ android {
             )
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        jvmToolchain(17)
     }
     buildFeatures {
         compose = true
+    }
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("release") {
+                from(components["release"])
+                groupId = "com.eka.records"
+                artifactId = "eka-records-ui"
+                version = "1.0.0"
+            }
+        }
+    }
+    tasks.named("publishReleasePublicationToMavenLocal") {
+        dependsOn(tasks.named("bundleReleaseAar"))
     }
 }
 
@@ -47,10 +57,4 @@ dependencies {
     implementation(libs.eka.ui.kit)
     implementation(libs.compose.shimmer)
     implementation(libs.coil.compose)
-    implementation(libs.androidx.navigation.runtime.android)
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.material3.navigation)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
 }
