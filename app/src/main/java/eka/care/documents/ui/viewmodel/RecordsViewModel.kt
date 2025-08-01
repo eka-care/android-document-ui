@@ -64,6 +64,14 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
         _upsertRecordsState.value = state
     }
 
+    fun toggleDocumentViewType() {
+        documentViewType = if (documentViewType == DocumentViewType.GridView) {
+            DocumentViewType.ListView
+        } else {
+            DocumentViewType.GridView
+        }
+    }
+
     fun fetchRecordsCount(
         filterIds: List<String>,
         ownerId: String,

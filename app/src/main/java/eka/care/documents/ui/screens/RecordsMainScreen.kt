@@ -54,7 +54,9 @@ fun RecordsMainScreen(
                 RecordSortSection(
                     sortBy = "Upload date",
                     onSortByChange = {},
-                    onViewModeToggle = {},
+                    onViewModeToggle = {
+                        viewModel.toggleDocumentViewType()
+                    },
                     isGridView = true
                 )
                 RecordsScreenContent(
