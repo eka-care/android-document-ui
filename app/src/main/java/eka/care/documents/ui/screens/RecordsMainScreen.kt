@@ -15,8 +15,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,6 +33,7 @@ import eka.care.documents.ui.components.RecordSortSection
 import eka.care.documents.ui.components.RecordTabs
 import eka.care.documents.ui.components.RecordsScreenContent
 import eka.care.documents.ui.components.RecordsSearchBar
+import eka.care.documents.ui.components.recordcaseview.CaseView
 import eka.care.documents.ui.components.bottomSheet.RecordsBottomSheetContent
 import eka.care.documents.ui.model.TabItem
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
@@ -159,6 +163,7 @@ private fun ScreenContent(
     openSheet: () -> Unit
 ) {
     val selectedItems = remember { mutableStateListOf<RecordModel>() }
+    var selectedTabId by remember { mutableStateOf(TabConstants.ALL_FILES) }
     val context = LocalContext.current
 
     Scaffold(
@@ -197,36 +202,67 @@ private fun ScreenContent(
             ) {
                 RecordTabs(
                     tabs = listOf(
-                        TabItem(id = "all_files", title = "All Files", isSelected = true),
                         TabItem(
-                            id = "medical_cases",
+                            id = TabConstants.ALL_FILES,
+                            title = "All Files",
+                            isSelected = selectedTabId == TabConstants.ALL_FILES
+                        ),
+                        TabItem(
+                            id = TabConstants.MEDICAL_CASES,
                             title = "Medical Cases",
-                            isSelected = false
+                            isSelected = selectedTabId == TabConstants.MEDICAL_CASES
                         )
-                    )
-                )
-                RecordSortSection(viewModel = viewModel, openSheet = openSheet)
-                RecordsScreenContent(
-                    params = params,
-                    viewModel = viewModel,
-                    mode = Mode.VIEW,
-                    selectedItems = selectedItems,
-                    onSelectedItemsChange = { items ->
-//                            selectedItems.clear()
-//                            selectedItems.addAll(items)
-                    },
-                    openSmartReport = {},
-                    openRecordViewer = {},
-                    openSheet = { openSheet.invoke() },
-                    onRefresh = {
-                        syncRecords(
-                            filterIds = filterIdsToProcess,
-                            ownerId = params.ownerId,
-                            context = context
-                        )
+                    ),
+                    onTabClick = { tabId ->
+                        selectedTabId = tabId
+                        when(tabId) {
+                            TabConstants.ALL_FILES -> {}
+                            TabConstants.MEDICAL_CASES -> {}
+                        }
                     }
                 )
+
+                RecordSortSection(viewModel = viewModel, openSheet = openSheet)
+
+                when(selectedTabId) {
+                    TabConstants.ALL_FILES -> {
+                        RecordsScreenContent(
+                            params = params,
+                            viewModel = viewModel,
+                            mode = Mode.VIEW,
+                            selectedItems = selectedItems,
+                            onSelectedItemsChange = { items ->
+//                            selectedItems.clear()
+//                            selectedItems.addAll(items)
+                            },
+                            openSmartReport = {},
+                            openRecordViewer = {},
+                            openSheet = { openSheet.invoke() },
+                            onRefresh = {
+                                syncRecords(
+                                    filterIds = filterIdsToProcess,
+                                    ownerId = params.ownerId,
+                                    context = context
+                                )
+                            }
+                        )
+                    }
+
+                    TabConstants.MEDICAL_CASES -> {
+                        CaseView(
+                            cases = emptyList(),
+                            onCaseItemClick = { caseItem ->
+
+                            }
+                        )
+                    }
+                }
             }
         }
     )
+}
+
+object TabConstants {
+    const val ALL_FILES = "all_files"
+    const val MEDICAL_CASES = "medical_cases"
 }
