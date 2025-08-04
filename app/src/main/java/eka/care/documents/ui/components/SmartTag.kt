@@ -1,6 +1,7 @@
 package eka.care.documents.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -22,6 +23,7 @@ import eka.care.documents.ui.R
 fun SmartTag(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
+            .border(1.dp, EkaTheme.colors.onPrimary, RoundedCornerShape(8.dp))
             .background(EkaTheme.colors.onPrimary, RoundedCornerShape(8.dp))
             .padding(horizontal = 8.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,

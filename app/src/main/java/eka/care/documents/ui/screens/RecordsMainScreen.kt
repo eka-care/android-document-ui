@@ -57,7 +57,7 @@ fun RecordsMainScreen(
                     onViewModeToggle = {
                         viewModel.toggleDocumentViewType()
                     },
-                    isGridView = true
+                    isGridView = false
                 )
                 RecordsScreenContent(
                     params = params,

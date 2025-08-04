@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,7 +41,7 @@ fun RecordsListItem(
             onClick = onClick,
         ),
         colors = ListItemDefaults.colors(
-            containerColor = EkaTheme.colors.background
+            containerColor = Color.White
         ),
         headlineContent = {
             Text(
@@ -82,7 +83,15 @@ fun RecordsListItem(
 
         },
         leadingContent = {
-            RecordType.entries.find { it.code == record.documentType }?.let { GetIconById(it) }
+            RecordType.entries.find { it.code == record.documentType }?.let {
+                GetIconById(
+                    type = it,
+                    padding = 3.dp,
+                    iconSize = 12.dp,
+                    boundingBoxSize = 18.dp,
+                    roundedCorner = 4.dp,
+                )
+            }
         },
         trailingContent = {
             Row(
@@ -94,15 +103,15 @@ fun RecordsListItem(
                 }
 
                 IconButton(
-                    modifier = Modifier.size(48.dp),
+                    modifier = Modifier.size(24.dp),
                     onClick = {
                         onMoreOptionsClick
                     },
                     content = {
                         Icon(
-                            painter = painterResource(id =R.drawable.ic_ellipsis_vertical_regular),
+                            painter = painterResource(id = R.drawable.ic_solid_arrow_right),
                             contentDescription = "More",
-                            tint = EkaTheme.colors.onSurface
+                            tint = EkaTheme.colors.onSurfaceVariant
                         )
                     }
                 )
