@@ -188,13 +188,13 @@ private fun ScreenContent(
                     )
                 },
                 onClick = {
-//                    if (selectedTabId == TabConstants.ALL_FILES){
-//                        viewModel.documentBottomSheetType = DocumentBottomSheetType.DocumentUpload
-//                    }else{
-//                        viewModel.documentBottomSheetType = DocumentBottomSheetType.CaseUpload
-//                    }
-//                    openSheet.invoke()
-                    navigateToCreateCase.invoke()
+                    if (selectedTabId == TabConstants.ALL_FILES){
+                        viewModel.documentBottomSheetType = DocumentBottomSheetType.DocumentUpload
+                    }else{
+                        viewModel.documentBottomSheetType = DocumentBottomSheetType.CaseUpload
+                    }
+                    openSheet.invoke()
+//                    navigateToCreateCase.invoke()
                 }
             )
         },
