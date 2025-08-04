@@ -1,7 +1,6 @@
 package eka.care.documents.ui.components.recordcaseview
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
@@ -19,7 +18,7 @@ fun CaseView(
     onCaseItemClick: (RecordCase) -> Unit = {}
 ){
     LazyColumn(
-        modifier = modifier.fillMaxSize().background(Color.White),
+        modifier = modifier.background(Color.White),
     ) {
         items(cases) { caseItem ->
             RecordCaseItem(

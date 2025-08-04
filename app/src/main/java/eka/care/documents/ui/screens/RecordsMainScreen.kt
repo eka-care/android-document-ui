@@ -19,8 +19,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -33,8 +33,8 @@ import eka.care.documents.ui.components.RecordSortSection
 import eka.care.documents.ui.components.RecordTabs
 import eka.care.documents.ui.components.RecordsScreenContent
 import eka.care.documents.ui.components.RecordsSearchBar
-import eka.care.documents.ui.components.recordcaseview.CaseView
 import eka.care.documents.ui.components.bottomSheet.RecordsBottomSheetContent
+import eka.care.documents.ui.components.recordcaseview.CaseView
 import eka.care.documents.ui.model.TabItem
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.utility.DocumentBottomSheetType
@@ -188,13 +188,12 @@ private fun ScreenContent(
                     )
                 },
                 onClick = {
-                    if (selectedTabId == TabConstants.ALL_FILES){
+                    if (selectedTabId == TabConstants.ALL_FILES) {
                         viewModel.documentBottomSheetType = DocumentBottomSheetType.DocumentUpload
-                    }else{
-                        viewModel.documentBottomSheetType = DocumentBottomSheetType.CaseUpload
+                        openSheet.invoke()
+                    } else {
+                        navigateToCreateCase.invoke()
                     }
-                    openSheet.invoke()
-//                    navigateToCreateCase.invoke()
                 }
             )
         },
@@ -220,7 +219,7 @@ private fun ScreenContent(
                     ),
                     onTabClick = { tabId ->
                         selectedTabId = tabId
-                        when(tabId) {
+                        when (tabId) {
                             TabConstants.ALL_FILES -> {}
                             TabConstants.MEDICAL_CASES -> {}
                         }
@@ -229,7 +228,7 @@ private fun ScreenContent(
 
                 RecordSortSection(viewModel = viewModel, openSheet = openSheet)
 
-                when(selectedTabId) {
+                when (selectedTabId) {
                     TabConstants.ALL_FILES -> {
                         RecordsScreenContent(
                             params = params,
