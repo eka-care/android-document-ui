@@ -33,7 +33,6 @@ import eka.care.documents.ui.components.RecordsSearchBar
 import eka.care.documents.ui.components.bottomSheet.RecordsBottomSheetContent
 import eka.care.documents.ui.model.TabItem
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
-import eka.care.documents.ui.utility.DocumentBottomSheetType
 import eka.care.documents.ui.utility.Mode
 import eka.care.documents.ui.utility.RecordsAction
 import eka.care.documents.ui.viewmodel.RecordsViewModel
@@ -44,7 +43,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun RecordsMainScreen(
     viewModel: RecordsViewModel,
-    params: MedicalRecordsNavModel
+    params: MedicalRecordsNavModel,
+    navigateToCreateCase: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(Hidden)
     val scope = rememberCoroutineScope()
@@ -141,6 +141,7 @@ fun RecordsMainScreen(
                 viewModel = viewModel,
                 params = params,
                 filterIdsToProcess = filterIdsToProcess,
+                navigateToCreateCase = navigateToCreateCase,
                 openSheet = {
                     openSheet.invoke()
                 }
@@ -154,6 +155,7 @@ private fun ScreenContent(
     viewModel: RecordsViewModel,
     params: MedicalRecordsNavModel,
     filterIdsToProcess: List<String>,
+    navigateToCreateCase: () -> Unit,
     openSheet: () -> Unit
 ) {
     val selectedItems = remember { mutableStateListOf<RecordModel>() }
@@ -180,8 +182,9 @@ private fun ScreenContent(
                     )
                 },
                 onClick = {
-                    viewModel.documentBottomSheetType = DocumentBottomSheetType.DocumentUpload
-                    openSheet.invoke()
+//                    viewModel.documentBottomSheetType = DocumentBottomSheetType.DocumentUpload
+//                    openSheet.invoke()
+                    navigateToCreateCase.invoke()
                 }
             )
         },
