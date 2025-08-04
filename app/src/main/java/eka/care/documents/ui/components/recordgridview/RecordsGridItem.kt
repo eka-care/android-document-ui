@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -62,13 +63,7 @@ fun RecordsGridItem(
     onMoreOptionsClick: () -> Unit,
 ) {
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = if (isSelected && mode == Mode.SELECTION) {
-                EkaTheme.colors.surface
-            } else {
-                EkaTheme.colors.onBackground
-            }
-        ),
+        colors = CardDefaults.cardColors(EkaTheme.colors.surface),
         onClick = if (record.status == RecordStatus.SYNC_FAILED) onRetry else onClick
     ) {
         Column(
@@ -130,7 +125,7 @@ fun RecordsGridItem(
                     )
                 } else {
                     IconButton(
-                        modifier = Modifier.size(48.dp),
+                        modifier = Modifier.size(24.dp),
                         onClick = {
                             onMoreOptionsClick
                         },
@@ -182,9 +177,9 @@ fun RecordsGridItem(
                         .height(80.dp)
                         .background(
                             if (record.status != RecordStatus.NONE && record.status != RecordStatus.SYNC_SUCCESS) {
-                                EkaTheme.colors.onPrimary.copy(alpha = 0.7f)
+                                Color.Black.copy(alpha = 0.7f)
                             } else {
-                                EkaTheme.colors.onPrimary.copy(alpha = 0.2f)
+                                Color.Black.copy(alpha = 0.2f)
                             },
                             RoundedCornerShape(12.dp)
                         )
