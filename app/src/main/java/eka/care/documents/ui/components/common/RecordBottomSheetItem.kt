@@ -61,13 +61,15 @@ fun RecordBottomSheetItem(
                     RecommendedChip(text = "Recommended")
                 }
                 Icon(
-                    painter = painterResource(item.trailingIcon.hashCode()),
+                    imageVector = item.trailingIcon,
                     modifier = Modifier.size(16.dp),
                     contentDescription = "action"
                 )
             }
         },
-        colors = ListItemDefaults.colors()
+        colors = ListItemDefaults.colors(
+            containerColor = Color.Transparent
+        )
     )
 }
 

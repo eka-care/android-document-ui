@@ -16,17 +16,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import eka.care.documents.ui.R
+import eka.care.documents.ui.utility.DocumentBottomSheetType
+import eka.care.documents.ui.utility.DocumentViewType
+import eka.care.documents.ui.viewmodel.RecordsViewModel
 
 @Composable
-fun RecordSortSection(
-    sortBy: String,
-    openSortBySheet: () -> Unit,
-    onViewModeToggle: () -> Unit,
-    isGridView: Boolean,
-    modifier: Modifier = Modifier
-) {
+fun RecordSortSection(viewModel: RecordsViewModel, openSheet: () -> Unit) {
+    val sortBy = viewModel.sortBy.value
+    val documentViewType = viewModel.documentViewType
+    val handleSort = {
+        viewModel.documentBottomSheetType = DocumentBottomSheetType.DocumentSort
+        openSheet.invoke()
+    }
     Surface(
-        modifier = modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         color = Color.White
     ) {
         Row(
@@ -37,16 +40,20 @@ fun RecordSortSection(
             verticalAlignment = Alignment.CenterVertically
         ) {
             RecordFilterChip(
-                filteredText = sortBy,
-                openSortBySheet = openSortBySheet
+                filteredText = sortBy.value,
+                openSortBySheet = handleSort
             )
 
-            IconButton(onClick = onViewModeToggle) {
+            IconButton(onClick = { viewModel.toggleDocumentViewType() }) {
                 Icon(
-                    modifier = Modifier.size(24.dp).padding(4.dp),
-                    painter = if (isGridView) painterResource(id = R.drawable.ic_list_regular) else painterResource(
-                        id = R.drawable.ic_grid_2_sharp_regular
-                    ),
+                    modifier = Modifier
+                        .size(24.dp)
+                        .padding(4.dp),
+                    painter = if (documentViewType == DocumentViewType.GridView) {
+                        painterResource(R.drawable.ic_list_regular)
+                    } else {
+                        painterResource(R.drawable.ic_grid_2_sharp_regular)
+                    },
                     contentDescription = "Multi View",
                     tint = MaterialTheme.colorScheme.onSurface
                 )

@@ -28,6 +28,7 @@ fun RecordsScreenContent(
     onSelectedItemsChange: (List<RecordModel>) -> Unit,
     openSmartReport: (data: RecordModel) -> Unit,
     openRecordViewer: (data: RecordModel) -> Unit,
+    openSheet: () -> Unit,
     onRefresh: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -92,6 +93,7 @@ fun RecordsScreenContent(
                 onMoreOptionsClick = { record ->
                     viewModel.documentBottomSheetType = DocumentBottomSheetType.DocumentOptions
                     viewModel.cardClickData.value = record
+                    openSheet()
                 }
             )
 
@@ -102,6 +104,7 @@ fun RecordsScreenContent(
                 onMoreOptionsClick = { record ->
                     viewModel.documentBottomSheetType = DocumentBottomSheetType.DocumentOptions
                     viewModel.cardClickData.value = record
+                    openSheet()
                 }
             )
         }

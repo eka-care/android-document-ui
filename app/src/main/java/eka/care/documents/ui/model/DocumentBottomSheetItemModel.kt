@@ -9,7 +9,7 @@ data class DocumentBottomSheetItemModel(
     val itemName: String,
     val itemNameColor: Color = Color.Unspecified,
     val isRecommended: Boolean = false,
-//    val itemType: CTA,
+    val action: String,
     val leadingIcon: Int,
     val trailingIcon: ImageVector,
     val leadingIconTint: Color = Color.Unspecified

@@ -125,12 +125,12 @@ fun RecordsGridItem(
                     )
                 } else {
                     IconButton(
-                        modifier = Modifier.size(24.dp),
                         onClick = {
-                            onMoreOptionsClick
+                            onMoreOptionsClick.invoke()
                         },
                         content = {
                             Icon(
+                                modifier = Modifier.size(24.dp).padding(4.dp),
                                 painter = painterResource(id =R.drawable.ic_ellipsis_vertical_regular),
                                 contentDescription = "More",
                                 tint = EkaTheme.colors.onSurface

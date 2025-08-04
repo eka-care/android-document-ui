@@ -7,43 +7,44 @@ import eka.care.documents.ui.R
 import eka.care.documents.ui.components.common.BottomSheetContentLayout
 import eka.care.documents.ui.components.common.RecordBottomSheetItem
 import eka.care.documents.ui.model.DocumentBottomSheetItemModel
+import eka.care.documents.ui.utility.RecordsAction
 
 val uploadOptionsItems = arrayOf(
     DocumentBottomSheetItemModel(
         itemName = "Take a photo",
-//        itemType = CTA(action = RecordsAction.ACTION_TAKE_PHOTO),
+        action = RecordsAction.ACTION_TAKE_PHOTO,
         leadingIcon = R.drawable.ic_camera_solid,
         trailingIcon = Icons.Default.KeyboardArrowRight
     ),
     DocumentBottomSheetItemModel(
         itemName = "Scan a document",
-//        itemType = CTA(action = RecordsAction.ACTION_SCAN_A_DOCUMENT),
+        action = RecordsAction.ACTION_SCAN_A_DOCUMENT,
         leadingIcon = R.drawable.ic_camera_viewfinder_regular,
         trailingIcon = Icons.Default.KeyboardArrowRight
     ),
     DocumentBottomSheetItemModel(
         itemName = "Choose from gallery",
-//        itemType = CTA(action = RecordsAction.ACTION_CHOOSE_FROM_GALLERY),
+        action = RecordsAction.ACTION_CHOOSE_FROM_GALLERY,
         leadingIcon = R.drawable.ic_image_regular,
         trailingIcon = Icons.Default.KeyboardArrowRight
     ),
     DocumentBottomSheetItemModel(
         itemName = "Upload a PDF",
-//        itemType = CTA(action = RecordsAction.ACTION_UPLOAD_PDF),
+        action = RecordsAction.ACTION_UPLOAD_PDF,
         leadingIcon = R.drawable.ic_file_pdf_solid,
         trailingIcon = Icons.Default.KeyboardArrowRight
     )
 )
 
 @Composable
-fun RecordUploadBottomSheet(/*onClick: (CTA?) -> Unit*/) {
+fun RecordUploadBottomSheet(onClick: (String) -> Unit) {
     BottomSheetContentLayout(
-        height = 0.125f * uploadOptionsItems.size,
+        height = 0.1f * uploadOptionsItems.size,
         title = "Add medical records",
     ) {
         uploadOptionsItems.map { item ->
             RecordBottomSheetItem(item) {
-//                onClick(item.itemType)
+                onClick(item.action)
             }
         }
     }
