@@ -10,6 +10,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import com.eka.ui.theme.EkaTheme
 import eka.care.documents.ui.components.RecordSortSection
 import eka.care.documents.ui.components.RecordTabs
@@ -27,6 +28,7 @@ fun RecordsMainScreen(
     params: MedicalRecordsNavModel
 ) {
     val selectedItems = remember { mutableStateListOf<RecordModel>() }
+    val context = LocalContext.current
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -71,11 +73,22 @@ fun RecordsMainScreen(
                     openSmartReport = {},
                     openRecordViewer = {},
                     onRefresh = {
-//                            syncRecords(
-//                                filterIds = filterIdsToProcess,
-//                                ownerId = navData.ownerId,
-//                                context = context
-//                            )
+                        val filterIdsToProcess = mutableListOf<String>().apply {
+                            if (params.filterId?.isNotEmpty() == true) {
+                                add(params.filterId)
+                            }
+                            if (!params.links.isNullOrBlank()) {
+                                params.links.split(",")
+                                    .map { it.trim() }
+                                    .filter { it.isNotEmpty() && it != params.filterId }
+                                    .forEach { add(it) }
+                            }
+                        }
+                        syncRecords(
+                            filterIds = filterIdsToProcess,
+                            ownerId = params.ownerId,
+                            context = context
+                        )
                     }
                 )
             }

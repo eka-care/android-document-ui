@@ -47,7 +47,7 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
         documentType.value = type
     }
 
-    val isRefreshing = mutableStateOf(false)
+    var isRefreshing = mutableStateOf(false)
 
     var documentBottomSheetType by mutableStateOf<DocumentBottomSheetType?>(null)
 
@@ -99,6 +99,7 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
         job?.cancel()
         _getRecordsState.value = RecordsState.Loading
         job = viewModelScope.launch {
+            isRefreshing.value = true
             val documentFlow = recordsManager.getRecords(
                 filterIds = filterIds,
                 ownerId = ownerId,
@@ -111,6 +112,7 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
                     _getRecordsState.value = if (records.isEmpty()) {
                         RecordsState.EmptyState
                     } else {
+                        isRefreshing.value = false
                         RecordsState.Success(data = records)
                     }
                 }
