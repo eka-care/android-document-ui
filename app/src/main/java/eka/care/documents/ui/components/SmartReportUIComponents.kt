@@ -156,7 +156,7 @@ fun SmartReportFilter(smartReport: SmartReport?, viewModel: RecordPreviewViewMod
             }
             RecordFilterChip(
                 filteredText = listOfFilter[index],
-                onSortByChange = { viewModel.updateFilter(filter, smartReport) }
+                openSortBySheet = { viewModel.updateFilter(filter, smartReport) }
             )
         }
     }

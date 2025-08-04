@@ -22,10 +22,10 @@ import com.eka.ui.theme.EkaTheme
 fun RecordFilterChip(
     modifier: Modifier = Modifier,
     filteredText: String = "Upload date",
-    onSortByChange: (String) -> Unit = {}
+    openSortBySheet: () -> Unit = {}
 ) {
     AssistChip(
-        onClick = { onSortByChange(filteredText) },
+        onClick = openSortBySheet,
         label = {
             Text(
             text = buildAnnotatedString {

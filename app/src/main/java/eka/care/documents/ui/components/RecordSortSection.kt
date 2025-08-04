@@ -20,7 +20,7 @@ import eka.care.documents.ui.R
 @Composable
 fun RecordSortSection(
     sortBy: String,
-    onSortByChange: (String) -> Unit,
+    openSortBySheet: () -> Unit,
     onViewModeToggle: () -> Unit,
     isGridView: Boolean,
     modifier: Modifier = Modifier
@@ -38,7 +38,7 @@ fun RecordSortSection(
         ) {
             RecordFilterChip(
                 filteredText = sortBy,
-                onSortByChange = onSortByChange
+                openSortBySheet = openSortBySheet
             )
 
             IconButton(onClick = onViewModeToggle) {
