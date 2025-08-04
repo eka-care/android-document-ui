@@ -21,7 +21,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eka.ui.theme.EkaTheme
@@ -77,22 +76,12 @@ private fun CasesSearchBar() {
                         )
                     }
                 },
-                trailingIcon = {
-                    IconButton(onClick = { expanded = false }) {
-                        Icon(
-                            modifier = Modifier
-                                .size(24.dp)
-                                .padding(2.dp),
-                            painter = painterResource(R.drawable.rounded_filter_alt_24),
-                            contentDescription = "Multi View",
-                            tint = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-                },
                 expanded = expanded,
                 onExpandedChange = { expanded = it },
                 placeholder = {
-                    Text("Search in medical cases")
+                    Text(
+                        text = "Search or add your medical cases..."
+                    )
                 }
             )
         },
