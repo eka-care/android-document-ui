@@ -15,14 +15,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Warning
@@ -49,7 +47,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -57,6 +54,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.eka.ui.buttons.EkaButton
+import com.eka.ui.buttons.EkaButtonShape
 import com.eka.ui.theme.EkaTheme
 import eka.care.documents.ui.R
 import eka.care.documents.ui.utility.CaseType
@@ -80,83 +79,48 @@ fun CreateCaseSheetContent(
             .background(Color.White)
             .padding(16.dp)
     ) {
-        CreateCaseHeader(onDismiss = onDismiss)
-        Spacer(modifier = Modifier.height(16.dp))
         CreateCaseInfoBanner()
-        Spacer(modifier = Modifier.height(32.dp))
 
-        CreateCaseNameField(
-            caseName = caseName,
-            onCaseNameChange = { caseName = it }
-        )
+        Column(
+            modifier = Modifier.padding(vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
+        ) {
+            CreateCaseNameField(
+                caseName = caseName,
+                onCaseNameChange = { caseName = it }
+            )
 
-        Spacer(modifier = Modifier.height(24.dp))
+            CreateCaseTypeDropdown(
+                selectedCaseType = selectedCaseType?.displayName ?: "",
+                onTypeSelected = { it }
+            )
+            CreateCaseDateField(
+                selectedDate = selectedDate,
+                onDateClick = { showDatePicker = true }
+            )
+        }
 
-        // Case Type Dropdown - Updated to use enum
-        CreateCaseTypeDropdown(
-            selectedCaseType = selectedCaseType?.displayName ?: "", // Convert enum to string
-            onTypeSelected = {it}
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Date Field
-        CreateCaseDateField(
-            selectedDate = selectedDate,
-            onDateClick = { showDatePicker = true }
-        )
-
-        Spacer(modifier = Modifier.height(40.dp))
-
-        // Create Button
-        CreateCaseButton(
+        EkaButton(
+            modifier = Modifier.fillMaxWidth(),
+            label = "Create",
+            shape = EkaButtonShape.SQUARE,
             enabled = caseName.isNotBlank() && selectedCaseType != null,
             onClick = {
                 selectedCaseType?.let { caseType ->
                     onCreateCase(caseName, caseType.displayName, selectedDate)
                 }
                 onDismiss()
-            }
+            },
         )
         Spacer(modifier = Modifier.height(32.dp))
     }
 
-    // Date Picker Dialog
     if (showDatePicker) {
         CreateCaseDatePicker(
             currentDate = selectedDate,
             onDateSelected = { selectedDate = it },
             onDismiss = { showDatePicker = false }
         )
-    }
-}
-
-@Composable
-private fun CreateCaseHeader(
-    onDismiss: () -> Unit
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        IconButton(
-            onClick = onDismiss,
-            modifier = Modifier.size(24.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Close,
-                contentDescription = "Close",
-                tint = EkaTheme.colors.onSurface,
-            )
-        }
-
-        Text(
-            text = "Select or Create your Case",
-            style = EkaTheme.typography.titleLarge
-        )
-
-        Spacer(modifier = Modifier.width(24.dp))
     }
 }
 
@@ -221,35 +185,35 @@ private fun CreateCaseTypeDropdown(
     var searchText by remember { mutableStateOf("") }
     var showSearchableDropdown by remember { mutableStateOf(false) }
 
-        OutlinedTextField(
-            value = selectedCaseType,
-            onValueChange = { },
-            readOnly = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { showSearchableDropdown = true },
-            placeholder = {
-                Text(
-                    text = "Select Type",
-                    color = Color.Gray.copy(alpha = 0.7f)
-                )
-            },
-            trailingIcon = {
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowDown,
-                    contentDescription = "Dropdown",
-                    tint = Color.Gray,
-                    modifier = Modifier.size(24.dp)
-                )
-            },
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xFF6750A4),
-                unfocusedBorderColor = Color.Gray.copy(alpha = 0.3f),
-                focusedTextColor = Color.Black,
-                unfocusedTextColor = Color.Black
-            ),
-            shape = RoundedCornerShape(8.dp)
-        )
+    OutlinedTextField(
+        value = selectedCaseType,
+        onValueChange = { },
+        readOnly = true,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { showSearchableDropdown = true },
+        placeholder = {
+            Text(
+                text = "Select Type",
+                color = Color.Gray.copy(alpha = 0.7f)
+            )
+        },
+        trailingIcon = {
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowDown,
+                contentDescription = "Dropdown",
+                tint = Color.Gray,
+                modifier = Modifier.size(24.dp)
+            )
+        },
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = Color(0xFF6750A4),
+            unfocusedBorderColor = Color.Gray.copy(alpha = 0.3f),
+            focusedTextColor = Color.Black,
+            unfocusedTextColor = Color.Black
+        ),
+        shape = RoundedCornerShape(8.dp)
+    )
 
 
     if (showSearchableDropdown) {
@@ -475,33 +439,33 @@ private fun CreateCaseDateField(
 ) {
 
 
-        OutlinedTextField(
-            value = selectedDate,
-            onValueChange = { },
-            readOnly = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onDateClick() },
-            trailingIcon = {
-                Icon(
-                    imageVector = Icons.Default.DateRange,
-                    contentDescription = "Calendar",
-                    tint = Color.Gray,
-                    modifier = Modifier.size(24.dp)
-                )
-            },
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xFF6750A4),
-                unfocusedBorderColor = Color.Gray.copy(alpha = 0.3f),
-                focusedTextColor = Color.Black,
-                unfocusedTextColor = Color.Black
-            ),
-            shape = RoundedCornerShape(8.dp),
-            textStyle = TextStyle(
-                fontSize = 16.sp,
-                color = Color.Black
+    OutlinedTextField(
+        value = selectedDate,
+        onValueChange = { },
+        readOnly = true,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onDateClick() },
+        trailingIcon = {
+            Icon(
+                imageVector = Icons.Default.DateRange,
+                contentDescription = "Calendar",
+                tint = Color.Gray,
+                modifier = Modifier.size(24.dp)
             )
+        },
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = Color(0xFF6750A4),
+            unfocusedBorderColor = Color.Gray.copy(alpha = 0.3f),
+            focusedTextColor = Color.Black,
+            unfocusedTextColor = Color.Black
+        ),
+        shape = RoundedCornerShape(8.dp),
+        textStyle = TextStyle(
+            fontSize = 16.sp,
+            color = Color.Black
         )
+    )
 
 }
 

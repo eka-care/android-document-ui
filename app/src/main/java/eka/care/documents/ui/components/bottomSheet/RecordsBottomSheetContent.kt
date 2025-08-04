@@ -123,6 +123,12 @@ fun RecordsBottomSheetContent(
                 )
             }
 
+            DocumentBottomSheetType.CaseUpload -> {
+                UploadCaseBottomSheet(
+
+                )
+            }
+
             null -> {}
         }
     }

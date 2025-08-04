@@ -47,6 +47,10 @@ fun RecordsScreenContent(
         viewModel.documentBottomSheetType = DocumentBottomSheetType.DocumentUpload
     }
 
+    val handleCaseUploadClick: () -> Unit = {
+        viewModel.documentBottomSheetType = DocumentBottomSheetType.CaseUpload
+    }
+
     val filterIdsToProcess = mutableListOf<String>().apply {
         if (params.filterId?.isNotEmpty() == true) {
             add(params.filterId)

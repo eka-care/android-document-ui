@@ -37,6 +37,7 @@ import eka.care.documents.ui.components.recordcaseview.CaseView
 import eka.care.documents.ui.components.bottomSheet.RecordsBottomSheetContent
 import eka.care.documents.ui.model.TabItem
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
+import eka.care.documents.ui.utility.DocumentBottomSheetType
 import eka.care.documents.ui.utility.Mode
 import eka.care.documents.ui.utility.RecordsAction
 import eka.care.documents.ui.viewmodel.RecordsViewModel
@@ -177,7 +178,7 @@ private fun ScreenContent(
             EkaFloatingActionButton(
                 fabType = FabType.NORMAL,
                 fabColor = FabColor.PRIMARY_CONTAINER,
-                actionText = "Add Record",
+                actionText = if (selectedTabId == TabConstants.ALL_FILES) "Add Record" else "Add Case",
                 icon = {
                     Icon(
                         modifier = Modifier.size(24.dp),
@@ -187,7 +188,11 @@ private fun ScreenContent(
                     )
                 },
                 onClick = {
-//                    viewModel.documentBottomSheetType = DocumentBottomSheetType.DocumentUpload
+//                    if (selectedTabId == TabConstants.ALL_FILES){
+//                        viewModel.documentBottomSheetType = DocumentBottomSheetType.DocumentUpload
+//                    }else{
+//                        viewModel.documentBottomSheetType = DocumentBottomSheetType.CaseUpload
+//                    }
 //                    openSheet.invoke()
                     navigateToCreateCase.invoke()
                 }
