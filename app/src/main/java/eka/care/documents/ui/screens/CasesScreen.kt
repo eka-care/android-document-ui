@@ -41,11 +41,12 @@ import eka.care.documents.ui.R
 import eka.care.documents.ui.components.bottomSheet.UploadCaseBottomSheet
 import eka.care.documents.ui.components.recordcaseview.CaseView
 import eka.care.documents.ui.model.RecordCase
+import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.viewmodel.RecordsViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun CasesScreen(viewModel: RecordsViewModel) {
+fun CasesScreen(viewModel: RecordsViewModel, params: MedicalRecordsNavModel) {
     val sheetState = rememberModalBottomSheetState(Hidden)
     val scope = rememberCoroutineScope()
     var caseName by rememberSaveable { mutableStateOf("") }
@@ -60,6 +61,7 @@ fun CasesScreen(viewModel: RecordsViewModel) {
         sheetState = sheetState,
         sheetContent = {
             UploadCaseBottomSheet(
+                params = params,
                 caseNane = caseName,
                 viewModel = viewModel
             )
