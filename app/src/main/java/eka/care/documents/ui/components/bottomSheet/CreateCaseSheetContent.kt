@@ -52,7 +52,6 @@ fun CreateCaseSheetContent(
             CreateCaseNameField(
                 caseName = caseName
             )
-            Spacer(modifier = Modifier.height(16.dp))
             CaseTypeGrid(
                 selectedCaseType = selectedCaseType,
                 onCaseTypeSelected = { selectedCaseType = it }
