@@ -10,6 +10,7 @@ fun UploadCaseBottomSheet(
 ) {
     BottomSheetContentLayout(
         modifier = Modifier.wrapContentHeight(),
+        height = 0.7f,
         title = "Select or Create your Case"
     ) {
         CreateCaseSheetContent(
