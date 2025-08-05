@@ -441,7 +441,8 @@ private fun ScreenContent(
 
                     TabConstants.MEDICAL_CASES -> {
                         CaseView(
-                            cases = emptyList(),
+                            viewModel = viewModel,
+                            params = params,
                             onCaseItemClick = { caseItem ->
 
                             }

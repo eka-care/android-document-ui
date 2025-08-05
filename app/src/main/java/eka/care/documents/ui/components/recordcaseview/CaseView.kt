@@ -4,44 +4,46 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
-import com.eka.ui.theme.EkaTheme
-import eka.care.documents.ui.R
-import eka.care.documents.ui.model.RecordCase
+import eka.care.documents.ui.navigation.MedicalRecordsNavModel
+import eka.care.documents.ui.state.CasesState
+import eka.care.documents.ui.viewmodel.RecordsViewModel
+import eka.care.records.client.model.CaseModel
 
 @Composable
 fun CaseView(
     modifier: Modifier = Modifier,
-    cases: List<RecordCase> = emptyList(),
-    onCaseItemClick: (RecordCase) -> Unit = {}
+    viewModel: RecordsViewModel,
+    params: MedicalRecordsNavModel,
+    onCaseItemClick: (CaseModel) -> Unit = {}
 ){
-    LazyColumn(
-        modifier = modifier.background(Color.White),
-    ) {
-        items(cases) { caseItem ->
-            RecordCaseItem(
-                record = caseItem,
-                onClick = { onCaseItemClick(caseItem) }
-            )
-        }
+    LaunchedEffect(Unit) {
+        viewModel.getCases(
+            ownerId = params.ownerId,
+            filterId = params.filterId
+        )
     }
-}
 
-
-private val sampleCases = listOf(
-    RecordCase("Dr. Raghu Gupta", 72, "25 Fri", R.drawable.ic_user_doctor),
-    RecordCase("Apollo Hospital", 102, "21 Fri", R.drawable.ic_bed),
-    RecordCase("Health Check-up", 5, "20 Wed", R.drawable.ic_stethoscope),
-    RecordCase("Home Visit", 3, "18 Mon", R.drawable.ic_house),
-    RecordCase("Emergency", 1, "15 Fri", R.drawable.ic_ambulance)
-)
-
-@Preview(showBackground = true, name = "With Custom Data")
-@Composable
-fun CaseViewWithDataPreview() {
-    EkaTheme {
-        CaseView(cases = sampleCases)
+    val state by viewModel.getCasesState.collectAsState()
+    when(state) {
+        is CasesState.Loading -> {}
+        is CasesState.EmptyState -> {}
+        is CasesState.Error -> {}
+        is CasesState.Success -> {
+            LazyColumn(
+                modifier = modifier.background(Color.White),
+            ) {
+                items((state as CasesState.Success).data) { caseItem ->
+                    RecordCaseItem(
+                        record = caseItem,
+                        onClick = { onCaseItemClick(caseItem) }
+                    )
+                }
+            }
+        }
     }
 }

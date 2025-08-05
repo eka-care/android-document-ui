@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import eka.care.documents.ui.state.CasesState
 import eka.care.documents.ui.state.RecordsCountByType
 import eka.care.documents.ui.state.RecordsState
 import eka.care.documents.ui.state.UpsertRecordState
@@ -30,10 +31,14 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
 
     private var job: Job? = null
     private var recordsCountJob: Job? = null
+    private var caseJob: Job? = null
     val cardClickData = mutableStateOf<RecordModel?>(null)
 
     private val _getRecordsState = MutableStateFlow<RecordsState>(RecordsState.Loading)
     val getRecordsState: StateFlow<RecordsState> = _getRecordsState
+
+    private val _getCasesState = MutableStateFlow<CasesState>(CasesState.Loading)
+    val getCasesState: StateFlow<CasesState> = _getCasesState
 
     private val _upsertRecordsState = MutableStateFlow<UpsertRecordState>(UpsertRecordState.NONE)
     val upsertRecordsState: StateFlow<UpsertRecordState> = _upsertRecordsState
@@ -185,6 +190,27 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
                 ownerId = ownerId,
                 filterId = filterId,
             )
+        }
+    }
+
+    fun getCases(
+        ownerId: String,
+        filterId: String?
+    ) {
+        caseJob?.cancel()
+        _getRecordsState.value = RecordsState.Loading
+        caseJob = viewModelScope.launch {
+            recordsManager.readCases(
+                ownerId = ownerId,
+                filterIds = filterId?.let { listOf(it) })
+                .cancellable()
+                .collect { cases ->
+                    _getCasesState.value = if (cases.isEmpty()) {
+                        CasesState.EmptyState
+                    } else {
+                        CasesState.Success(data = cases)
+                    }
+                }
         }
     }
 }

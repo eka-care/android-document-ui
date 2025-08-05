@@ -87,7 +87,8 @@ fun CasesScreen(viewModel: RecordsViewModel, params: MedicalRecordsNavModel) {
                 content = { paddingValues ->
                     CaseView(
                         modifier = Modifier.padding(paddingValues),
-                        cases = sampleCases
+                        viewModel = viewModel,
+                        params = params
                     )
                 }
             )
@@ -147,9 +148,6 @@ private fun CasesSearchBar(onAddNewCase: (caseName: String) -> Unit) {
 private fun CasesSearchScreenContent(searchQuery: String, onAddNewCase: (caseName: String) -> Unit) {
     if (searchQuery.isNotEmpty()) {
         Column {
-            CaseView(
-                cases = sampleCases
-            )
             ListItem(
                 modifier = Modifier
                     .fillMaxWidth()

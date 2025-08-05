@@ -1,6 +1,7 @@
 package eka.care.documents.ui.state
 
 import androidx.annotation.Keep
+import eka.care.records.client.model.CaseModel
 import eka.care.records.client.model.DocumentTypeCount
 import eka.care.records.client.model.RecordModel
 
@@ -23,4 +24,11 @@ sealed class UpsertRecordState {
     data object Loading : UpsertRecordState()
     data class Error(val error: String?) : UpsertRecordState()
     data class Success(val recordId: String) : UpsertRecordState()
+}
+
+sealed class CasesState {
+    data object Loading : CasesState()
+    data class Error(val error: String?) : CasesState()
+    data class Success(val data: List<CaseModel>) : CasesState()
+    data object EmptyState : CasesState()
 }
