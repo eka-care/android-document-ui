@@ -236,7 +236,7 @@ fun formatLocalDateToCustomFormat(date: Date): String? {
 }
 
 enum class DocumentBottomSheetType {
-    DocumentUpload, DocumentOptions, DocumentSort, EnterFileDetails, CaseUpload
+    DocumentUpload, DocumentOptions, DocumentSort, EnterFileDetails
 }
 
 enum class CaseType(

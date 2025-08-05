@@ -171,4 +171,20 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
             recordsManager.deleteRecords(ids = listOf(localId))
         }
     }
+
+    fun createCase(
+        ownerId: String,
+        filterId: String?,
+        name: String,
+        type: String
+    ) {
+        viewModelScope.launch {
+            recordsManager.createCase(
+                name = name,
+                type = type,
+                ownerId = ownerId,
+                filterId = filterId,
+            )
+        }
+    }
 }

@@ -4,10 +4,10 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import eka.care.documents.ui.components.common.BottomSheetContentLayout
+import eka.care.documents.ui.viewmodel.RecordsViewModel
 
 @Composable
-fun UploadCaseBottomSheet(
-) {
+fun UploadCaseBottomSheet(viewModel: RecordsViewModel, caseNane: String) {
     BottomSheetContentLayout(
         modifier = Modifier.wrapContentHeight(),
         height = 0.7f,
@@ -15,7 +15,10 @@ fun UploadCaseBottomSheet(
     ) {
         CreateCaseSheetContent(
             onDismiss = { },
-            onCreateCase = { caseName, caseType -> }
+            onCreateCase = { caseName, caseType ->
+//                viewModel.createCase(caseName, caseType)
+            },
+            caseName = caseNane
         )
     }
 }

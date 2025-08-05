@@ -41,7 +41,6 @@ import eka.care.documents.ui.R
 import eka.care.documents.ui.components.bottomSheet.UploadCaseBottomSheet
 import eka.care.documents.ui.components.recordcaseview.CaseView
 import eka.care.documents.ui.model.RecordCase
-import eka.care.documents.ui.utility.DocumentBottomSheetType
 import eka.care.documents.ui.viewmodel.RecordsViewModel
 import kotlinx.coroutines.launch
 
@@ -49,6 +48,7 @@ import kotlinx.coroutines.launch
 fun CasesScreen(viewModel: RecordsViewModel) {
     val sheetState = rememberModalBottomSheetState(Hidden)
     val scope = rememberCoroutineScope()
+    var caseName by rememberSaveable { mutableStateOf("") }
 
     val openSheet = {
         scope.launch {
@@ -59,7 +59,10 @@ fun CasesScreen(viewModel: RecordsViewModel) {
     ModalBottomSheetLayout(
         sheetState = sheetState,
         sheetContent = {
-            UploadCaseBottomSheet()
+            UploadCaseBottomSheet(
+                caseNane = caseName,
+                viewModel = viewModel
+            )
         },
         content = {
             Scaffold(
@@ -68,6 +71,7 @@ fun CasesScreen(viewModel: RecordsViewModel) {
                     .background(EkaTheme.colors.surface),
                 topBar = {
                     CasesSearchBar(onAddNewCase = {
+                        caseName = it
                         openSheet.invoke()
                     })
                 },
@@ -84,7 +88,7 @@ fun CasesScreen(viewModel: RecordsViewModel) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CasesSearchBar(onAddNewCase: () -> Unit) {
+private fun CasesSearchBar(onAddNewCase: (caseName: String) -> Unit) {
     var expanded by rememberSaveable { mutableStateOf(true) }
     var searchQuery by rememberSaveable { mutableStateOf("") }
     SearchBar(
@@ -131,7 +135,7 @@ private fun CasesSearchBar(onAddNewCase: () -> Unit) {
 }
 
 @Composable
-private fun CasesSearchScreenContent(searchQuery: String, onAddNewCase: () -> Unit) {
+private fun CasesSearchScreenContent(searchQuery: String, onAddNewCase: (caseName: String) -> Unit) {
     if (searchQuery.isNotEmpty()) {
         Column {
             CaseView(
@@ -141,7 +145,7 @@ private fun CasesSearchScreenContent(searchQuery: String, onAddNewCase: () -> Un
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                        onAddNewCase.invoke()
+                        onAddNewCase.invoke(searchQuery)
                     },
                 headlineContent = {
                     Text(

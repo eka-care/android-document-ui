@@ -419,7 +419,6 @@ private fun ScreenContent(
                 when (selectedTabId) {
                     TabConstants.ALL_FILES -> {
                         RecordsScreenContent(
-                            params = params,
                             viewModel = viewModel,
                             mode = Mode.VIEW,
                             selectedItems = selectedItems,

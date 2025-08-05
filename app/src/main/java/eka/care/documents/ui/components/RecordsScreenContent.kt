@@ -9,7 +9,6 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.platform.LocalContext
 import eka.care.documents.ui.components.recordListView.RecordsListView
 import eka.care.documents.ui.components.recordgridview.RecordsGridView
-import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.utility.DocumentBottomSheetType
 import eka.care.documents.ui.utility.DocumentViewType
 import eka.care.documents.ui.utility.Mode
@@ -20,7 +19,6 @@ import eka.care.records.client.model.RecordModel
 @OptIn(ExperimentalMaterial3Api::class)
 fun RecordsScreenContent(
     viewModel: RecordsViewModel,
-    params: MedicalRecordsNavModel,
     mode: Mode,
     selectedItems: SnapshotStateList<RecordModel>,
     onSelectedItemsChange: (List<RecordModel>) -> Unit,
@@ -43,22 +41,6 @@ fun RecordsScreenContent(
 
     val handleRecordUploadClick: () -> Unit = {
         viewModel.documentBottomSheetType = DocumentBottomSheetType.DocumentUpload
-    }
-
-    val handleCaseUploadClick: () -> Unit = {
-        viewModel.documentBottomSheetType = DocumentBottomSheetType.CaseUpload
-    }
-
-    val filterIdsToProcess = mutableListOf<String>().apply {
-        if (params.filterId?.isNotEmpty() == true) {
-            add(params.filterId)
-        }
-        if (!params.links.isNullOrBlank()) {
-            params.links.split(",")
-                .map { it.trim() }
-                .filter { it.isNotEmpty() && it != params.filterId }
-                .forEach { add(it) }
-        }
     }
 
     PullToRefreshBox(
