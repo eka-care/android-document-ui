@@ -53,7 +53,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    implementation(libs.eka.health.records)
+    api(libs.eka.health.records)
     implementation(libs.eka.ui.kit)
     implementation(libs.compose.shimmer)
     implementation(libs.coil.compose)
