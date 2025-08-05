@@ -32,7 +32,7 @@ import eka.care.documents.ui.utility.CaseType
 @Composable
 fun CreateCaseSheetContent(
     onDismiss: () -> Unit = {},
-    onCreateCase: (String, String) -> Unit = { _, _ -> },
+    onCreateCase: (String, CaseType) -> Unit = { _, _ -> },
     caseName: String = "system"
 ) {
     var selectedCaseType by remember { mutableStateOf<CaseType?>(null) }
@@ -63,8 +63,8 @@ fun CreateCaseSheetContent(
             enabled = true,
             onClick = {
                 selectedCaseType?.let { caseType ->
-                    onCreateCase(caseName, caseType.displayName)
-                } ?: onCreateCase(caseName, CaseType.OTHER.displayName)
+                    onCreateCase(caseName, caseType)
+                } ?: onCreateCase(caseName, CaseType.OTHER)
                 onDismiss()
             },
         )

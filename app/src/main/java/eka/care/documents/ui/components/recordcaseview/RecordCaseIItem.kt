@@ -20,8 +20,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.eka.ui.theme.EkaTheme
+import eka.care.documents.ui.R
+import eka.care.documents.ui.utility.CaseType
 import eka.care.records.client.model.CaseModel
 
 @Composable
@@ -48,19 +51,20 @@ fun RecordCaseItem(record: CaseModel, onClick: () -> Unit = {}) {
                 color = EkaTheme.colors.outline
             )
         },
-//        leadingContent = {
-//            record.iconRes?.let {
-//                Image(
-//                    modifier = Modifier.size(40.dp),
-//                    painter = painterResource(it),
-//                    contentDescription = ""
-//                )
-//            } ?: Image(
-//                painter = painterResource(R.drawable.ic_folder),
-//                contentDescription = "",
-//                modifier = Modifier.size(40.dp)
-//            )
-//        },
+        leadingContent = {
+            record?.let { recordItem ->
+                val caseType = CaseType.fromId(recordItem.type) ?: CaseType.OTHER
+                Image(
+                    modifier = Modifier.size(40.dp),
+                    painter = painterResource(caseType.iconRes),
+                    contentDescription = caseType.displayName
+                )
+            } ?: Image(
+                painter = painterResource(R.drawable.ic_folder),
+                contentDescription = "",
+                modifier = Modifier.size(40.dp)
+            )
+        },
         trailingContent = {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -83,4 +87,9 @@ fun RecordCaseItem(record: CaseModel, onClick: () -> Unit = {}) {
             containerColor = Color.Transparent
         )
     )
+}
+
+@Composable
+fun Image(modifier: Modifier, painter: painterResource, contentDescription: String) {
+    TODO("Not yet implemented")
 }

@@ -240,17 +240,24 @@ enum class DocumentBottomSheetType {
 }
 
 enum class CaseType(
+    val id: String,
     val displayName: String,
     val iconRes: Int
 ) {
-    DOCTOR_VISIT("Doctor Visit (OPD)", R.drawable.ic_user_doctor),
-    HOSPITAL_ADMIT("Hospital Admit (IPD)", R.drawable.ic_bed),
-    HEALTH_CHECKUP("Health Check-up", R.drawable.ic_stethoscope),
-    HOME_VISIT("Home Visit", R.drawable.ic_house),
-    TELECONSULTATION("Teleconsultation", R.drawable.ic_video),
-    EMERGENCY("Emergency", R.drawable.ic_ambulance),
-    SURGERY("Surgery / Procedure", R.drawable.ic_scalpel),
-    DENTAL("Dental", R.drawable.ic_tooth),
-    SECOND_OPINION("Second Opinion", R.drawable.ic_users),
-    OTHER("Other", R.drawable.ic_folder)
+    DOCTOR_VISIT("doctor_visit", "Doctor Visit (OPD)", R.drawable.ic_user_doctor),
+    HOSPITAL_ADMIT("hospital_admit", "Hospital Admit (IPD)", R.drawable.ic_bed),
+    HEALTH_CHECKUP("health_checkup", "Health Check-up", R.drawable.ic_stethoscope),
+    HOME_VISIT("home_visit", "Home Visit", R.drawable.ic_house),
+    TELECONSULTATION("teleconsultation", "Teleconsultation", R.drawable.ic_video),
+    EMERGENCY("emergency", "Emergency", R.drawable.ic_ambulance),
+    SURGERY("surgery", "Surgery / Procedure", R.drawable.ic_scalpel),
+    DENTAL("dental", "Dental", R.drawable.ic_tooth),
+    SECOND_OPINION("second_opinion", "Second Opinion", R.drawable.ic_users),
+    OTHER("other", "Other", R.drawable.ic_folder);
+
+    companion object {
+        fun fromId(id: String): CaseType? {
+            return entries.find { it.id == id }
+        }
+    }
 }
