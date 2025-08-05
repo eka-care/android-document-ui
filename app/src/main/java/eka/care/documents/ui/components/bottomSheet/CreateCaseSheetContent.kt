@@ -27,22 +27,17 @@ import com.eka.ui.buttons.EkaButton
 import com.eka.ui.buttons.EkaButtonShape
 import com.eka.ui.theme.EkaTheme
 import eka.care.documents.ui.R
-import eka.care.documents.ui.components.CreateCaseDateField
-import eka.care.documents.ui.components.CreateCaseDatePicker
-import eka.care.documents.ui.components.CreateCaseTypeDropdown
+import eka.care.documents.ui.components.CaseTypeGrid
 import eka.care.documents.ui.components.common.TextFieldWrapper
 import eka.care.documents.ui.utility.CaseType
 
 @Composable
 fun CreateCaseSheetContent(
     onDismiss: () -> Unit = {},
-    onCreateCase: (String, String, String) -> Unit = { _, _, _ -> }
+    onCreateCase: (String, String) -> Unit = { _, _ -> },
+    caseName: String = "system"
 ) {
-    var caseName by remember { mutableStateOf("") }
     var selectedCaseType by remember { mutableStateOf<CaseType?>(null) }
-    var selectedDate by remember { mutableStateOf("") }
-    var showDatePicker by remember { mutableStateOf(false) }
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -55,17 +50,12 @@ fun CreateCaseSheetContent(
             modifier = Modifier.padding(vertical = 16.dp),
         ) {
             CreateCaseNameField(
-                caseName = caseName,
-                onCaseNameChange = { caseName = it }
+                caseName = caseName
             )
-
-            CreateCaseTypeDropdown(
-                selectedCaseType = selectedCaseType?.displayName ?: "",
-                onTypeSelected = { it }
-            )
-            CreateCaseDateField(
-                selectedDate = selectedDate,
-                onDateClick = { showDatePicker = true }
+            Spacer(modifier = Modifier.height(16.dp))
+            CaseTypeGrid(
+                selectedCaseType = selectedCaseType,
+                onCaseTypeSelected = { selectedCaseType = it }
             )
         }
 
@@ -73,25 +63,18 @@ fun CreateCaseSheetContent(
             modifier = Modifier.fillMaxWidth(),
             label = "Create",
             shape = EkaButtonShape.SQUARE,
-            enabled = caseName.isNotBlank() && selectedCaseType != null,
+            enabled = true,
             onClick = {
                 selectedCaseType?.let { caseType ->
-                    onCreateCase(caseName, caseType.displayName, selectedDate)
-                }
+                    onCreateCase(caseName, caseType.displayName)
+                } ?: onCreateCase(caseName, "")
                 onDismiss()
             },
         )
         Spacer(modifier = Modifier.height(32.dp))
     }
-
-    if (showDatePicker) {
-        CreateCaseDatePicker(
-            currentDate = selectedDate,
-            onDateSelected = { selectedDate = it },
-            onDismiss = { showDatePicker = false }
-        )
-    }
 }
+
 
 @Composable
 private fun CreateCaseInfoBanner() {
@@ -124,16 +107,16 @@ private fun CreateCaseInfoBanner() {
 
 @Composable
 private fun CreateCaseNameField(
-    caseName: String,
-    onCaseNameChange: (String) -> Unit
+    caseName: String
 ) {
     TextFieldWrapper(
         modifier = Modifier.fillMaxWidth(),
         value = caseName,
-        onChange = onCaseNameChange,
+        onChange = {},
         label = "Case Name",
         placeholder = "Enter case name",
-        required = true
+        required = true,
+        enabled = false
     )
 }
 

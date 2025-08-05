@@ -14,7 +14,7 @@ fun UploadCaseBottomSheet(
     ) {
         CreateCaseSheetContent(
             onDismiss = { },
-            onCreateCase = { caseName, caseType, date -> }
+            onCreateCase = { caseName, caseType -> }
         )
     }
 }

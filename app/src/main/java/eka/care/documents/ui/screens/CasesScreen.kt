@@ -40,6 +40,7 @@ import com.eka.ui.theme.EkaTheme
 import eka.care.documents.ui.R
 import eka.care.documents.ui.components.recordcaseview.CaseView
 import eka.care.documents.ui.model.RecordCase
+import eka.care.documents.ui.utility.DocumentBottomSheetType
 import eka.care.documents.ui.viewmodel.RecordsViewModel
 import kotlinx.coroutines.launch
 
