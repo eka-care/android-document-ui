@@ -57,13 +57,20 @@ fun CasesScreen(viewModel: RecordsViewModel, params: MedicalRecordsNavModel) {
         }
     }
 
+    val closeSheet = {
+        scope.launch {
+            sheetState.hide()
+        }
+    }
+
     ModalBottomSheetLayout(
         sheetState = sheetState,
         sheetContent = {
             UploadCaseBottomSheet(
                 params = params,
                 caseNane = caseName,
-                viewModel = viewModel
+                viewModel = viewModel,
+                closeSheet = { closeSheet.invoke() }
             )
         },
         content = {

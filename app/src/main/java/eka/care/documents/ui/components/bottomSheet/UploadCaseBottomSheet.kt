@@ -11,6 +11,7 @@ import eka.care.documents.ui.viewmodel.RecordsViewModel
 fun UploadCaseBottomSheet(
     viewModel: RecordsViewModel,
     params: MedicalRecordsNavModel,
+    closeSheet: () -> Unit,
     caseNane: String
 ) {
     BottomSheetContentLayout(
@@ -26,6 +27,7 @@ fun UploadCaseBottomSheet(
                     name = caseName,
                     type = caseType
                 )
+                closeSheet.invoke()
             },
             caseName = caseNane
         )
