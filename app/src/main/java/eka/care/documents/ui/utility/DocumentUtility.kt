@@ -227,6 +227,5 @@ enum class CaseType(
     SURGERY("Surgery / Procedure", R.drawable.ic_scalpel),
     DENTAL("Dental", R.drawable.ic_tooth),
     SECOND_OPINION("Second Opinion", R.drawable.ic_users),
-    OTHER("Other", R.drawable.ic_folder),
-    CREATE_OWN("Create own", R.drawable.ic_folder)
+    OTHER("Other", R.drawable.ic_folder)
 }
