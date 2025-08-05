@@ -1,5 +1,6 @@
 package eka.care.documents.ui.components.recordcaseview
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -87,9 +88,4 @@ fun RecordCaseItem(record: CaseModel, onClick: () -> Unit = {}) {
             containerColor = Color.Transparent
         )
     )
-}
-
-@Composable
-fun Image(modifier: Modifier, painter: painterResource, contentDescription: String) {
-    TODO("Not yet implemented")
 }

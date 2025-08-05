@@ -449,7 +449,7 @@ private fun ScreenContent(
                             viewModel = viewModel,
                             params = params,
                             onCaseItemClick = { caseItem ->
-
+                                openCaseDetails(caseItem)
                             }
                         )
                     }
