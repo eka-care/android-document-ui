@@ -38,8 +38,7 @@ fun CaseTypeGrid(
 ) {
     FlowRow(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp),
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         CaseType.entries.forEach { caseType ->

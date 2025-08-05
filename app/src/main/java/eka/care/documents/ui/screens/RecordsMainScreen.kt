@@ -72,7 +72,9 @@ import kotlinx.coroutines.launch
 fun RecordsMainScreen(
     viewModel: RecordsViewModel,
     params: MedicalRecordsNavModel,
-    navigateToCreateCase: () -> Unit
+    navigateToCreateCase: () -> Unit,
+    openSmartReport: (data: RecordModel) -> Unit,
+    openRecordViewer: (data: RecordModel) -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState(Hidden)
     val scope = rememberCoroutineScope()
@@ -331,7 +333,9 @@ fun RecordsMainScreen(
                 navigateToCreateCase = navigateToCreateCase,
                 openSheet = {
                     openSheet.invoke()
-                }
+                },
+                openSmartReport = openSmartReport,
+                openRecordViewer = openRecordViewer,
             )
         }
     )
@@ -343,7 +347,9 @@ private fun ScreenContent(
     params: MedicalRecordsNavModel,
     filterIdsToProcess: List<String>,
     navigateToCreateCase: () -> Unit,
-    openSheet: () -> Unit
+    openSheet: () -> Unit,
+    openSmartReport: (data: RecordModel) -> Unit = {},
+    openRecordViewer: (data: RecordModel) -> Unit = {}
 ) {
     val selectedItems = remember { mutableStateListOf<RecordModel>() }
     var selectedTabId by remember { mutableStateOf(TabConstants.ALL_FILES) }
@@ -421,8 +427,8 @@ private fun ScreenContent(
 //                            selectedItems.clear()
 //                            selectedItems.addAll(items)
                             },
-                            openSmartReport = {},
-                            openRecordViewer = {},
+                            openSmartReport = openSmartReport,
+                            openRecordViewer = openRecordViewer,
                             openSheet = { openSheet.invoke() },
                             onRefresh = {
                                 syncRecords(
