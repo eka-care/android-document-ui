@@ -3,6 +3,7 @@ package eka.care.documents.ui.components
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -19,6 +20,8 @@ import eka.care.records.client.model.RecordModel
 @OptIn(ExperimentalMaterial3Api::class)
 fun RecordsScreenContent(
     viewModel: RecordsViewModel,
+    ownerId: String,
+    filterIdsToProcess: List<String>,
     mode: Mode,
     selectedItems: SnapshotStateList<RecordModel>,
     onSelectedItemsChange: (List<RecordModel>) -> Unit,
@@ -41,6 +44,13 @@ fun RecordsScreenContent(
 
     val handleRecordUploadClick: () -> Unit = {
         viewModel.documentBottomSheetType = DocumentBottomSheetType.DocumentUpload
+    }
+
+    LaunchedEffect(viewModel.documentType.value) {
+        viewModel.fetchRecords(
+            ownerId = ownerId,
+            filterIds = filterIdsToProcess
+        )
     }
 
     PullToRefreshBox(

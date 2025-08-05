@@ -61,6 +61,7 @@ import eka.care.documents.ui.utility.DocumentBottomSheetType
 import eka.care.documents.ui.utility.Mode
 import eka.care.documents.ui.utility.RecordsAction
 import eka.care.documents.ui.viewmodel.RecordsViewModel
+import eka.care.records.client.model.CaseModel
 import eka.care.records.client.model.RecordModel
 import eka.care.records.client.utils.MediaPickerManager
 import eka.care.records.client.utils.PhotoPickerHost
@@ -75,6 +76,7 @@ fun RecordsMainScreen(
     navigateToCreateCase: () -> Unit,
     openSmartReport: (data: RecordModel) -> Unit,
     openRecordViewer: (data: RecordModel) -> Unit,
+    openCaseDetails: (caseModel: CaseModel) -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(Hidden)
     val scope = rememberCoroutineScope()
@@ -336,6 +338,7 @@ fun RecordsMainScreen(
                 },
                 openSmartReport = openSmartReport,
                 openRecordViewer = openRecordViewer,
+                openCaseDetails = openCaseDetails
             )
         }
     )
@@ -349,7 +352,8 @@ private fun ScreenContent(
     navigateToCreateCase: () -> Unit,
     openSheet: () -> Unit,
     openSmartReport: (data: RecordModel) -> Unit = {},
-    openRecordViewer: (data: RecordModel) -> Unit = {}
+    openRecordViewer: (data: RecordModel) -> Unit = {},
+    openCaseDetails: (caseModel: CaseModel) -> Unit
 ) {
     val selectedItems = remember { mutableStateListOf<RecordModel>() }
     var selectedTabId by remember { mutableStateOf(TabConstants.ALL_FILES) }
@@ -421,6 +425,8 @@ private fun ScreenContent(
                         RecordsScreenContent(
                             viewModel = viewModel,
                             mode = Mode.VIEW,
+                            ownerId = params.ownerId,
+                            filterIdsToProcess = filterIdsToProcess,
                             selectedItems = selectedItems,
                             onSelectedItemsChange = { items ->
 //                            selectedItems.clear()

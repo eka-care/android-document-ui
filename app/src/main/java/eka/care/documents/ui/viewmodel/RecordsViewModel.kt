@@ -202,8 +202,8 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
         caseJob = viewModelScope.launch {
             recordsManager.readCases(
                 ownerId = ownerId,
-                filterIds = filterId?.let { listOf(it) })
-                .cancellable()
+                filterId = filterId
+            ).cancellable()
                 .collect { cases ->
                     _getCasesState.value = if (cases.isEmpty()) {
                         CasesState.EmptyState
