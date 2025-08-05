@@ -3,7 +3,6 @@ package eka.care.documents.ui.components
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -11,7 +10,6 @@ import androidx.compose.ui.platform.LocalContext
 import eka.care.documents.ui.components.recordListView.RecordsListView
 import eka.care.documents.ui.components.recordgridview.RecordsGridView
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
-import eka.care.documents.ui.screens.syncRecords
 import eka.care.documents.ui.utility.DocumentBottomSheetType
 import eka.care.documents.ui.utility.DocumentViewType
 import eka.care.documents.ui.utility.Mode
@@ -61,22 +59,6 @@ fun RecordsScreenContent(
                 .filter { it.isNotEmpty() && it != params.filterId }
                 .forEach { add(it) }
         }
-    }
-
-    LaunchedEffect(Unit) {
-        syncRecords(
-            filterIds = filterIdsToProcess,
-            ownerId = params.ownerId,
-            context = context,
-        )
-        viewModel.fetchRecordsCount(
-            filterIds = filterIdsToProcess,
-            ownerId = params.ownerId,
-        )
-        viewModel.fetchRecords(
-            ownerId = params.ownerId,
-            filterIds = filterIdsToProcess,
-        )
     }
 
     PullToRefreshBox(

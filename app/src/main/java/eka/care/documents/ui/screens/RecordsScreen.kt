@@ -1,8 +1,5 @@
 package eka.care.documents.ui.screens
 
-import android.content.Context
-import eka.care.records.client.utils.Records
-
 //import android.Manifest
 //import android.app.Activity
 //import android.content.Context
@@ -511,12 +508,3 @@ import eka.care.records.client.utils.Records
 //        }
 //    )
 //}
-
-fun syncRecords(
-    filterIds: List<String>,
-    ownerId: String,
-    context: Context,
-) {
-    val records = Records.getInstance(context = context, token = "")
-    records.refreshRecords(context, ownerId, filterIds)
-}

@@ -1,5 +1,12 @@
 package eka.care.documents.ui.utility
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -14,6 +21,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.eka.ui.theme.EkaTheme
 import eka.care.documents.ui.R
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -27,6 +35,23 @@ class DocumentUtility {
 
         fun getTitleById(id: String): String {
             return RecordType.entries.find { it.code == id }?.title ?: ""
+        }
+
+        fun loadFromUri(context: Context, photoUri: Uri): Bitmap? {
+            var bitmap: Bitmap? = null
+            try {
+                bitmap = if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O_MR1) {
+                    val source: ImageDecoder.Source =
+                        ImageDecoder.createSource(context.contentResolver, photoUri)
+                    ImageDecoder.decodeBitmap(source)
+                } else {
+                    @Suppress("DEPRECATION")
+                    MediaStore.Images.Media.getBitmap(context.contentResolver, photoUri)
+                }
+            } catch (ex: IOException) {
+                Log.e("log", "Exception in loadFromUri() = ", ex)
+            }
+            return bitmap
         }
     }
 }

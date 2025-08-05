@@ -38,6 +38,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.eka.ui.theme.EkaTheme
 import eka.care.documents.ui.R
+import eka.care.documents.ui.components.bottomSheet.UploadCaseBottomSheet
 import eka.care.documents.ui.components.recordcaseview.CaseView
 import eka.care.documents.ui.model.RecordCase
 import eka.care.documents.ui.utility.DocumentBottomSheetType
@@ -58,7 +59,7 @@ fun CasesScreen(viewModel: RecordsViewModel) {
     ModalBottomSheetLayout(
         sheetState = sheetState,
         sheetContent = {
-
+            UploadCaseBottomSheet()
         },
         content = {
             Scaffold(

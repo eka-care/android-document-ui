@@ -57,4 +57,7 @@ dependencies {
     implementation(libs.eka.ui.kit)
     implementation(libs.compose.shimmer)
     implementation(libs.coil.compose)
+    implementation(libs.google.gson)
+    implementation(libs.mlkit.scanner)
+    implementation(libs.bouquet)
 }
