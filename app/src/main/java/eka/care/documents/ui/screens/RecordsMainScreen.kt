@@ -418,10 +418,9 @@ private fun ScreenContent(
                     }
                 )
 
-                RecordSortSection(viewModel = viewModel, openSheet = openSheet)
-
                 when (selectedTabId) {
                     TabConstants.ALL_FILES -> {
+                        RecordSortSection(viewModel = viewModel, openSheet = openSheet)
                         RecordsScreenContent(
                             viewModel = viewModel,
                             mode = Mode.VIEW,
