@@ -48,7 +48,10 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun CasesScreen(viewModel: RecordsViewModel, params: MedicalRecordsNavModel) {
-    val sheetState = rememberModalBottomSheetState(Hidden)
+    val sheetState = rememberModalBottomSheetState(
+        initialValue = Hidden,
+        skipHalfExpanded = true
+    )
     val scope = rememberCoroutineScope()
     var caseName by rememberSaveable { mutableStateOf("") }
 

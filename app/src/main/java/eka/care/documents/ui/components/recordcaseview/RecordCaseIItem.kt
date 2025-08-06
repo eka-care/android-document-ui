@@ -22,11 +22,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.eka.ui.theme.EkaTheme
-import eka.care.documents.ui.R
 import eka.care.documents.ui.utility.CaseType
 import eka.care.records.client.model.CaseModel
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @Composable
 fun RecordCaseItem(record: CaseModel, onClick: () -> Unit = {}) {
@@ -42,6 +44,7 @@ fun RecordCaseItem(record: CaseModel, onClick: () -> Unit = {}) {
             Text(
                 text = record.name,
                 style = EkaTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Medium,
                 color = EkaTheme.colors.onSurface
             )
         },
@@ -53,17 +56,11 @@ fun RecordCaseItem(record: CaseModel, onClick: () -> Unit = {}) {
             )
         },
         leadingContent = {
-            record?.let { recordItem ->
-                val caseType = CaseType.fromId(recordItem.type) ?: CaseType.OTHER
-                Image(
-                    modifier = Modifier.size(40.dp),
-                    painter = painterResource(caseType.iconRes),
-                    contentDescription = caseType.displayName
-                )
-            } ?: Image(
-                painter = painterResource(R.drawable.ic_folder),
-                contentDescription = "",
-                modifier = Modifier.size(40.dp)
+            val caseType = CaseType.fromId(record.type) ?: CaseType.OTHER
+            Image(
+                modifier = Modifier.size(40.dp),
+                painter = painterResource(caseType.iconRes),
+                contentDescription = caseType.displayName
             )
         },
         trailingContent = {
@@ -71,11 +68,12 @@ fun RecordCaseItem(record: CaseModel, onClick: () -> Unit = {}) {
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-//                Text(
-//                    text = record.date,
-//                    style = EkaTheme.typography.labelSmall,
-//                    color = EkaTheme.colors.onSurfaceVariant,
-//                )
+                val formatter = SimpleDateFormat("dd EEE", Locale.getDefault())
+                Text(
+                    text = formatter.format(record.createdAt * 1000),
+                    style = EkaTheme.typography.labelSmall,
+                    color = EkaTheme.colors.onSurfaceVariant,
+                )
                 Spacer(modifier = Modifier.width(8.dp))
                 Icon(
                     imageVector = Icons.Default.PlayArrow,
