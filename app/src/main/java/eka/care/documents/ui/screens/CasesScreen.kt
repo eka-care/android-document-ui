@@ -33,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -146,6 +147,7 @@ private fun CasesSearchBar(onAddNewCase: (caseName: String) -> Unit) {
 
 @Composable
 private fun CasesSearchScreenContent(searchQuery: String, onAddNewCase: (caseName: String) -> Unit) {
+    val keyboardController = LocalSoftwareKeyboardController.current
     if (searchQuery.isNotEmpty()) {
         Column {
             ListItem(
@@ -153,6 +155,7 @@ private fun CasesSearchScreenContent(searchQuery: String, onAddNewCase: (caseNam
                     .fillMaxWidth()
                     .clickable {
                         onAddNewCase.invoke(searchQuery)
+                        keyboardController?.hide()
                     },
                 headlineContent = {
                     Text(
