@@ -7,7 +7,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.Modifier
 import eka.care.documents.ui.components.recordListView.RecordsListView
 import eka.care.documents.ui.components.recordgridview.RecordsGridView
 import eka.care.documents.ui.utility.DocumentBottomSheetType
@@ -19,18 +19,18 @@ import eka.care.records.client.model.RecordModel
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun RecordsScreenContent(
+    modifier: Modifier = Modifier,
     viewModel: RecordsViewModel,
     ownerId: String,
     filterIdsToProcess: List<String>,
-    mode: Mode,
-    selectedItems: SnapshotStateList<RecordModel>,
-    onSelectedItemsChange: (List<RecordModel>) -> Unit,
+    mode: Mode = Mode.VIEW,
+    selectedItems: SnapshotStateList<RecordModel>? = null,
+    onSelectedItemsChange: (List<RecordModel>) -> Unit = {},
     openSmartReport: (data: RecordModel) -> Unit,
     openRecordViewer: (data: RecordModel) -> Unit,
     openSheet: () -> Unit,
     onRefresh: () -> Unit,
 ) {
-    val context = LocalContext.current
     val isRefreshing by viewModel.isRefreshing
     val recordsState by viewModel.getRecordsState.collectAsState()
 
@@ -54,6 +54,7 @@ fun RecordsScreenContent(
     }
 
     PullToRefreshBox(
+        modifier = modifier,
         isRefreshing = isRefreshing,
         onRefresh = onRefresh
     ) {

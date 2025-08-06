@@ -11,26 +11,22 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import eka.care.documents.ui.components.RecordsScreenContent
-import eka.care.documents.ui.utility.Mode
 import eka.care.documents.ui.viewmodel.RecordsViewModel
-import eka.care.records.client.model.RecordModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CaseDetailsScreen(
     viewModel: RecordsViewModel,
     caseId: String,
+    caseName: String,
     ownerId: String,
     filterId: String? = null,
     onBackPressed: () -> Unit = {},
 ) {
-    val selectedItems = remember { mutableStateListOf<RecordModel>() }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -38,7 +34,7 @@ fun CaseDetailsScreen(
                     .fillMaxWidth(),
                 title = {
                     Text(
-                        text = "Preview",
+                        text = caseName,
                     )
                 },
                 navigationIcon = {
@@ -57,15 +53,10 @@ fun CaseDetailsScreen(
         },
         content = { paddingValues ->
             RecordsScreenContent(
+                modifier = Modifier.padding(paddingValues),
                 viewModel = viewModel,
-                mode = Mode.VIEW,
                 ownerId = ownerId,
                 filterIdsToProcess = listOfNotNull(filterId),
-                selectedItems = selectedItems,
-                onSelectedItemsChange = { items ->
-//                            selectedItems.clear()
-//                            selectedItems.addAll(items)
-                },
                 openSmartReport = {
 
                 },

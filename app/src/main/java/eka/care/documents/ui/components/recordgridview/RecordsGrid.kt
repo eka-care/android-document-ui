@@ -20,7 +20,7 @@ fun RecordsGrid(
     onClick: (record: RecordModel) -> Unit,
     onRetry: (record: RecordModel) -> Unit,
     onMoreOptionsClick: (record: RecordModel) -> Unit,
-    selectedItems: SnapshotStateList<RecordModel>,
+    selectedItems: SnapshotStateList<RecordModel>? = null,
     onSelectedItemsChange: (List<RecordModel>) -> Unit
 ) {
     LazyVerticalGrid(
@@ -36,19 +36,19 @@ fun RecordsGrid(
                 mode = mode,
                 onClick = {
                     if (mode == Mode.SELECTION) {
-                        if (selectedItems.contains(record)) {
+                        if (selectedItems?.contains(record) == true) {
                             selectedItems.remove(record)
                         } else {
-                            selectedItems.add(record)
+                            selectedItems?.add(record)
                         }
-                        onSelectedItemsChange(selectedItems.toList())
+                        onSelectedItemsChange(selectedItems?.toList() ?: emptyList())
                     } else {
                         onClick(record)
                     }
                 },
                 onRetry = { onRetry(record) },
                 onMoreOptionsClick = { onMoreOptionsClick(record) },
-                isSelected = selectedItems.contains(record)
+                isSelected = selectedItems?.contains(record) == true
             )
         }
     }

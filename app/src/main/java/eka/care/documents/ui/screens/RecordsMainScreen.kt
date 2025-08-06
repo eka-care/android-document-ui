@@ -73,6 +73,7 @@ import kotlinx.coroutines.launch
 fun RecordsMainScreen(
     viewModel: RecordsViewModel,
     params: MedicalRecordsNavModel,
+    caseId: String? = null,
     navigateToCreateCase: () -> Unit,
     openSmartReport: (data: RecordModel) -> Unit,
     openRecordViewer: (data: RecordModel) -> Unit,

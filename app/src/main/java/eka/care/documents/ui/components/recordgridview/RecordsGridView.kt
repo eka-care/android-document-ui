@@ -11,7 +11,7 @@ import eka.care.records.ui.presentation.screens.RecordEmptyState
 fun RecordsGridView(
     state: RecordsState,
     mode: Mode,
-    selectedItems: SnapshotStateList<RecordModel>,
+    selectedItems: SnapshotStateList<RecordModel> ? = null,
     onSelectedItemsChange: (List<RecordModel>) -> Unit,
     onUploadRecordClick: () -> Unit,
     onRecordClick: (record: RecordModel) -> Unit,
