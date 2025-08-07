@@ -100,7 +100,7 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun fetchRecords(filterIds: List<String>, ownerId: String) {
+    fun fetchRecords(filterIds: List<String>, ownerId: String, caseId: String? = null) {
         job?.cancel()
         _getRecordsState.value = RecordsState.Loading
         job = viewModelScope.launch {
@@ -108,6 +108,7 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
             val documentFlow = recordsManager.getRecords(
                 filterIds = filterIds,
                 ownerId = ownerId,
+                caseId = caseId,
                 sortOrder = sortBy.value,
                 documentType = documentType.value
             )
@@ -135,6 +136,7 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
         files: List<File>,
         ownerId: String,
         filterId: String?,
+        caseId: String?,
         documentType: String,
         documentDate: Long?,
     ) {
@@ -144,6 +146,7 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
                 files = files,
                 ownerId = ownerId,
                 filterId = filterId,
+                caseId = caseId,
                 documentType = documentType,
                 documentDate = documentDate,
             )

@@ -55,6 +55,7 @@ import java.util.Locale
 fun EnterDetailsBottomSheet(
     onClick: () -> Unit,
     viewModel: RecordsViewModel,
+    caseId: String? = null,
     fileList: ArrayList<File>,
     paramsModel: MedicalRecordsNavModel,
     editDocument: Boolean
@@ -108,6 +109,7 @@ fun EnterDetailsBottomSheet(
                     files = fileList,
                     ownerId = paramsModel.ownerId,
                     filterId = paramsModel.filterId,
+                    caseId = caseId,
                     documentType = selectedChip ?: "ot",
                     documentDate = timestampToLong(date)
                 )

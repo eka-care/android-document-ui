@@ -15,6 +15,7 @@ enum class AddRecordParams(val key: String) {
     PDF_URI("pdfUriString"),
     IMAGE_URIS("imageUris"),
     FILTER_ID("filterId"),
+    CASE_ID("caseId"),
     OWNER_ID("ownerId");
 
     companion object {
@@ -40,7 +41,8 @@ class AddRecordPreviewActivity : ComponentActivity() {
             pdfUriString = if (params.has(AddRecordParams.PDF_URI.key)) params.get(AddRecordParams.PDF_URI.key).asString else null,
             imageUris = if (params.has(AddRecordParams.IMAGE_URIS.key)) params.get(AddRecordParams.IMAGE_URIS.key).asString else null,
             filterId = params.get(AddRecordParams.FILTER_ID.key).asString,
-            ownerId = params.get(AddRecordParams.OWNER_ID.key).asString
+            ownerId = params.get(AddRecordParams.OWNER_ID.key).asString,
+            caseId = params.get(AddRecordParams.CASE_ID.key).asString
         )
 
         setContent {

@@ -109,6 +109,7 @@ fun AddRecordPreviewScreen(
                     onUploadSuccess()
                 },
                 viewModel = recordsViewModel,
+                caseId = navData.caseId,
                 fileList = if (pdfUriString != null) arrayListOf(
                     uriToFile(
                         context,

@@ -1,18 +1,6 @@
 package eka.care.documents.ui.components.bottomSheet
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.dp
-import com.eka.ui.theme.EkaTheme
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.state.UpsertRecordState
 import eka.care.documents.ui.utility.DocumentBottomSheetType
@@ -23,6 +11,7 @@ import eka.care.documents.ui.viewmodel.RecordsViewModel
 fun RecordsBottomSheetContent(
     viewModel: RecordsViewModel,
     params: MedicalRecordsNavModel,
+    caseId: String? = null,
     onClick: (String) -> Unit,
     onShare: () -> Unit,
     onEditDocument: () -> Unit,
@@ -32,98 +21,87 @@ fun RecordsBottomSheetContent(
     pickImagesFromGallery: () -> Unit,
     allFilterIds: List<String>
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Box(
-            modifier = Modifier
-                .padding(16.dp)
-                .width(32.dp)
-                .height(4.dp)
-                .clip(RoundedCornerShape(50))
-                .background(EkaTheme.colors.outline)
-        )
-        when (viewModel.documentBottomSheetType) {
-            DocumentBottomSheetType.DocumentUpload -> {
-                RecordUploadBottomSheet(
-                    onClick = {
-                        onClick(RecordsAction.ACTION_CLOSE_SHEET)
-                        when (it) {
-                            RecordsAction.ACTION_TAKE_PHOTO -> {
-                                cameraLauncher.invoke()
-                            }
+    when (viewModel.documentBottomSheetType) {
+        DocumentBottomSheetType.DocumentUpload -> {
+            RecordUploadBottomSheet(
+                onClick = {
+                    onClick(RecordsAction.ACTION_CLOSE_SHEET)
+                    when (it) {
+                        RecordsAction.ACTION_TAKE_PHOTO -> {
+                            cameraLauncher.invoke()
+                        }
 
-                            RecordsAction.ACTION_SCAN_A_DOCUMENT -> {
-                                scanDocument.invoke()
-                            }
+                        RecordsAction.ACTION_SCAN_A_DOCUMENT -> {
+                            scanDocument.invoke()
+                        }
 
-                            RecordsAction.ACTION_CHOOSE_FROM_GALLERY -> {
-                                pickImagesFromGallery.invoke()
-                            }
+                        RecordsAction.ACTION_CHOOSE_FROM_GALLERY -> {
+                            pickImagesFromGallery.invoke()
+                        }
 
-                            RecordsAction.ACTION_UPLOAD_PDF -> {
-                                pickPdf.invoke()
-                            }
+                        RecordsAction.ACTION_UPLOAD_PDF -> {
+                            pickPdf.invoke()
                         }
                     }
-                )
-            }
-
-            DocumentBottomSheetType.DocumentOptions -> {
-                RecordOptionsBottomSheet(
-                    onClick = {
-                        onClick(RecordsAction.ACTION_CLOSE_SHEET)
-                        when (it) {
-                            RecordsAction.ACTION_EDIT_DOCUMENT -> {
-                                onClick(RecordsAction.ACTION_OPEN_SHEET)
-                                viewModel.documentBottomSheetType =
-                                    DocumentBottomSheetType.EnterFileDetails
-                            }
-
-                            RecordsAction.ACTION_SHARE_DOCUMENT -> {
-                                onShare()
-                            }
-
-                            RecordsAction.ACTION_DELETE_RECORD -> {
-                                onClick(RecordsAction.ACTION_OPEN_DELETE_DIALOG)
-                            }
-                        }
-                    }
-                )
-            }
-
-            DocumentBottomSheetType.DocumentSort -> {
-                RecordSortBottomSheet(
-                    selectedSort = viewModel.sortBy.value,
-                    onCloseClick = {
-                        onClick(RecordsAction.ACTION_CLOSE_SHEET)
-                    },
-                    onClick = {
-                        viewModel.sortBy.value = it
-                        viewModel.fetchRecords(
-                            filterIds = allFilterIds,
-                            ownerId = params.ownerId
-                        )
-                        onClick(RecordsAction.ACTION_CLOSE_SHEET)
-                    },
-                )
-            }
-
-            DocumentBottomSheetType.EnterFileDetails -> {
-                EnterDetailsBottomSheet(
-                    onClick = {
-                        onClick(RecordsAction.ACTION_CLOSE_SHEET)
-                        viewModel.updateRecordState(UpsertRecordState.NONE)
-                        onEditDocument()
-                    },
-                    fileList = ArrayList(),
-                    paramsModel = params,
-                    viewModel = viewModel,
-                    editDocument = true
-                )
-            }
-
-            null -> {}
+                }
+            )
         }
+
+        DocumentBottomSheetType.DocumentOptions -> {
+            RecordOptionsBottomSheet(
+                onClick = {
+                    onClick(RecordsAction.ACTION_CLOSE_SHEET)
+                    when (it) {
+                        RecordsAction.ACTION_EDIT_DOCUMENT -> {
+                            onClick(RecordsAction.ACTION_OPEN_SHEET)
+                            viewModel.documentBottomSheetType =
+                                DocumentBottomSheetType.EnterFileDetails
+                        }
+
+                        RecordsAction.ACTION_SHARE_DOCUMENT -> {
+                            onShare()
+                        }
+
+                        RecordsAction.ACTION_DELETE_RECORD -> {
+                            onClick(RecordsAction.ACTION_OPEN_DELETE_DIALOG)
+                        }
+                    }
+                }
+            )
+        }
+
+        DocumentBottomSheetType.DocumentSort -> {
+            RecordSortBottomSheet(
+                selectedSort = viewModel.sortBy.value,
+                onCloseClick = {
+                    onClick(RecordsAction.ACTION_CLOSE_SHEET)
+                },
+                onClick = {
+                    viewModel.sortBy.value = it
+                    viewModel.fetchRecords(
+                        filterIds = allFilterIds,
+                        ownerId = params.ownerId
+                    )
+                    onClick(RecordsAction.ACTION_CLOSE_SHEET)
+                },
+            )
+        }
+
+        DocumentBottomSheetType.EnterFileDetails -> {
+            EnterDetailsBottomSheet(
+                onClick = {
+                    onClick(RecordsAction.ACTION_CLOSE_SHEET)
+                    viewModel.updateRecordState(UpsertRecordState.NONE)
+                    onEditDocument()
+                },
+                fileList = ArrayList(),
+                caseId = caseId,
+                paramsModel = params,
+                viewModel = viewModel,
+                editDocument = true
+            )
+        }
+
+        null -> {}
     }
 }
