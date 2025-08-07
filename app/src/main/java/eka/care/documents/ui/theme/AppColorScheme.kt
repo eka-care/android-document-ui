@@ -2,8 +2,8 @@ package eka.care.documents.ui.theme
 
 import androidx.compose.material3.lightColorScheme
 
-val RecordsColorScheme = lightColorScheme(
-    primary = StyleDictionaryColor.colorDanger500,
+val AppColorScheme = lightColorScheme(
+    primary = StyleDictionaryColor.colorBackgroundPrimary,
     surfaceTint = StyleDictionaryColor.colorBackgroundPrimarySubtle,
     onPrimary = StyleDictionaryColor.colorForegroundOnPrimary,
     primaryContainer = StyleDictionaryColor.colorBackgroundPrimarySubtle,

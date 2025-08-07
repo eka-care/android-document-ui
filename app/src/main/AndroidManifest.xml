@@ -8,5 +8,8 @@
         <activity
             android:name=".activity.AddRecordPreviewActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.CaseDetailsActivity"
+            android:screenOrientation="portrait" />
     </application>
 </manifest>
