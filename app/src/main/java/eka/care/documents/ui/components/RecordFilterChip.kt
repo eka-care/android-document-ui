@@ -16,6 +16,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eka.ui.theme.EkaTheme
+import eka.care.documents.ui.theme.StyleDictionaryColor
 
 @Preview
 @Composable
@@ -28,25 +29,25 @@ fun RecordFilterChip(
         onClick = openSortBySheet,
         label = {
             Text(
-            text = buildAnnotatedString {
-                withStyle(
-                    style = SpanStyle(
-                        fontWeight = EkaTheme.typography.labelLarge.fontWeight,
-                        color = EkaTheme.colors.primary
-                    )
-                ) {
-                    append("Sort by: ")
-                }
+                text = buildAnnotatedString {
+                    withStyle(
+                        style = SpanStyle(
+                            fontWeight = EkaTheme.typography.labelLarge.fontWeight,
+                            color = EkaTheme.colors.primary
+                        )
+                    ) {
+                        append("Sort by: ")
+                    }
 
-                withStyle(
-                    style = SpanStyle(
-                        fontWeight = EkaTheme.typography.labelLarge.fontWeight,
-                        color = EkaTheme.colors.primary
-                    )
-                ) {
-                    append(filteredText)
+                    withStyle(
+                        style = SpanStyle(
+                            fontWeight = EkaTheme.typography.labelLarge.fontWeight,
+                            color = EkaTheme.colors.primary
+                        )
+                    ) {
+                        append(filteredText)
+                    }
                 }
-            }
             )
         },
         trailingIcon = {
@@ -58,7 +59,7 @@ fun RecordFilterChip(
         },
         modifier = modifier,
         colors = AssistChipDefaults.assistChipColors(
-            containerColor = EkaTheme.colors.background,
+            containerColor = StyleDictionaryColor.schemesPrimaryFixed,
             labelColor = EkaTheme.colors.surfaceBright,
             trailingIconContentColor = EkaTheme.colors.onSurfaceVariant
         ),

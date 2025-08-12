@@ -68,7 +68,7 @@ fun RecordBottomSheetItem(
             }
         },
         colors = ListItemDefaults.colors(
-            containerColor = Color.Transparent
+            containerColor = Color.White
         )
     )
 }

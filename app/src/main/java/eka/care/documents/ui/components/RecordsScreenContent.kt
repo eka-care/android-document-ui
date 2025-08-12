@@ -9,6 +9,7 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -102,13 +103,13 @@ fun RecordsScreenContent(
         )
     }
 
-    LaunchedEffect(viewModel.documentType.value) {
-        viewModel.fetchRecords(
-            ownerId = params.ownerId,
-            filterIds = filterIdsToProcess,
-            caseId = caseId
-        )
-    }
+//    LaunchedEffect(viewModel.documentType.value) {
+//        viewModel.fetchRecords(
+//            ownerId = params.ownerId,
+//            filterIds = filterIdsToProcess,
+//            caseId = caseId
+//        )
+//    }
 
     val addRecordResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
@@ -122,22 +123,22 @@ fun RecordsScreenContent(
         }
     }
 
-    LaunchedEffect(Unit) {
-        syncRecords(
-            filterIds = filterIdsToProcess,
-            ownerId = params.ownerId,
-            context = context,
-        )
-        viewModel.fetchRecordsCount(
-            filterIds = filterIdsToProcess,
-            ownerId = params.ownerId,
-        )
-        viewModel.fetchRecords(
-            ownerId = params.ownerId,
-            filterIds = filterIdsToProcess,
-            caseId = caseId
-        )
-    }
+//    LaunchedEffect(params) {
+//        syncRecords(
+//            filterIds = filterIdsToProcess,
+//            ownerId = params.ownerId,
+//            context = context,
+//        )
+//        viewModel.fetchRecordsCount(
+//            filterIds = filterIdsToProcess,
+//            ownerId = params.ownerId,
+//        )
+//        viewModel.fetchRecords(
+//            ownerId = params.ownerId,
+//            filterIds = filterIdsToProcess,
+//            caseId = caseId
+//        )
+//    }
 
     val mediaPickerLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(3)) { images ->
@@ -351,37 +352,45 @@ fun RecordsScreenContent(
         isRefreshing = isRefreshing,
         onRefresh = onRefresh
     ) {
-        when (viewModel.documentViewType) {
-            DocumentViewType.GridView -> RecordsGridView(
-                state = recordsState,
-                mode = mode,
-                selectedItems = selectedItems,
-                onSelectedItemsChange = onSelectedItemsChange,
-                onRecordClick = handleRecordClick,
-                onRetry = {
-                    onRefresh.invoke()
-                },
-                onUploadRecordClick = handleRecordUploadClick,
-                onMoreOptionsClick = { record ->
-                    viewModel.documentBottomSheetType = DocumentBottomSheetType.DocumentOptions
-                    viewModel.cardClickData.value = record
+        Column {
+            RecordSortSection(
+                viewModel = viewModel,
+                openSheet = {
+                    viewModel.documentBottomSheetType =
+                        DocumentBottomSheetType.DocumentSort
                 }
             )
+            when (viewModel.documentViewType) {
+                DocumentViewType.GridView -> RecordsGridView(
+                    state = recordsState,
+                    mode = mode,
+                    selectedItems = selectedItems,
+                    onSelectedItemsChange = onSelectedItemsChange,
+                    onRecordClick = handleRecordClick,
+                    onRetry = {
+                        onRefresh.invoke()
+                    },
+                    onUploadRecordClick = handleRecordUploadClick,
+                    onMoreOptionsClick = { record ->
+                        viewModel.documentBottomSheetType = DocumentBottomSheetType.DocumentOptions
+                        viewModel.cardClickData.value = record
+                    }
+                )
 
-            DocumentViewType.ListView -> RecordsListView(
-                state = recordsState,
-                onRecordClick = handleRecordClick,
-                onUploadRecordClick = handleRecordUploadClick,
-                onMoreOptionsClick = { record ->
-                    viewModel.documentBottomSheetType = DocumentBottomSheetType.DocumentOptions
-                    viewModel.cardClickData.value = record
-                }
-            )
+                DocumentViewType.ListView -> RecordsListView(
+                    state = recordsState,
+                    onRecordClick = handleRecordClick,
+                    onUploadRecordClick = handleRecordUploadClick,
+                    onMoreOptionsClick = { record ->
+                        viewModel.documentBottomSheetType = DocumentBottomSheetType.DocumentOptions
+                        viewModel.cardClickData.value = record
+                    }
+                )
+            }
         }
     }
 }
-
-private fun syncRecords(
+fun syncRecords(
     filterIds: List<String>,
     ownerId: String,
     context: Context,

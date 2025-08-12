@@ -29,6 +29,7 @@ import java.util.Locale
 @Composable
 fun CaseView(
     modifier: Modifier = Modifier,
+    query: String = "",
     viewModel: RecordsViewModel,
     params: MedicalRecordsNavModel,
     onCaseItemClick: (CaseModel) -> Unit = {}
@@ -46,8 +47,17 @@ fun CaseView(
         is CasesState.EmptyState -> {}
         is CasesState.Error -> {}
         is CasesState.Success -> {
+            val cases =
+                if (state is CasesState.Success) (state as CasesState.Success).data else emptyList()
+            val filteredCases = if (query.isBlank()) {
+                cases
+            } else {
+                cases.filter { case ->
+                    case.name.contains(query, ignoreCase = true)
+                }
+            }
             val groupedData: Map<String, List<CaseModel>> =
-                (state as CasesState.Success).data
+                filteredCases
                     .sortedByDescending { it.createdAt }
                     .groupBy {
                         val caseDate = Date(it.createdAt * 1000)

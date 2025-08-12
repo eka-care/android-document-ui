@@ -17,7 +17,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.eka.ui.buttons.EkaButton
 import com.eka.ui.buttons.EkaButtonShape
@@ -26,6 +28,7 @@ import com.eka.ui.buttons.EkaButtonStyle
 import com.eka.ui.buttons.EkaIcon
 import com.eka.ui.theme.EkaTheme
 import eka.care.documents.ui.components.RecordsScreenContent
+import eka.care.documents.ui.components.syncRecords
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.utility.DocumentBottomSheetType
 import eka.care.documents.ui.viewmodel.RecordsViewModel
@@ -41,6 +44,34 @@ fun CaseDetailsScreen(
     openRecordViewer: (data: RecordModel) -> Unit,
     onBackPressed: () -> Unit = {},
 ) {
+    val context = LocalContext.current
+    val filterIdsToProcess = mutableListOf<String>().apply {
+        if (params.filterId?.isNotEmpty() == true) {
+            add(params.filterId)
+        }
+        if (!params.links.isNullOrBlank()) {
+            params.links.split(",")
+                .map { it.trim() }
+                .filter { it.isNotEmpty() && it != params.filterId }
+                .forEach { add(it) }
+        }
+    }
+    LaunchedEffect(params) {
+        syncRecords(
+            filterIds = filterIdsToProcess,
+            ownerId = params.ownerId,
+            context = context,
+        )
+        viewModel.fetchRecordsCount(
+            filterIds = filterIdsToProcess,
+            ownerId = params.ownerId,
+        )
+        viewModel.fetchRecords(
+            ownerId = params.ownerId,
+            filterIds = filterIdsToProcess,
+            caseId = caseId
+        )
+    }
     Scaffold(
         modifier = Modifier
             .background(EkaTheme.colors.surface)

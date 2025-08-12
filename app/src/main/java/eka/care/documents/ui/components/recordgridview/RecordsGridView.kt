@@ -19,7 +19,9 @@ fun RecordsGridView(
     onMoreOptionsClick: (record: RecordModel) -> Unit,
 ) {
     when (state) {
-        is RecordsState.Loading -> {}
+        is RecordsState.Loading -> {
+            RecordsGridShimmer()
+        }
         is RecordsState.EmptyState -> RecordEmptyState(onClick = onUploadRecordClick)
         is RecordsState.Error -> {}
         is RecordsState.Success -> {

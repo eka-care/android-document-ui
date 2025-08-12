@@ -16,18 +16,20 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
-import com.valentinilk.shimmer.shimmer
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eka.ui.theme.EkaTheme
+import com.valentinilk.shimmer.shimmer
+import eka.care.documents.ui.theme.StyleDictionaryColor
 
 @Composable
 fun RecordsGridItemShimmer() {
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = EkaTheme.colors.onPrimary
+            containerColor = Color.White
         ),
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier.width(184.dp)
@@ -48,10 +50,10 @@ fun RecordsGridItemShimmer() {
                             .height(24.dp)
                             .shimmer()
                             .background(
-                                color = EkaTheme.colors.onPrimaryContainer,
+                                color = StyleDictionaryColor.colorNeutral200,
                                 RoundedCornerShape(4.dp)
                             )
-                    ) { }
+                    )
                     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                         Box(
                             modifier = Modifier
@@ -59,20 +61,20 @@ fun RecordsGridItemShimmer() {
                                 .height(16.dp)
                                 .shimmer()
                                 .background(
-                                    color = EkaTheme.colors.onPrimaryContainer,
+                                    color = StyleDictionaryColor.colorNeutral200,
                                     RoundedCornerShape(28.dp)
                                 )
-                        ) { }
+                        )
                         Box(
                             modifier = Modifier
                                 .width(66.dp)
                                 .height(16.dp)
                                 .shimmer()
                                 .background(
-                                    color = EkaTheme.colors.onPrimaryContainer,
+                                    color = StyleDictionaryColor.colorNeutral200,
                                     RoundedCornerShape(28.dp)
                                 )
-                        ) { }
+                        )
                     }
                 }
                 Box(
@@ -81,10 +83,10 @@ fun RecordsGridItemShimmer() {
                         .height(24.dp)
                         .shimmer()
                         .background(
-                            color = EkaTheme.colors.onPrimaryContainer,
+                            color = StyleDictionaryColor.colorNeutral200,
                             RoundedCornerShape(28.dp)
                         )
-                ) { }
+                )
             }
 
             Box(
@@ -93,10 +95,10 @@ fun RecordsGridItemShimmer() {
                     .height(60.dp)
                     .shimmer()
                     .background(
-                        color = EkaTheme.colors.onPrimaryContainer,
+                        color = StyleDictionaryColor.colorNeutral200,
                         RoundedCornerShape(12.dp)
                     )
-            ) { }
+            )
         }
     }
 }
@@ -110,7 +112,7 @@ fun RecordsGridShimmer() {
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        repeat(6) {
+        repeat(8) {
             item {
                 RecordsGridItemShimmer()
             }

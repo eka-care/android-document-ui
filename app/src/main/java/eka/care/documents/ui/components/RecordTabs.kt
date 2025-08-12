@@ -25,10 +25,10 @@ import eka.care.documents.ui.model.TabItem
 fun RecordTabs(
     modifier: Modifier = Modifier,
     tabs: List<TabItem> = listOf(
-        TabItem(id = "all_files", title = "All Files", isSelected = false),
-        TabItem(id = "medical_cases", title = "Medical Cases", isSelected = true)
+        TabItem(id = 0, title = "All Files", isSelected = false),
+        TabItem(id = 1, title = "Medical Cases", isSelected = true)
     ),
-    onTabClick: (String) -> Unit = {}
+    onTabClick: (Int) -> Unit = {}
 ) {
     val selectedTabIndex = tabs.indexOfFirst { it.isSelected }.takeIf { it >= 0 } ?: 0
 

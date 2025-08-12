@@ -36,7 +36,7 @@ val documentOptionsItems = arrayOf(
 @Composable
 fun RecordOptionsBottomSheet(onClick: (String) -> Unit) {
     BottomSheetContentLayout(
-        height = 0.125f * documentOptionsItems.size,
+        height = 0.1f * documentOptionsItems.size,
         title = "Choose an option"
     ) {
         documentOptionsItems.map { item ->

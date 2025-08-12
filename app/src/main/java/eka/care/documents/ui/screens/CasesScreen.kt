@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -41,13 +42,16 @@ import com.eka.ui.theme.EkaTheme
 import eka.care.documents.ui.R
 import eka.care.documents.ui.components.bottomSheet.UploadCaseBottomSheet
 import eka.care.documents.ui.components.recordcaseview.CaseView
-import eka.care.documents.ui.model.RecordCase
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.viewmodel.RecordsViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun CasesScreen(viewModel: RecordsViewModel, params: MedicalRecordsNavModel) {
+fun CasesScreen(
+    viewModel: RecordsViewModel,
+    params: MedicalRecordsNavModel,
+    onBackPressed: () -> Unit
+) {
     val sheetState = rememberModalBottomSheetState(
         initialValue = Hidden,
         skipHalfExpanded = true
@@ -67,6 +71,8 @@ fun CasesScreen(viewModel: RecordsViewModel, params: MedicalRecordsNavModel) {
         }
     }
 
+    var query by remember { mutableStateOf("") }
+
     ModalBottomSheetLayout(
         sheetState = sheetState,
         sheetContent = {
@@ -83,15 +89,24 @@ fun CasesScreen(viewModel: RecordsViewModel, params: MedicalRecordsNavModel) {
                     .fillMaxSize()
                     .background(EkaTheme.colors.surface),
                 topBar = {
-                    CasesSearchBar(onAddNewCase = {
-                        caseName = it
-                        openSheet.invoke()
-                    })
+                    CasesSearchBar(
+                        viewModel = viewModel,
+                        params = params,
+                        onAddNewCase = {
+                            caseName = it
+                            openSheet.invoke()
+                        },
+                        onQuery = {
+                            query = it
+                        },
+                        onBackPressed = onBackPressed
+                    )
                 },
                 content = { paddingValues ->
                     CaseView(
                         modifier = Modifier.padding(paddingValues),
                         viewModel = viewModel,
+                        query = query,
                         params = params
                     )
                 }
@@ -102,23 +117,31 @@ fun CasesScreen(viewModel: RecordsViewModel, params: MedicalRecordsNavModel) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CasesSearchBar(onAddNewCase: (caseName: String) -> Unit) {
-    var expanded by rememberSaveable { mutableStateOf(true) }
+private fun CasesSearchBar(
+    viewModel: RecordsViewModel,
+    params: MedicalRecordsNavModel,
+    onQuery: (String) -> Unit,
+    onAddNewCase: (caseName: String) -> Unit,
+    onBackPressed: () -> Unit
+) {
     var searchQuery by rememberSaveable { mutableStateOf("") }
     SearchBar(
         modifier = Modifier
             .fillMaxWidth()
             .background(EkaTheme.colors.surface)
-            .padding(all = if (expanded) 0.dp else 16.dp),
+            .padding(0.dp),
         inputField = {
             SearchBarDefaults.InputField(
                 query = searchQuery,
-                onQueryChange = { searchQuery = it },
+                onQueryChange = {
+                    searchQuery = it
+                    onQuery.invoke(searchQuery)
+                },
                 onSearch = {
 
                 },
                 leadingIcon = {
-                    IconButton(onClick = { expanded = false }) {
+                    IconButton(onClick = onBackPressed) {
                         Icon(
                             modifier = Modifier
                                 .size(24.dp)
@@ -129,8 +152,8 @@ private fun CasesSearchBar(onAddNewCase: (caseName: String) -> Unit) {
                         )
                     }
                 },
-                expanded = expanded,
-                onExpandedChange = { expanded = it },
+                expanded = true,
+                onExpandedChange = { },
                 placeholder = {
                     Text(
                         text = "Search or add your medical cases..."
@@ -141,18 +164,34 @@ private fun CasesSearchBar(onAddNewCase: (caseName: String) -> Unit) {
         colors = SearchBarDefaults.colors(
             containerColor = EkaTheme.colors.surfaceContainerHigh
         ),
-        expanded = expanded,
-        onExpandedChange = { expanded = it },
+        expanded = true,
+        onExpandedChange = { },
     ) {
-        CasesSearchScreenContent(searchQuery, onAddNewCase)
+        CasesSearchScreenContent(
+            searchQuery = searchQuery,
+            viewModel = viewModel,
+            params = params,
+            onAddNewCase = onAddNewCase
+        )
     }
 }
 
 @Composable
-private fun CasesSearchScreenContent(searchQuery: String, onAddNewCase: (caseName: String) -> Unit) {
+private fun CasesSearchScreenContent(
+    searchQuery: String,
+    viewModel: RecordsViewModel,
+    params: MedicalRecordsNavModel,
+    onAddNewCase: (caseName: String) -> Unit
+) {
     val keyboardController = LocalSoftwareKeyboardController.current
     if (searchQuery.isNotEmpty()) {
         Column {
+            CaseView(
+                modifier = Modifier.fillMaxWidth(),
+                viewModel = viewModel,
+                query = searchQuery,
+                params = params
+            )
             ListItem(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -214,11 +253,3 @@ private fun EmptyCaseView() {
         )
     }
 }
-
-private val sampleCases = listOf(
-    RecordCase("Dr. Raghu Gupta", 72, "25 Fri", R.drawable.ic_user_doctor),
-    RecordCase("Apollo Hospital", 102, "21 Fri", R.drawable.ic_bed),
-    RecordCase("Health Check-up", 5, "20 Wed", R.drawable.ic_stethoscope),
-    RecordCase("Home Visit", 3, "18 Mon", R.drawable.ic_house),
-    RecordCase("Emergency", 1, "15 Fri", R.drawable.ic_ambulance)
-)

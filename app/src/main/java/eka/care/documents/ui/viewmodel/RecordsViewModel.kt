@@ -201,7 +201,6 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
         filterId: String?
     ) {
         caseJob?.cancel()
-        _getRecordsState.value = RecordsState.Loading
         caseJob = viewModelScope.launch {
             recordsManager.readCases(
                 ownerId = ownerId,
