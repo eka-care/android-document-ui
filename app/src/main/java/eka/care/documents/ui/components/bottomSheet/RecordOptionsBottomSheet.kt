@@ -24,6 +24,12 @@ val documentOptionsItems = arrayOf(
         trailingIcon = Icons.Default.KeyboardArrowRight
     ),
     DocumentBottomSheetItemModel(
+        itemName = "Assign to case",
+        action = RecordsAction.ASSIGN_DOCUMENT_TO_CASE,
+        leadingIcon = R.drawable.ic_pen_regular,
+        trailingIcon = Icons.Default.KeyboardArrowRight
+    ),
+    DocumentBottomSheetItemModel(
         itemName = "Delete document",
         itemNameColor = StyleDictionaryColor.colorBackgroundDanger,
         action = RecordsAction.ACTION_DELETE_RECORD,

@@ -1,6 +1,7 @@
 package eka.care.documents.ui.components.recordcaseview
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -71,7 +72,11 @@ fun CaseView(
                             SimpleDateFormat("MMMM yyyy", Locale.getDefault()).format(caseDate)
                         }
                     }
-            LazyColumn(modifier = modifier.background(Color.White)) {
+            LazyColumn(
+                modifier = modifier
+                    .fillMaxSize()
+                    .background(Color.White)
+            ) {
                 groupedData.toList().forEachIndexed { index, (month, cases) ->
                     stickyHeader {
                         ListItem(

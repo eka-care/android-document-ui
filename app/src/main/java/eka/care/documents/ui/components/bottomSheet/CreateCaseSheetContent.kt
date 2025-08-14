@@ -64,7 +64,7 @@ fun CreateCaseSheetContent(
             onClick = {
                 selectedCaseType?.let { caseType ->
                     onCreateCase(caseName, caseType)
-                } ?: onCreateCase(caseName, CaseType.OTHER)
+                } ?: onCreateCase(caseName, CaseType.PRESCRIPTION)
                 onDismiss()
             },
         )

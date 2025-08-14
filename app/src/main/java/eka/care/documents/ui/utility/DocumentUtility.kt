@@ -244,16 +244,13 @@ enum class CaseType(
     val displayName: String,
     val iconRes: Int
 ) {
-    DOCTOR_VISIT("doctor_visit", "Doctor Visit (OPD)", R.drawable.ic_user_doctor),
-    HOSPITAL_ADMIT("hospital_admit", "Hospital Admit (IPD)", R.drawable.ic_bed),
-    HEALTH_CHECKUP("health_checkup", "Health Check-up", R.drawable.ic_stethoscope),
-    HOME_VISIT("home_visit", "Home Visit", R.drawable.ic_house),
-    TELECONSULTATION("teleconsultation", "Teleconsultation", R.drawable.ic_video),
-    EMERGENCY("emergency", "Emergency", R.drawable.ic_ambulance),
-    SURGERY("surgery", "Surgery / Procedure", R.drawable.ic_scalpel),
-    DENTAL("dental", "Dental", R.drawable.ic_tooth),
-    SECOND_OPINION("second_opinion", "Second Opinion", R.drawable.ic_users),
-    OTHER("other", "Other", R.drawable.ic_folder);
+    OP_CONSULTATION("OPConsultation", "OP Consultation", R.drawable.ic_user_doctor),
+    PRESCRIPTION("Prescription", "Prescription", R.drawable.ic_bed),
+    DISCHARGE_SUMMARY("DischargeSummary", "Discharge Summary", R.drawable.ic_stethoscope),
+    DIAGNOSTIC_REPORT("DiagnosticReport", "Diagnostic Report", R.drawable.ic_house),
+    IMMUNIZATION_RECORD("ImmunizationRecord", "Immunization Record", R.drawable.ic_video),
+    HEALTH_DOCUMENT_RECORD("HealthDocumentRecord", "Health Document Record", R.drawable.ic_ambulance),
+    WELLNESS_RECORD("WellnessRecord", "Wellness Record", R.drawable.ic_scalpel);
 
     companion object {
         fun fromId(id: String): CaseType? {

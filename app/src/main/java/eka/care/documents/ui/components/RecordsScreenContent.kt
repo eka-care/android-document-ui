@@ -36,6 +36,7 @@ import com.google.gson.JsonObject
 import com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult
 import eka.care.documents.ui.activity.AddRecordParams
 import eka.care.documents.ui.activity.AddRecordPreviewActivity
+import eka.care.documents.ui.activity.CaseListActivity
 import eka.care.documents.ui.components.bottomSheet.RecordsBottomSheetContent
 import eka.care.documents.ui.components.recordListView.RecordsListView
 import eka.care.documents.ui.components.recordgridview.RecordsGridView
@@ -337,6 +338,18 @@ fun RecordsScreenContent(
                     pickImagesFromGallery = {
                         MediaPickerManager.pickVisualMedia()
                     },
+                    onAssignCase = {
+                        val paramsJson = JsonObject().apply {
+                            addProperty(AddRecordParams.FILTER_ID.key, params.filterId)
+                            addProperty(AddRecordParams.LINKS.key, params.links)
+                            addProperty(AddRecordParams.OWNER_ID.key, params.ownerId)
+                        }
+                        Intent(context, CaseListActivity::class.java).apply {
+                            putExtra(AddRecordParams.PARAMS_KEY, Gson().toJson(paramsJson))
+                        }.run {
+                            context.startActivity(this)
+                        }
+                    },
                     viewModel = viewModel,
                     params = params,
                     caseId = caseId,
@@ -390,6 +403,7 @@ fun RecordsScreenContent(
         }
     }
 }
+
 fun syncRecords(
     filterIds: List<String>,
     ownerId: String,
@@ -397,4 +411,5 @@ fun syncRecords(
 ) {
     val records = Records.getInstance(context = context, token = "")
     records.refreshRecords(context, ownerId, filterIds)
+    records.syncRecords(ownerId)
 }

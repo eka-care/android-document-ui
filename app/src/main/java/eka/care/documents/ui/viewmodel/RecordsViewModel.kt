@@ -182,7 +182,7 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
 
     fun createCase(
         ownerId: String,
-        filterId: String?,
+        filterId: String,
         name: String,
         type: String
     ) {
@@ -193,13 +193,11 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
                 ownerId = ownerId,
                 filterId = filterId,
             )
+            recordsManager.syncRecords(ownerId)
         }
     }
 
-    fun getCases(
-        ownerId: String,
-        filterId: String?
-    ) {
+    fun getCases(ownerId: String, filterId: String?) {
         caseJob?.cancel()
         caseJob = viewModelScope.launch {
             recordsManager.readCases(
@@ -213,6 +211,18 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
                         CasesState.Success(data = cases)
                     }
                 }
+        }
+    }
+
+    fun assignRecordToCase(
+        recordId: String,
+        caseId: String
+    ) {
+        viewModelScope.launch {
+            recordsManager.assignRecordToCase(
+                recordId = recordId,
+                caseId = caseId
+            )
         }
     }
 }

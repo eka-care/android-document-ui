@@ -56,7 +56,7 @@ fun RecordCaseItem(record: CaseModel, onClick: () -> Unit = {}) {
             )
         },
         leadingContent = {
-            val caseType = CaseType.fromId(record.type) ?: CaseType.OTHER
+            val caseType = CaseType.fromId(record.type) ?: CaseType.PRESCRIPTION
             Image(
                 modifier = Modifier.size(40.dp),
                 painter = painterResource(caseType.iconRes),

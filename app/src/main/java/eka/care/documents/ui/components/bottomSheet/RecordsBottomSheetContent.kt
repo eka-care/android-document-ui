@@ -19,6 +19,7 @@ fun RecordsBottomSheetContent(
     pickPdf: () -> Unit,
     cameraLauncher: () -> Unit,
     pickImagesFromGallery: () -> Unit,
+    onAssignCase: () -> Unit,
     allFilterIds: List<String>
 ) {
     when (viewModel.documentBottomSheetType) {
@@ -64,6 +65,10 @@ fun RecordsBottomSheetContent(
 
                         RecordsAction.ACTION_DELETE_RECORD -> {
                             onClick(RecordsAction.ACTION_OPEN_DELETE_DIALOG)
+                        }
+
+                        RecordsAction.ASSIGN_DOCUMENT_TO_CASE -> {
+                            onAssignCase()
                         }
                     }
                 }

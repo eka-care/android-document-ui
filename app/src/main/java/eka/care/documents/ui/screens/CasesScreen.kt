@@ -44,13 +44,15 @@ import eka.care.documents.ui.components.bottomSheet.UploadCaseBottomSheet
 import eka.care.documents.ui.components.recordcaseview.CaseView
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.viewmodel.RecordsViewModel
+import eka.care.records.client.model.CaseModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun CasesScreen(
     viewModel: RecordsViewModel,
     params: MedicalRecordsNavModel,
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
+    onCaseItemClick: (CaseModel) -> Unit = {}
 ) {
     val sheetState = rememberModalBottomSheetState(
         initialValue = Hidden,
@@ -106,6 +108,7 @@ fun CasesScreen(
                     CaseView(
                         modifier = Modifier.padding(paddingValues),
                         viewModel = viewModel,
+                        onCaseItemClick = onCaseItemClick,
                         query = query,
                         params = params
                     )
@@ -185,9 +188,11 @@ private fun CasesSearchScreenContent(
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     if (searchQuery.isNotEmpty()) {
-        Column {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
             CaseView(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().weight(1f),
                 viewModel = viewModel,
                 query = searchQuery,
                 params = params

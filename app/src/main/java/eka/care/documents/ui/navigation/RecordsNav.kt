@@ -1,7 +1,7 @@
 package eka.care.documents.ui.navigation
 
 data class MedicalRecordsNavModel(
-    val filterId: String? = null,
+    val filterId: String,
     val ownerId: String,
     val links: String? = null,
 )

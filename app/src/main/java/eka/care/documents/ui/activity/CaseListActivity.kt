@@ -36,6 +36,9 @@ class CaseListActivity : ComponentActivity() {
                     ownerId = ownerId,
                     links = links
                 ),
+                onCaseItemClick = {
+
+                },
                 onBackPressed = {
                     finish()
                 }
