@@ -45,30 +45,30 @@ fun CaseDetailsScreen(
     onBackPressed: () -> Unit = {},
 ) {
     val context = LocalContext.current
-    val filterIdsToProcess = mutableListOf<String>().apply {
-        if (params.filterId?.isNotEmpty() == true) {
-            add(params.filterId)
+    val owners = mutableListOf<String>().apply {
+        if (params.ownerId.isNotEmpty()) {
+            add(params.ownerId)
         }
         if (!params.links.isNullOrBlank()) {
             params.links.split(",")
                 .map { it.trim() }
-                .filter { it.isNotEmpty() && it != params.filterId }
+                .filter { it.isNotEmpty() && it != params.ownerId }
                 .forEach { add(it) }
         }
     }
     LaunchedEffect(params) {
         syncRecords(
-            filterIds = filterIdsToProcess,
-            ownerId = params.ownerId,
+            businessId = params.businessId,
+            owners = owners,
             context = context,
         )
         viewModel.fetchRecordsCount(
-            filterIds = filterIdsToProcess,
-            ownerId = params.ownerId,
+            businessId = params.businessId,
+            owners = owners,
         )
         viewModel.fetchRecords(
-            ownerId = params.ownerId,
-            filterIds = filterIdsToProcess,
+            businessId = params.businessId,
+            owners = owners,
             caseId = caseId
         )
     }

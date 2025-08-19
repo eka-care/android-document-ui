@@ -23,8 +23,8 @@ fun UploadCaseBottomSheet(
             onDismiss = { },
             onCreateCase = { caseName, caseType ->
                 viewModel.createCase(
+                    businessId = params.businessId,
                     ownerId = params.ownerId,
-                    filterId = params.filterId,
                     name = caseName,
                     type = caseType.id
                 )

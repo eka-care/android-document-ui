@@ -78,15 +78,15 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
     }
 
     fun fetchRecordsCount(
-        filterIds: List<String>,
-        ownerId: String,
+        businessId: String,
+        owners: List<String>
     ) {
         recordsCountJob?.cancel()
         _getAvailableDocTypes.value = RecordsCountByType(isLoading = true)
         recordsCountJob = viewModelScope.launch {
             val documentFlow = recordsManager.getRecordsCountGroupByType(
-                filterIds = filterIds,
-                ownerId = ownerId
+                businessId = businessId,
+                ownerIds = owners
             )
             documentFlow
                 .cancellable()
@@ -100,14 +100,14 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun fetchRecords(filterIds: List<String>, ownerId: String, caseId: String? = null) {
+    fun fetchRecords(owners: List<String>, businessId: String, caseId: String? = null) {
         job?.cancel()
         _getRecordsState.value = RecordsState.Loading
         job = viewModelScope.launch {
             isRefreshing.value = true
             val documentFlow = recordsManager.getRecords(
-                filterIds = filterIds,
-                ownerId = ownerId,
+                businessId = businessId,
+                ownerIds = owners,
                 caseId = caseId,
                 sortOrder = sortBy.value,
                 documentType = documentType.value
@@ -134,8 +134,8 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
 
     fun createRecord(
         files: List<File>,
+        businessId: String,
         ownerId: String,
-        filterId: String?,
         caseId: String?,
         documentType: String,
         documentDate: Long?,
@@ -144,8 +144,8 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             val recordId = recordsManager.addNewRecord(
                 files = files,
+                businessId = businessId,
                 ownerId = ownerId,
-                filterId = filterId,
                 caseId = caseId,
                 documentType = documentType,
                 documentDate = documentDate,
@@ -181,28 +181,28 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
     }
 
     fun createCase(
+        businessId: String,
         ownerId: String,
-        filterId: String,
         name: String,
         type: String
     ) {
         viewModelScope.launch {
             recordsManager.createCase(
+                businessId = businessId,
+                ownerId = ownerId,
                 name = name,
                 type = type,
-                ownerId = ownerId,
-                filterId = filterId,
             )
             recordsManager.syncRecords(ownerId)
         }
     }
 
-    fun getCases(ownerId: String, filterId: String?) {
+    fun getCases(businessId: String, ownerId: String) {
         caseJob?.cancel()
         caseJob = viewModelScope.launch {
             recordsManager.readCases(
-                ownerId = ownerId,
-                filterId = filterId
+                businessId = businessId,
+                ownerId = ownerId
             ).cancellable()
                 .collect { cases ->
                     _getCasesState.value = if (cases.isEmpty()) {

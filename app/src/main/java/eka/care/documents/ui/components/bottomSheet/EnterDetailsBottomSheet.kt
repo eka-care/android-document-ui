@@ -107,8 +107,8 @@ fun EnterDetailsBottomSheet(
             if (selectedChip != null && fileList.isNotEmpty()) {
                 viewModel.createRecord(
                     files = fileList,
+                    businessId = paramsModel.businessId,
                     ownerId = paramsModel.ownerId,
-                    filterId = paramsModel.filterId,
                     caseId = caseId,
                     documentType = selectedChip ?: "ot",
                     documentDate = timestampToLong(date)

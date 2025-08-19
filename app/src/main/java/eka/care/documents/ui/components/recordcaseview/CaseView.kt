@@ -37,8 +37,8 @@ fun CaseView(
 ) {
     LaunchedEffect(Unit) {
         viewModel.getCases(
-            ownerId = params.ownerId,
-            filterId = params.filterId
+            businessId = params.businessId,
+            ownerId = params.ownerId
         )
     }
 

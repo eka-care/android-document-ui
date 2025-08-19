@@ -24,7 +24,7 @@ class CaseListActivity : ComponentActivity() {
             return
         }
         val params = Gson().fromJson(jsonString, JsonObject::class.java)
-        val filterId = params.get(AddRecordParams.FILTER_ID.key).asString
+        val businessId = params.get(AddRecordParams.BUSINESS_ID.key).asString
         val ownerId = params.get(AddRecordParams.OWNER_ID.key).asString
         val links = params.get(AddRecordParams.LINKS.key).asString
 
@@ -32,7 +32,7 @@ class CaseListActivity : ComponentActivity() {
             CasesScreen(
                 viewModel = recordsViewModel,
                 params = MedicalRecordsNavModel(
-                    filterId = filterId,
+                    businessId = businessId,
                     ownerId = ownerId,
                     links = links
                 ),

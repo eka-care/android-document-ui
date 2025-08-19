@@ -25,7 +25,7 @@ import eka.care.documents.ui.utility.GetIconById
 import eka.care.documents.ui.utility.RecordType
 import eka.care.documents.ui.utility.TagState
 import eka.care.records.client.model.RecordModel
-import eka.care.records.client.model.RecordStatus
+import eka.care.records.client.model.RecordState
 
 
 @Composable
@@ -51,20 +51,20 @@ fun RecordsListItem(
             )
         },
         supportingContent = {
-            when (record.status) {
-                RecordStatus.SYNCING -> {
+            when (record.state) {
+                RecordState.SYNCING -> {
                     Row {
                         Text(text = "Uploading")
                     }
                 }
 
-                RecordStatus.WAITING_TO_UPLOAD -> {
+                RecordState.WAITING_TO_UPLOAD -> {
                     Row {
                         Text(text = "Waiting to upload")
                     }
                 }
 
-                RecordStatus.WAITING_FOR_NETWORK -> {
+                RecordState.WAITING_FOR_NETWORK -> {
                     Row {
                         Text(text = "Waiting for network")
                     }
@@ -133,7 +133,7 @@ fun RecordsListItemPreview() {
                 record = RecordModel(
                     id = "hhh",
                     thumbnail = null,
-                    status = RecordStatus.SYNC_SUCCESS,
+                    state = RecordState.SYNC_SUCCESS,
                     createdAt = 0L,
                     updatedAt = 0L,
                     documentDate = 0L,

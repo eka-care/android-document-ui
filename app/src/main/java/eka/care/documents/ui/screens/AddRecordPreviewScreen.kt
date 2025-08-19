@@ -117,8 +117,8 @@ fun AddRecordPreviewScreen(
                     )
                 ) else filesPreviewList,
                 paramsModel = MedicalRecordsNavModel(
-                    ownerId = navData.ownerId,
-                    filterId = navData.filterId
+                    businessId = navData.businessId,
+                    ownerId = navData.ownerId
                 ),
                 editDocument = false
             )

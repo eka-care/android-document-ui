@@ -72,14 +72,14 @@ fun RecordsScreenContent(
     var showDeleteDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
-    val filterIdsToProcess = mutableListOf<String>().apply {
-        if (params.filterId?.isNotEmpty() == true) {
-            add(params.filterId)
+    val owners = mutableListOf<String>().apply {
+        if (params.ownerId.isNotEmpty()) {
+            add(params.ownerId)
         }
         if (!params.links.isNullOrBlank()) {
             params.links.split(",")
                 .map { it.trim() }
-                .filter { it.isNotEmpty() && it != params.filterId }
+                .filter { it.isNotEmpty() && it != params.ownerId }
                 .forEach { add(it) }
         }
     }
@@ -98,55 +98,30 @@ fun RecordsScreenContent(
 
     val onRefresh: () -> Unit = {
         syncRecords(
-            filterIds = filterIdsToProcess,
-            ownerId = params.ownerId,
+            businessId = params.businessId,
+            owners = owners,
             context = context
         )
     }
-
-//    LaunchedEffect(viewModel.documentType.value) {
-//        viewModel.fetchRecords(
-//            ownerId = params.ownerId,
-//            filterIds = filterIdsToProcess,
-//            caseId = caseId
-//        )
-//    }
 
     val addRecordResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             syncRecords(
-                filterIds = filterIdsToProcess,
-                ownerId = params.ownerId,
+                businessId = params.businessId,
+                owners = owners,
                 context = context
             )
         }
     }
-
-//    LaunchedEffect(params) {
-//        syncRecords(
-//            filterIds = filterIdsToProcess,
-//            ownerId = params.ownerId,
-//            context = context,
-//        )
-//        viewModel.fetchRecordsCount(
-//            filterIds = filterIdsToProcess,
-//            ownerId = params.ownerId,
-//        )
-//        viewModel.fetchRecords(
-//            ownerId = params.ownerId,
-//            filterIds = filterIdsToProcess,
-//            caseId = caseId
-//        )
-//    }
 
     val mediaPickerLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(3)) { images ->
             val intent = Intent(context, AddRecordPreviewActivity::class.java)
             val paramsJson = JsonObject().apply {
                 images.let { addProperty(AddRecordParams.IMAGE_URIS.key, images.joinToString(",")) }
-                addProperty(AddRecordParams.FILTER_ID.key, filterIdsToProcess.first())
+                addProperty(AddRecordParams.BUSINESS_ID.key, params.businessId)
                 addProperty(AddRecordParams.OWNER_ID.key, params.ownerId)
                 addProperty(AddRecordParams.CASE_ID.key, caseId)
             }
@@ -161,7 +136,7 @@ fun RecordsScreenContent(
                 val intent = Intent(context, AddRecordPreviewActivity::class.java)
                 val paramsJson = JsonObject().apply {
                     addProperty(AddRecordParams.PDF_URI.key, it.toString())
-                    addProperty(AddRecordParams.FILTER_ID.key, filterIdsToProcess.first())
+                    addProperty(AddRecordParams.BUSINESS_ID.key, params.businessId)
                     addProperty(AddRecordParams.OWNER_ID.key, params.ownerId)
                     addProperty(AddRecordParams.CASE_ID.key, caseId)
                 }
@@ -184,7 +159,7 @@ fun RecordsScreenContent(
                                 AddRecordParams.IMAGE_URIS.key,
                                 pages.joinToString(",") { it.imageUri.toString() })
                         }
-                        addProperty(AddRecordParams.FILTER_ID.key, filterIdsToProcess.first())
+                        addProperty(AddRecordParams.BUSINESS_ID.key, params.businessId)
                         addProperty(AddRecordParams.OWNER_ID.key, params.ownerId)
                         addProperty(AddRecordParams.CASE_ID.key, caseId)
                     }
@@ -202,7 +177,7 @@ fun RecordsScreenContent(
                 val intent = Intent(context, AddRecordPreviewActivity::class.java)
                 val paramsJson = JsonObject().apply {
                     addProperty(AddRecordParams.IMAGE_URIS.key, uri.toString())
-                    addProperty(AddRecordParams.FILTER_ID.key, filterIdsToProcess.first())
+                    addProperty(AddRecordParams.BUSINESS_ID.key, params.businessId)
                     addProperty(AddRecordParams.OWNER_ID.key, params.ownerId)
                     addProperty(AddRecordParams.CASE_ID.key, caseId)
                 }
@@ -251,8 +226,8 @@ fun RecordsScreenContent(
                                 localId = record.id
                             )
                             syncRecords(
-                                filterIds = filterIdsToProcess,
-                                ownerId = params.ownerId,
+                                businessId = params.businessId,
+                                owners = owners,
                                 context = context
                             )
                         }
@@ -318,8 +293,8 @@ fun RecordsScreenContent(
                     },
                     onEditDocument = {
                         syncRecords(
-                            filterIds = filterIdsToProcess,
-                            ownerId = params.ownerId,
+                            businessId = params.businessId,
+                            owners = owners,
                             context = context
                         )
                     },
@@ -340,9 +315,9 @@ fun RecordsScreenContent(
                     },
                     onAssignCase = {
                         val paramsJson = JsonObject().apply {
-                            addProperty(AddRecordParams.FILTER_ID.key, params.filterId)
-                            addProperty(AddRecordParams.LINKS.key, params.links)
+                            addProperty(AddRecordParams.BUSINESS_ID.key, params.businessId)
                             addProperty(AddRecordParams.OWNER_ID.key, params.ownerId)
+                            addProperty(AddRecordParams.LINKS.key, params.links)
                         }
                         Intent(context, CaseListActivity::class.java).apply {
                             putExtra(AddRecordParams.PARAMS_KEY, Gson().toJson(paramsJson))
@@ -353,7 +328,7 @@ fun RecordsScreenContent(
                     viewModel = viewModel,
                     params = params,
                     caseId = caseId,
-                    allFilterIds = filterIdsToProcess
+                    owners = owners
                 )
             },
             containerColor = Color.White
@@ -405,11 +380,10 @@ fun RecordsScreenContent(
 }
 
 fun syncRecords(
-    filterIds: List<String>,
-    ownerId: String,
+    owners: List<String>,
+    businessId: String,
     context: Context,
 ) {
     val records = Records.getInstance(context = context, token = "")
-    records.refreshRecords(context, ownerId, filterIds)
-    records.syncRecords(ownerId)
+    records.refreshRecords(context, businessId = businessId, ownerIds = owners)
 }

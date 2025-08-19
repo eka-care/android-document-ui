@@ -50,7 +50,7 @@ import eka.care.documents.ui.utility.Mode
 import eka.care.documents.ui.utility.RecordType
 import eka.care.documents.ui.utility.TagState
 import eka.care.records.client.model.RecordModel
-import eka.care.records.client.model.RecordStatus
+import eka.care.records.client.model.RecordState
 
 @Composable
 fun RecordsGridItem(
@@ -64,7 +64,7 @@ fun RecordsGridItem(
 ) {
     Card(
         colors = CardDefaults.cardColors(EkaTheme.colors.surface),
-        onClick = if (record.status == RecordStatus.SYNC_FAILED) onRetry else onClick
+        onClick = if (record.state == RecordState.SYNC_FAILED) onRetry else onClick
     ) {
         Column(
             modifier = Modifier.padding(8.dp),
@@ -140,10 +140,10 @@ fun RecordsGridItem(
                 }
             }
             val blurModifier =
-                when (record.status) {
-                    RecordStatus.SYNCING -> Modifier.blur(6.dp)
-                    RecordStatus.SYNC_FAILED -> Modifier.blur(22.dp)
-                    RecordStatus.WAITING_TO_UPLOAD, RecordStatus.WAITING_FOR_NETWORK -> Modifier.blur(
+                when (record.state) {
+                    RecordState.SYNCING -> Modifier.blur(6.dp)
+                    RecordState.SYNC_FAILED -> Modifier.blur(22.dp)
+                    RecordState.WAITING_TO_UPLOAD, RecordState.WAITING_FOR_NETWORK -> Modifier.blur(
                         6.dp
                     )
 
@@ -176,7 +176,7 @@ fun RecordsGridItem(
                         .fillMaxWidth()
                         .height(80.dp)
                         .background(
-                            if (record.status != RecordStatus.NONE && record.status != RecordStatus.SYNC_SUCCESS) {
+                            if (record.state != RecordState.NONE && record.state != RecordState.SYNC_SUCCESS) {
                                 Color.Black.copy(alpha = 0.7f)
                             } else {
                                 Color.Black.copy(alpha = 0.2f)
@@ -186,8 +186,8 @@ fun RecordsGridItem(
                         .clip(RoundedCornerShape(12.dp))
                 )
 
-                when (record.status) {
-                    RecordStatus.SYNCING -> {
+                when (record.state) {
+                    RecordState.SYNCING -> {
                         Column(
                             modifier = Modifier.fillMaxSize(),
                             horizontalAlignment = Alignment.CenterHorizontally,
@@ -210,7 +210,7 @@ fun RecordsGridItem(
                         }
                     }
 
-                    RecordStatus.WAITING_TO_UPLOAD -> {
+                    RecordState.WAITING_TO_UPLOAD -> {
                         Column(
                             modifier = Modifier.fillMaxSize(),
                             horizontalAlignment = Alignment.CenterHorizontally,
@@ -234,7 +234,7 @@ fun RecordsGridItem(
                         }
                     }
 
-                    RecordStatus.WAITING_FOR_NETWORK -> {
+                    RecordState.WAITING_FOR_NETWORK -> {
                         Column(
                             modifier = Modifier.fillMaxSize(),
                             horizontalAlignment = Alignment.CenterHorizontally,
@@ -258,7 +258,7 @@ fun RecordsGridItem(
                         }
                     }
 
-                    RecordStatus.SYNC_FAILED -> {
+                    RecordState.SYNC_FAILED -> {
                         Column(
                             modifier = Modifier.fillMaxSize(),
                             horizontalAlignment = Alignment.CenterHorizontally,
@@ -315,7 +315,7 @@ fun MedicalRecordsGridItemPreview() {
                 record = RecordModel(
                     id = "hhh",
                     thumbnail = null,
-                    status = RecordStatus.SYNC_FAILED,
+                    state = RecordState.SYNC_FAILED,
                     createdAt = 0L,
                     updatedAt = 0L,
                     documentDate = 0L,

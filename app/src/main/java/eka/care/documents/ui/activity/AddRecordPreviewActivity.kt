@@ -12,12 +12,12 @@ import eka.care.documents.ui.screens.AddRecordPreviewScreen
 import eka.care.documents.ui.viewmodel.RecordsViewModel
 
 enum class AddRecordParams(val key: String) {
+    BUSINESS_ID("businessId"),
+    OWNER_ID("ownerId"),
     PDF_URI("pdfUriString"),
     IMAGE_URIS("imageUris"),
-    FILTER_ID("filterId"),
     CASE_ID("caseId"),
-    LINKS("links"),
-    OWNER_ID("ownerId");
+    LINKS("links");
 
     companion object {
         const val PARAMS_KEY = "params"
@@ -41,9 +41,9 @@ class AddRecordPreviewActivity : ComponentActivity() {
         val navData = AddRecordPreviewNavModel(
             pdfUriString = if (params.has(AddRecordParams.PDF_URI.key)) params.get(AddRecordParams.PDF_URI.key).asString else null,
             imageUris = if (params.has(AddRecordParams.IMAGE_URIS.key)) params.get(AddRecordParams.IMAGE_URIS.key).asString else null,
-            filterId = params.get(AddRecordParams.FILTER_ID.key).asString,
+            businessId = params.get(AddRecordParams.BUSINESS_ID.key).asString,
             ownerId = params.get(AddRecordParams.OWNER_ID.key).asString,
-            caseId = params.get(AddRecordParams.CASE_ID.key).asString
+            caseId = if (params.has(AddRecordParams.CASE_ID.key)) params.get(AddRecordParams.CASE_ID.key).asString else null
         )
 
         setContent {

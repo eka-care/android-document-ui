@@ -81,31 +81,31 @@ private fun ScreenContent(
     val context = LocalContext.current
 
 
-    val filterIdsToProcess = mutableListOf<String>().apply {
-        if (params.filterId?.isNotEmpty() == true) {
-            add(params.filterId)
+    val owners = mutableListOf<String>().apply {
+        if (params.ownerId.isNotEmpty()) {
+            add(params.ownerId)
         }
         if (!params.links.isNullOrBlank()) {
             params.links.split(",")
                 .map { it.trim() }
-                .filter { it.isNotEmpty() && it != params.filterId }
+                .filter { it.isNotEmpty() && it != params.ownerId }
                 .forEach { add(it) }
         }
     }
 
     LaunchedEffect(params) {
         syncRecords(
-            filterIds = filterIdsToProcess,
-            ownerId = params.ownerId,
-            context = context,
+            businessId = params.businessId,
+            owners = owners,
+            context = context
         )
         viewModel.fetchRecordsCount(
-            filterIds = filterIdsToProcess,
-            ownerId = params.ownerId,
+            businessId = params.businessId,
+            owners = owners,
         )
         viewModel.fetchRecords(
-            ownerId = params.ownerId,
-            filterIds = filterIdsToProcess,
+            businessId = params.businessId,
+            owners = owners,
             caseId = null
         )
     }
@@ -145,7 +145,7 @@ private fun ScreenContent(
                         viewModel.documentBottomSheetType = DocumentBottomSheetType.DocumentUpload
                     } else {
                         val paramsJson = JsonObject().apply {
-                            addProperty(AddRecordParams.FILTER_ID.key, params.filterId)
+                            addProperty(AddRecordParams.BUSINESS_ID.key, params.businessId)
                             addProperty(AddRecordParams.LINKS.key, params.links)
                             addProperty(AddRecordParams.OWNER_ID.key, params.ownerId)
                         }
@@ -202,9 +202,9 @@ private fun navigateToCaseDetails(
     caseItem: CaseModel
 ) {
     val paramsJson = JsonObject().apply {
-        addProperty(AddRecordParams.FILTER_ID.key, params.filterId)
-        addProperty(AddRecordParams.LINKS.key, params.links)
+        addProperty(AddRecordParams.BUSINESS_ID.key, params.businessId)
         addProperty(AddRecordParams.OWNER_ID.key, params.ownerId)
+        addProperty(AddRecordParams.LINKS.key, params.links)
         addProperty(AddRecordParams.CASE_ID.key, caseItem.id)
     }
     Intent(context, CaseDetailsActivity::class.java).apply {
@@ -232,5 +232,4 @@ private fun getTabs(pagerState: PagerState): List<TabItem> {
 enum class TabConstants(val id: Int) {
     ALL_FILES(0),
     MEDICAL_CASES(1)
-
 }

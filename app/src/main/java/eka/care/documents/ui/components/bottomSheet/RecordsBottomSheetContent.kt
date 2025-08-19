@@ -20,7 +20,7 @@ fun RecordsBottomSheetContent(
     cameraLauncher: () -> Unit,
     pickImagesFromGallery: () -> Unit,
     onAssignCase: () -> Unit,
-    allFilterIds: List<String>
+    owners: List<String>
 ) {
     when (viewModel.documentBottomSheetType) {
         DocumentBottomSheetType.DocumentUpload -> {
@@ -84,8 +84,8 @@ fun RecordsBottomSheetContent(
                 onClick = {
                     viewModel.sortBy.value = it
                     viewModel.fetchRecords(
-                        filterIds = allFilterIds,
-                        ownerId = params.ownerId
+                        owners = owners,
+                        businessId = params.businessId
                     )
                     onClick(RecordsAction.ACTION_CLOSE_SHEET)
                 },
