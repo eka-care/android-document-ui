@@ -9,6 +9,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.screens.CasesScreen
+import eka.care.documents.ui.utility.RecordsAction.Companion.navigateToCaseDetails
 import eka.care.documents.ui.viewmodel.RecordsViewModel
 
 class CaseListActivity : ComponentActivity() {
@@ -37,7 +38,15 @@ class CaseListActivity : ComponentActivity() {
                     links = links
                 ),
                 onCaseItemClick = {
-
+                    navigateToCaseDetails(
+                        context = this,
+                        params = MedicalRecordsNavModel(
+                            businessId = businessId,
+                            ownerId = ownerId,
+                            links = links
+                        ),
+                        caseItem = it
+                    )
                 },
                 onBackPressed = {
                     finish()

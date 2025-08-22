@@ -1,7 +1,6 @@
 package eka.care.documents.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,21 +8,22 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue.Hidden
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,15 +34,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eka.ui.theme.EkaTheme
 import eka.care.documents.ui.R
 import eka.care.documents.ui.components.bottomSheet.UploadCaseBottomSheet
 import eka.care.documents.ui.components.recordcaseview.CaseView
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
+import eka.care.documents.ui.utility.RecordsAction.Companion.navigateToCaseDetails
 import eka.care.documents.ui.viewmodel.RecordsViewModel
 import eka.care.records.client.model.CaseModel
 import kotlinx.coroutines.launch
@@ -134,15 +139,18 @@ private fun CasesSearchBar(
             .background(EkaTheme.colors.surface)
             .padding(0.dp),
         inputField = {
-            SearchBarDefaults.InputField(
-                query = searchQuery,
-                onQueryChange = {
+            TextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.Transparent)
+                    .padding(0.dp),
+                value = searchQuery,
+                onValueChange = {
                     searchQuery = it
                     onQuery.invoke(searchQuery)
                 },
-                onSearch = {
-
-                },
+                placeholder = { Text("Search or add your medical cases...") },
+                singleLine = true,
                 leadingIcon = {
                     IconButton(onClick = onBackPressed) {
                         Icon(
@@ -155,17 +163,21 @@ private fun CasesSearchBar(
                         )
                     }
                 },
-                expanded = true,
-                onExpandedChange = { },
-                placeholder = {
-                    Text(
-                        text = "Search or add your medical cases..."
-                    )
-                }
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.Words,
+                    imeAction = ImeAction.Search
+                ),
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent
+                )
             )
         },
         colors = SearchBarDefaults.colors(
-            containerColor = EkaTheme.colors.surfaceContainerHigh
+            containerColor = EkaTheme.colors.surfaceContainerHigh,
+            dividerColor = EkaTheme.colors.surfaceContainerLow,
         ),
         expanded = true,
         onExpandedChange = { },
@@ -186,56 +198,41 @@ private fun CasesSearchScreenContent(
     params: MedicalRecordsNavModel,
     onAddNewCase: (caseName: String) -> Unit
 ) {
-    val keyboardController = LocalSoftwareKeyboardController.current
+    val context = LocalContext.current
     if (searchQuery.isNotEmpty()) {
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            CaseView(
-                modifier = Modifier.fillMaxWidth().weight(1f),
-                viewModel = viewModel,
-                query = searchQuery,
-                params = params
-            )
-            ListItem(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        onAddNewCase.invoke(searchQuery)
-                        keyboardController?.hide()
-                    },
-                headlineContent = {
-                    Text(
-                        text = "Create new case “\"$searchQuery\"”",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                },
-                leadingContent = {
-                    Icon(
-                        imageVector = Icons.Rounded.Add,
-                        contentDescription = "Search Icon",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            )
-        }
+        CaseView(
+            modifier = Modifier.fillMaxWidth(),
+            viewModel = viewModel,
+            onCaseItemClick = {
+                navigateToCaseDetails(
+                    context = context,
+                    params = params,
+                    caseItem = it
+                )
+            },
+            onAddNewCase = onAddNewCase,
+            query = searchQuery,
+            params = params
+        )
     } else {
         EmptyCaseView()
     }
 }
 
 @Composable
+@Preview
 private fun EmptyCaseView() {
     Column(
-        modifier = Modifier.padding(top = 100.dp),
+        modifier = Modifier
+            .background(EkaTheme.colors.surface)
+            .padding(top = 100.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
             modifier = Modifier
                 .size(100.dp)
                 .clip(RoundedCornerShape((50)))
-                .background(EkaTheme.colors.surfaceContainerLow)
+                .background(Color.White)
                 .padding(16.dp)
         ) {
             Icon(

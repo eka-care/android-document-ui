@@ -1,5 +1,18 @@
 package eka.care.documents.ui.utility
 
+import android.content.Context
+import android.content.Intent
+import androidx.compose.foundation.pager.PagerState
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import eka.care.documents.ui.activity.AddRecordParams
+import eka.care.documents.ui.activity.CaseDetailsActivity
+import eka.care.documents.ui.activity.CaseListActivity
+import eka.care.documents.ui.model.TabItem
+import eka.care.documents.ui.navigation.MedicalRecordsNavModel
+import eka.care.documents.ui.screens.TabConstants
+import eka.care.records.client.model.CaseModel
+
 class RecordsAction {
     companion object {
         const val ACTION_SCAN_A_DOCUMENT = "action_scan_a_document"
@@ -13,5 +26,54 @@ class RecordsAction {
         const val ACTION_CLOSE_SHEET = "action_close_sheet"
         const val ACTION_OPEN_SHEET = "action_open_sheet"
         const val ACTION_OPEN_DELETE_DIALOG = "action_open_delete_dialog"
+
+        fun navigateToCaseList(
+            context: Context,
+            params: MedicalRecordsNavModel
+        ) {
+            val paramsJson = JsonObject().apply {
+                addProperty(AddRecordParams.BUSINESS_ID.key, params.businessId)
+                addProperty(AddRecordParams.OWNER_ID.key, params.ownerId)
+                addProperty(AddRecordParams.LINKS.key, params.links)
+            }
+            Intent(context, CaseListActivity::class.java).apply {
+                putExtra(AddRecordParams.PARAMS_KEY, Gson().toJson(paramsJson))
+            }.run {
+                context.startActivity(this)
+            }
+        }
+
+        fun navigateToCaseDetails(
+            context: Context,
+            params: MedicalRecordsNavModel,
+            caseItem: CaseModel
+        ) {
+            val paramsJson = JsonObject().apply {
+                addProperty(AddRecordParams.BUSINESS_ID.key, params.businessId)
+                addProperty(AddRecordParams.OWNER_ID.key, params.ownerId)
+                addProperty(AddRecordParams.LINKS.key, params.links)
+                addProperty(AddRecordParams.CASE_ID.key, caseItem.id)
+            }
+            Intent(context, CaseDetailsActivity::class.java).apply {
+                putExtra(AddRecordParams.PARAMS_KEY, Gson().toJson(paramsJson))
+            }.run {
+                context.startActivity(this)
+            }
+        }
+
+        fun getTabs(pagerState: PagerState): List<TabItem> {
+            return listOf(
+                TabItem(
+                    id = TabConstants.ALL_FILES.id,
+                    title = "All Files",
+                    isSelected = pagerState.currentPage == 0
+                ),
+                TabItem(
+                    id = TabConstants.MEDICAL_CASES.id,
+                    title = "Medical Cases",
+                    isSelected = pagerState.currentPage == 1
+                )
+            )
+        }
     }
 }

@@ -1,14 +1,12 @@
 package eka.care.documents.ui.screens
 
-import android.content.Context
-import android.content.Intent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -28,23 +26,19 @@ import com.eka.ui.fab.EkaFloatingActionButton
 import com.eka.ui.fab.FabColor
 import com.eka.ui.fab.FabType
 import com.eka.ui.theme.EkaTheme
-import com.google.gson.Gson
-import com.google.gson.JsonObject
-import eka.care.documents.ui.activity.AddRecordParams
-import eka.care.documents.ui.activity.CaseDetailsActivity
-import eka.care.documents.ui.activity.CaseListActivity
 import eka.care.documents.ui.components.RecordTabs
 import eka.care.documents.ui.components.RecordsScreenContent
 import eka.care.documents.ui.components.RecordsSearchBar
 import eka.care.documents.ui.components.recordcaseview.CaseView
 import eka.care.documents.ui.components.syncRecords
-import eka.care.documents.ui.model.TabItem
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.theme.AppColorScheme
 import eka.care.documents.ui.utility.DocumentBottomSheetType
 import eka.care.documents.ui.utility.Mode
+import eka.care.documents.ui.utility.RecordsAction.Companion.getTabs
+import eka.care.documents.ui.utility.RecordsAction.Companion.navigateToCaseDetails
+import eka.care.documents.ui.utility.RecordsAction.Companion.navigateToCaseList
 import eka.care.documents.ui.viewmodel.RecordsViewModel
-import eka.care.records.client.model.CaseModel
 import eka.care.records.client.model.RecordModel
 import kotlinx.coroutines.launch
 
@@ -53,6 +47,7 @@ import kotlinx.coroutines.launch
 fun RecordsMainScreen(
     viewModel: RecordsViewModel,
     params: MedicalRecordsNavModel,
+    onBackPressed: () -> Unit = {},
     openSmartReport: (data: RecordModel) -> Unit,
     openRecordViewer: (data: RecordModel) -> Unit
 ) {
@@ -62,6 +57,7 @@ fun RecordsMainScreen(
         ScreenContent(
             viewModel = viewModel,
             params = params,
+            onBackPressed = onBackPressed,
             openSmartReport = openSmartReport,
             openRecordViewer = openRecordViewer
         )
@@ -72,6 +68,7 @@ fun RecordsMainScreen(
 private fun ScreenContent(
     viewModel: RecordsViewModel,
     params: MedicalRecordsNavModel,
+    onBackPressed: () -> Unit,
     openSmartReport: (data: RecordModel) -> Unit = {},
     openRecordViewer: (data: RecordModel) -> Unit = {},
 ) {
@@ -116,7 +113,21 @@ private fun ScreenContent(
             .background(EkaTheme.colors.surface),
         topBar = {
             Column {
-                RecordsSearchBar()
+                Box(
+                    modifier = Modifier
+                        .background(EkaTheme.colors.surface)
+                        .padding(start = 8.dp, end = 8.dp, top = 48.dp)
+                ) {
+                    RecordsSearchBar(
+                        onBackPressed = onBackPressed,
+                        onSearch = {
+                            navigateToCaseList(context = context, params = params)
+                        },
+                        onFilter = {
+
+                        },
+                    )
+                }
                 RecordTabs(
                     tabs = getTabs(pagerState = pagerState),
                     onTabClick = { tabId ->
@@ -144,16 +155,7 @@ private fun ScreenContent(
                     if (pagerState.currentPage == TabConstants.ALL_FILES.id) {
                         viewModel.documentBottomSheetType = DocumentBottomSheetType.DocumentUpload
                     } else {
-                        val paramsJson = JsonObject().apply {
-                            addProperty(AddRecordParams.BUSINESS_ID.key, params.businessId)
-                            addProperty(AddRecordParams.LINKS.key, params.links)
-                            addProperty(AddRecordParams.OWNER_ID.key, params.ownerId)
-                        }
-                        Intent(context, CaseListActivity::class.java).apply {
-                            putExtra(AddRecordParams.PARAMS_KEY, Gson().toJson(paramsJson))
-                        }.run {
-                            context.startActivity(this)
-                        }
+                        navigateToCaseList(context = context, params = params)
                     }
                 }
             )
@@ -166,7 +168,7 @@ private fun ScreenContent(
                     .background(Color.White)
                     .padding(paddingValues)
             ) { page ->
-                if (page == 0) {
+                if (page == TabConstants.ALL_FILES.id) {
                     RecordsScreenContent(
                         viewModel = viewModel,
                         params = params,
@@ -178,7 +180,7 @@ private fun ScreenContent(
                         openSmartReport = openSmartReport,
                         openRecordViewer = openRecordViewer,
                     )
-                } else if (page == 1) {
+                } else if (page == TabConstants.MEDICAL_CASES.id) {
                     CaseView(
                         viewModel = viewModel,
                         params = params,
@@ -193,39 +195,6 @@ private fun ScreenContent(
                 }
             }
         }
-    )
-}
-
-private fun navigateToCaseDetails(
-    context: Context,
-    params: MedicalRecordsNavModel,
-    caseItem: CaseModel
-) {
-    val paramsJson = JsonObject().apply {
-        addProperty(AddRecordParams.BUSINESS_ID.key, params.businessId)
-        addProperty(AddRecordParams.OWNER_ID.key, params.ownerId)
-        addProperty(AddRecordParams.LINKS.key, params.links)
-        addProperty(AddRecordParams.CASE_ID.key, caseItem.id)
-    }
-    Intent(context, CaseDetailsActivity::class.java).apply {
-        putExtra(AddRecordParams.PARAMS_KEY, Gson().toJson(paramsJson))
-    }.run {
-        context.startActivity(this)
-    }
-}
-
-private fun getTabs(pagerState: PagerState): List<TabItem> {
-    return listOf(
-        TabItem(
-            id = TabConstants.ALL_FILES.id,
-            title = "All Files",
-            isSelected = pagerState.currentPage == 0
-        ),
-        TabItem(
-            id = TabConstants.MEDICAL_CASES.id,
-            title = "Medical Cases",
-            isSelected = pagerState.currentPage == 1
-        )
     )
 }
 

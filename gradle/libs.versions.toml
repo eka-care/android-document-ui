@@ -12,6 +12,8 @@ coil = "2.7.0"
 gson = "2.10.1"
 playServicesMlkitDocumentScanner = "16.0.0-beta1"
 bouquet = "1.1.2"
+accompanistPermissions = "0.25.1"
+workRuntimeKtx = "2.8.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -24,6 +26,8 @@ compose-shimmer = { module = "com.valentinilk.shimmer:compose-shimmer", version.
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 google-gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 mlkit-scanner = { group = "com.google.android.gms", name = "play-services-mlkit-document-scanner", version.ref = "playServicesMlkitDocumentScanner" }
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
+androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
 bouquet = { module = "io.github.grizzi91:bouquet", version.ref = "bouquet" }
 
 [plugins]

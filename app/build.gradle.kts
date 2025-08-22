@@ -50,14 +50,16 @@ afterEvaluate {
 }
 
 dependencies {
+    api(libs.eka.health.records)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    api(libs.eka.health.records)
     implementation(libs.eka.ui.kit)
     implementation(libs.compose.shimmer)
     implementation(libs.coil.compose)
     implementation(libs.google.gson)
     implementation(libs.mlkit.scanner)
     implementation(libs.bouquet)
+    implementation(libs.accompanist.permissions)
+    implementation(libs.androidx.work.runtime.ktx)
 }

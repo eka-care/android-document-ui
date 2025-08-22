@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.WorkManager
 import eka.care.documents.ui.state.CasesState
 import eka.care.documents.ui.state.RecordsCountByType
 import eka.care.documents.ui.state.RecordsState
@@ -16,6 +17,7 @@ import eka.care.documents.ui.utility.DocumentViewType
 import eka.care.records.client.model.RecordModel
 import eka.care.records.client.model.SortOrder
 import eka.care.records.client.utils.Records
+import eka.care.records.sync.recordSyncFlow
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -42,6 +44,9 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
 
     private val _upsertRecordsState = MutableStateFlow<UpsertRecordState>(UpsertRecordState.NONE)
     val upsertRecordsState: StateFlow<UpsertRecordState> = _upsertRecordsState
+
+    private val _syncing = MutableStateFlow<Boolean>(false)
+    val syncing: StateFlow<Boolean> = _syncing
 
     private val _getAvailableDocTypes = MutableStateFlow(RecordsCountByType())
     val recordsCountByType: StateFlow<RecordsCountByType> = _getAvailableDocTypes
@@ -170,6 +175,16 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
                 UpsertRecordState.Success(recordId)
             } else {
                 UpsertRecordState.Error("Failed to update record")
+            }
+        }
+    }
+
+    fun getRecordsSyncState(businessId: String) {
+        viewModelScope.launch {
+            WorkManager.getInstance(app.applicationContext).recordSyncFlow(businessId).collect {
+                it?.let { info ->
+                    _syncing.value = it.progress.getBoolean("syncing", false)
+                }
             }
         }
     }

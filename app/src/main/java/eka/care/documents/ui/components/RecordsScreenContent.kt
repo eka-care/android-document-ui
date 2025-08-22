@@ -1,5 +1,6 @@
 package eka.care.documents.ui.components
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -10,6 +11,8 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -31,6 +34,10 @@ import com.eka.ui.buttons.EkaButton
 import com.eka.ui.buttons.EkaButtonShape
 import com.eka.ui.buttons.EkaButtonSize
 import com.eka.ui.buttons.EkaButtonStyle
+import com.eka.ui.theme.EkaTheme
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionStatus
+import com.google.accompanist.permissions.rememberPermissionState
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult
@@ -52,7 +59,7 @@ import eka.care.records.client.utils.PhotoPickerHost
 import eka.care.records.client.utils.Records
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 fun RecordsScreenContent(
     modifier: Modifier = Modifier,
     viewModel: RecordsViewModel,
@@ -66,6 +73,7 @@ fun RecordsScreenContent(
 ) {
     val isRefreshing by viewModel.isRefreshing
     val recordsState by viewModel.getRecordsState.collectAsState()
+    val cameraPermissionState = rememberPermissionState(permission = Manifest.permission.CAMERA)
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )
@@ -102,6 +110,16 @@ fun RecordsScreenContent(
             owners = owners,
             context = context
         )
+    }
+
+    LaunchedEffect(cameraPermissionState.status) {
+        if (cameraPermissionState.status != PermissionStatus.Granted) {
+            cameraPermissionState.launchPermissionRequest()
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.getRecordsSyncState(params.businessId)
     }
 
     val addRecordResultLauncher = rememberLauncherForActivityResult(
@@ -308,7 +326,8 @@ fun RecordsScreenContent(
                         MediaPickerManager.takePhoto(
                             context = context,
                             provider = "eka.care.doctor.fileprovider.new",
-                            onPermissionDenied = {})
+                            onPermissionDenied = {}
+                        )
                     },
                     pickImagesFromGallery = {
                         MediaPickerManager.pickVisualMedia()
@@ -341,6 +360,12 @@ fun RecordsScreenContent(
         onRefresh = onRefresh
     ) {
         Column {
+            if (viewModel.syncing.collectAsState().value) {
+                LinearProgressIndicator(
+                    modifier = Modifier.fillMaxWidth(),
+                    color = EkaTheme.colors.primary
+                )
+            }
             RecordSortSection(
                 viewModel = viewModel,
                 openSheet = {
