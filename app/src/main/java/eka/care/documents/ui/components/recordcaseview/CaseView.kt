@@ -42,7 +42,6 @@ fun CaseView(
     onCaseItemClick: (CaseModel) -> Unit = {},
     onAddNewCase: ((caseName: String) -> Unit)? = null
 ) {
-    val keyboardController = LocalSoftwareKeyboardController.current
     LaunchedEffect(Unit) {
         viewModel.getCases(
             businessId = params.businessId,
@@ -53,7 +52,15 @@ fun CaseView(
     val state by viewModel.getCasesState.collectAsState()
     when (state) {
         is CasesState.Loading -> {}
-        is CasesState.EmptyState -> {}
+        is CasesState.EmptyState -> {
+            if (query.isNotEmpty()) {
+                NewCasePrompt(
+                    query = query,
+                    onAddNewCase = onAddNewCase
+                )
+            }
+        }
+
         is CasesState.Error -> {}
         is CasesState.Success -> {
             val cases =
@@ -120,31 +127,43 @@ fun CaseView(
                 }
                 if (query.isNotEmpty()) {
                     item {
-                        ListItem(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    onAddNewCase?.invoke(query)
-                                    keyboardController?.hide()
-                                },
-                            headlineContent = {
-                                Text(
-                                    text = "Create a new case “$query”",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                            },
-                            leadingContent = {
-                                Icon(
-                                    imageVector = Icons.Rounded.Add,
-                                    contentDescription = "Search Icon",
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
+                        NewCasePrompt(
+                            query = query,
+                            onAddNewCase = onAddNewCase
                         )
                     }
                 }
             }
         }
     }
+}
+
+@Composable
+private fun NewCasePrompt(
+    query: String = "",
+    onAddNewCase: ((caseName: String) -> Unit)? = null
+) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    ListItem(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                onAddNewCase?.invoke(query)
+                keyboardController?.hide()
+            },
+        headlineContent = {
+            Text(
+                text = "Create a new case “$query”",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        },
+        leadingContent = {
+            Icon(
+                imageVector = Icons.Rounded.Add,
+                contentDescription = "Search Icon",
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    )
 }

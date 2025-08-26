@@ -336,6 +336,8 @@ fun RecordsScreenContent(
                         val paramsJson = JsonObject().apply {
                             addProperty(AddRecordParams.BUSINESS_ID.key, params.businessId)
                             addProperty(AddRecordParams.OWNER_ID.key, params.ownerId)
+                            addProperty(AddRecordParams.CASE_ID.key, caseId)
+                            addProperty(AddRecordParams.RECORD_ID.key, viewModel.cardClickData.value?.id)
                             addProperty(AddRecordParams.LINKS.key, params.links)
                         }
                         Intent(context, CaseListActivity::class.java).apply {

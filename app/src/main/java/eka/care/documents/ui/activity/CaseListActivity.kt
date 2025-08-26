@@ -27,6 +27,7 @@ class CaseListActivity : ComponentActivity() {
         val params = Gson().fromJson(jsonString, JsonObject::class.java)
         val businessId = params.get(AddRecordParams.BUSINESS_ID.key).asString
         val ownerId = params.get(AddRecordParams.OWNER_ID.key).asString
+        val recordId = params.get(AddRecordParams.RECORD_ID.key).asString
         val links = params.get(AddRecordParams.LINKS.key).asString
 
         setContent {
@@ -38,15 +39,31 @@ class CaseListActivity : ComponentActivity() {
                     links = links
                 ),
                 onCaseItemClick = {
-                    navigateToCaseDetails(
-                        context = this,
-                        params = MedicalRecordsNavModel(
-                            businessId = businessId,
-                            ownerId = ownerId,
-                            links = links
-                        ),
-                        caseItem = it
-                    )
+                    if(recordId != null) {
+                        recordsViewModel.assignRecordToCase(
+                            recordId = recordId,
+                            caseId = it.id
+                        )
+                        navigateToCaseDetails(
+                            context = this,
+                            params = MedicalRecordsNavModel(
+                                businessId = businessId,
+                                ownerId = ownerId,
+                                links = links
+                            ),
+                            caseItem = it
+                        )
+                    } else {
+                        navigateToCaseDetails(
+                            context = this,
+                            params = MedicalRecordsNavModel(
+                                businessId = businessId,
+                                ownerId = ownerId,
+                                links = links
+                            ),
+                            caseItem = it
+                        )
+                    }
                 },
                 onBackPressed = {
                     finish()

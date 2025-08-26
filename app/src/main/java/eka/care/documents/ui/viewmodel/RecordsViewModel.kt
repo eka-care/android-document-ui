@@ -42,6 +42,9 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
     private val _getCasesState = MutableStateFlow<CasesState>(CasesState.Loading)
     val getCasesState: StateFlow<CasesState> = _getCasesState
 
+    private val _getCaseDetailsState = MutableStateFlow<CasesState>(CasesState.Loading)
+    val getCaseDetailsState: StateFlow<CasesState> = _getCaseDetailsState
+
     private val _upsertRecordsState = MutableStateFlow<UpsertRecordState>(UpsertRecordState.NONE)
     val upsertRecordsState: StateFlow<UpsertRecordState> = _upsertRecordsState
 
@@ -226,6 +229,15 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
                         CasesState.Success(data = cases)
                     }
                 }
+        }
+    }
+
+    fun getCaseDetails(caseId: String) {
+        viewModelScope.launch {
+            val caseDetails = recordsManager.getCaseWithRecords(caseId = caseId)
+            caseDetails?.let {
+                _getCaseDetailsState.value = CasesState.Success(data = listOf(it))
+            }
         }
     }
 

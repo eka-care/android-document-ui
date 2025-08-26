@@ -8,7 +8,7 @@ import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.viewmodel.RecordsViewModel
 
 @Composable
-fun UploadCaseBottomSheet(
+fun CreateCaseBottomSheet(
     viewModel: RecordsViewModel,
     params: MedicalRecordsNavModel,
     closeSheet: () -> Unit,
@@ -17,7 +17,7 @@ fun UploadCaseBottomSheet(
     BottomSheetContentLayout(
         modifier = Modifier.wrapContentHeight(),
         title = "Select or Create your Case",
-        height = .75f
+        height = .7f
     ) {
         CreateCaseSheetContent(
             onDismiss = { },

@@ -35,7 +35,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -44,10 +43,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eka.ui.theme.EkaTheme
 import eka.care.documents.ui.R
-import eka.care.documents.ui.components.bottomSheet.UploadCaseBottomSheet
+import eka.care.documents.ui.components.bottomSheet.CreateCaseBottomSheet
 import eka.care.documents.ui.components.recordcaseview.CaseView
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
-import eka.care.documents.ui.utility.RecordsAction.Companion.navigateToCaseDetails
 import eka.care.documents.ui.viewmodel.RecordsViewModel
 import eka.care.records.client.model.CaseModel
 import kotlinx.coroutines.launch
@@ -83,7 +81,7 @@ fun CasesScreen(
     ModalBottomSheetLayout(
         sheetState = sheetState,
         sheetContent = {
-            UploadCaseBottomSheet(
+            CreateCaseBottomSheet(
                 params = params,
                 caseNane = caseName,
                 viewModel = viewModel,
@@ -106,6 +104,7 @@ fun CasesScreen(
                         onQuery = {
                             query = it
                         },
+                        onCaseItemClick = onCaseItemClick,
                         onBackPressed = onBackPressed
                     )
                 },
@@ -130,6 +129,7 @@ private fun CasesSearchBar(
     params: MedicalRecordsNavModel,
     onQuery: (String) -> Unit,
     onAddNewCase: (caseName: String) -> Unit,
+    onCaseItemClick: (CaseModel) -> Unit,
     onBackPressed: () -> Unit
 ) {
     var searchQuery by rememberSaveable { mutableStateOf("") }
@@ -186,7 +186,8 @@ private fun CasesSearchBar(
             searchQuery = searchQuery,
             viewModel = viewModel,
             params = params,
-            onAddNewCase = onAddNewCase
+            onAddNewCase = onAddNewCase,
+            onCaseItemClick = onCaseItemClick
         )
     }
 }
@@ -196,20 +197,14 @@ private fun CasesSearchScreenContent(
     searchQuery: String,
     viewModel: RecordsViewModel,
     params: MedicalRecordsNavModel,
-    onAddNewCase: (caseName: String) -> Unit
+    onAddNewCase: (caseName: String) -> Unit,
+    onCaseItemClick: (CaseModel) -> Unit
 ) {
-    val context = LocalContext.current
     if (searchQuery.isNotEmpty()) {
         CaseView(
             modifier = Modifier.fillMaxWidth(),
             viewModel = viewModel,
-            onCaseItemClick = {
-                navigateToCaseDetails(
-                    context = context,
-                    params = params,
-                    caseItem = it
-                )
-            },
+            onCaseItemClick = onCaseItemClick,
             onAddNewCase = onAddNewCase,
             query = searchQuery,
             params = params

@@ -11,11 +11,13 @@ import com.google.gson.JsonObject
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.screens.CaseDetailsScreen
 import eka.care.documents.ui.theme.AppColorScheme
+import eka.care.documents.ui.viewmodel.CaseDetailsViewModel
 import eka.care.documents.ui.viewmodel.RecordsViewModel
 
 class CaseDetailsActivity: ComponentActivity() {
 
     private val recordsViewModel: RecordsViewModel by viewModels()
+    private val caseDetailsViewModel: CaseDetailsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +39,7 @@ class CaseDetailsActivity: ComponentActivity() {
             ) {
                 CaseDetailsScreen(
                     viewModel = recordsViewModel,
+                    caseDetailsViewModel = caseDetailsViewModel,
                     caseId = caseId,
                     params = MedicalRecordsNavModel(
                         businessId = businessId,

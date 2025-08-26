@@ -17,6 +17,7 @@ enum class AddRecordParams(val key: String) {
     PDF_URI("pdfUriString"),
     IMAGE_URIS("imageUris"),
     CASE_ID("caseId"),
+    RECORD_ID("recordId"),
     LINKS("links");
 
     companion object {

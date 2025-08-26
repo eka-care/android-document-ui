@@ -25,6 +25,9 @@ android {
             )
         }
     }
+    compileOptions {
+        isCoreLibraryDesugaringEnabled = true
+    }
     kotlin {
         jvmToolchain(17)
     }
@@ -62,4 +65,5 @@ dependencies {
     implementation(libs.bouquet)
     implementation(libs.accompanist.permissions)
     implementation(libs.androidx.work.runtime.ktx)
+    coreLibraryDesugaring(libs.desugar)
 }

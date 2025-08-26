@@ -26,6 +26,9 @@ class RecordsAction {
         const val ACTION_CLOSE_SHEET = "action_close_sheet"
         const val ACTION_OPEN_SHEET = "action_open_sheet"
         const val ACTION_OPEN_DELETE_DIALOG = "action_open_delete_dialog"
+        const val ACTION_CASE_DETAILS = "action_case_details"
+        const val ACTION_EDIT_CASE = "action_edit_case"
+        const val ACTION_DELETE_CASE = "action_delete_case"
 
         fun navigateToCaseList(
             context: Context,
