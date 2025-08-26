@@ -12,6 +12,7 @@ fun CreateCaseBottomSheet(
     viewModel: RecordsViewModel,
     params: MedicalRecordsNavModel,
     closeSheet: () -> Unit,
+    onNameChange : (String) -> Unit,
     caseNane: String
 ) {
     BottomSheetContentLayout(
@@ -30,7 +31,8 @@ fun CreateCaseBottomSheet(
                 )
                 closeSheet.invoke()
             },
-            caseName = caseNane
+            caseName = caseNane,
+            onNameChange = onNameChange
         )
     }
 }

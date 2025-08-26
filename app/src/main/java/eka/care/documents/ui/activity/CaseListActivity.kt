@@ -6,11 +6,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import com.google.gson.Gson
-import com.google.gson.JsonObject
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.screens.CasesScreen
 import eka.care.documents.ui.utility.RecordsAction.Companion.navigateToCaseDetails
 import eka.care.documents.ui.viewmodel.RecordsViewModel
+import org.json.JSONObject
 
 class CaseListActivity : ComponentActivity() {
 
@@ -24,11 +24,11 @@ class CaseListActivity : ComponentActivity() {
             Log.e("CaseListActivity", "Params JSON is missing!")
             return
         }
-        val params = Gson().fromJson(jsonString, JsonObject::class.java)
-        val businessId = params.get(AddRecordParams.BUSINESS_ID.key).asString
-        val ownerId = params.get(AddRecordParams.OWNER_ID.key).asString
-        val recordId = params.get(AddRecordParams.RECORD_ID.key).asString
-        val links = params.get(AddRecordParams.LINKS.key).asString
+        val params = Gson().fromJson(jsonString, JSONObject::class.java)
+        val businessId = params.getString(AddRecordParams.BUSINESS_ID.key)
+        val ownerId = params.getString(AddRecordParams.OWNER_ID.key)
+        val recordId = params.optString(AddRecordParams.RECORD_ID.key).takeIf { it.isNotEmpty() }
+        val links = params.optString(AddRecordParams.LINKS.key).takeIf { it.isNotEmpty() }
 
         setContent {
             CasesScreen(

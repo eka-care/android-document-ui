@@ -6,10 +6,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import com.google.gson.Gson
-import com.google.gson.JsonObject
 import eka.care.documents.ui.navigation.AddRecordPreviewNavModel
 import eka.care.documents.ui.screens.AddRecordPreviewScreen
 import eka.care.documents.ui.viewmodel.RecordsViewModel
+import org.json.JSONObject
 
 enum class AddRecordParams(val key: String) {
     BUSINESS_ID("businessId"),
@@ -26,7 +26,7 @@ enum class AddRecordParams(val key: String) {
 }
 
 class AddRecordPreviewActivity : ComponentActivity() {
-    private lateinit var params: JsonObject
+    private lateinit var params: JSONObject
     private val recordsViewModel: RecordsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,14 +37,14 @@ class AddRecordPreviewActivity : ComponentActivity() {
             Log.e("AddPreviewActivity", "Params JSON is missing!")
             return
         }
-        params = Gson().fromJson(jsonString, JsonObject::class.java)
+        params = Gson().fromJson(jsonString, JSONObject::class.java)
 
         val navData = AddRecordPreviewNavModel(
-            pdfUriString = if (params.has(AddRecordParams.PDF_URI.key)) params.get(AddRecordParams.PDF_URI.key).asString else null,
-            imageUris = if (params.has(AddRecordParams.IMAGE_URIS.key)) params.get(AddRecordParams.IMAGE_URIS.key).asString else null,
-            businessId = params.get(AddRecordParams.BUSINESS_ID.key).asString,
-            ownerId = params.get(AddRecordParams.OWNER_ID.key).asString,
-            caseId = if (params.has(AddRecordParams.CASE_ID.key)) params.get(AddRecordParams.CASE_ID.key).asString else null
+            pdfUriString = if (params.has(AddRecordParams.PDF_URI.key)) params.getString(AddRecordParams.PDF_URI.key) else null,
+            imageUris = if (params.has(AddRecordParams.IMAGE_URIS.key)) params.getString(AddRecordParams.IMAGE_URIS.key) else null,
+            businessId = params.getString(AddRecordParams.BUSINESS_ID.key),
+            ownerId = params.getString(AddRecordParams.OWNER_ID.key),
+            caseId = if (params.has(AddRecordParams.CASE_ID.key)) params.getString(AddRecordParams.CASE_ID.key) else null
         )
 
         setContent {

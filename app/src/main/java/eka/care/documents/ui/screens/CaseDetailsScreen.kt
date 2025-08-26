@@ -125,7 +125,7 @@ fun CaseDetailsScreen(
                     size = EkaButtonSize.SMALL,
                     style = EkaButtonStyle.TEXT,
                     onClick = {
-                        caseDetailsViewModel.deleteCase(caseId = caseId)
+                        caseDetailsViewModel.deleteCase(businessId = params.businessId, caseId = caseId)
                         showDeleteDialog = false
                         onBackPressed()
                     },
@@ -149,6 +149,8 @@ fun CaseDetailsScreen(
         sheetState = sheetState,
         sheetContent = {
             SheetContent(
+                businessId = params.businessId,
+                owners = owners,
                 caseDetailsViewModel = caseDetailsViewModel,
                 viewModel = viewModel,
                 sheetType = sheetType,
@@ -279,11 +281,14 @@ private fun SheetContent(
     viewModel: RecordsViewModel,
     caseDetailsViewModel: CaseDetailsViewModel,
     sheetType: CaseDetailsOptions,
+    businessId: String,
+    owners: List<String>,
     caseId: String,
     openSheet: () -> Unit,
     closeSheet: () -> Unit,
     onDeleteCase: () -> Unit
 ) {
+    val context = LocalContext.current
     when(sheetType) {
         CaseDetailsOptions.MORE -> {
             CaseOptionsBottomSheet(
@@ -312,9 +317,12 @@ private fun SheetContent(
         }
         CaseDetailsOptions.EDIT_CASE -> {
             UpdateCaseBottomSheet(
+                businessId = businessId,
                 caseId = caseId,
                 viewModel = viewModel,
-                closeSheet = { closeSheet.invoke() }
+                closeSheet = {
+                    closeSheet.invoke()
+                }
             )
         }
     }

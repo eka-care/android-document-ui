@@ -62,7 +62,6 @@ fun CasesScreen(
         skipHalfExpanded = true
     )
     val scope = rememberCoroutineScope()
-    var caseName by rememberSaveable { mutableStateOf("") }
 
     val openSheet = {
         scope.launch {
@@ -83,9 +82,12 @@ fun CasesScreen(
         sheetContent = {
             CreateCaseBottomSheet(
                 params = params,
-                caseNane = caseName,
+                caseNane = query,
                 viewModel = viewModel,
-                closeSheet = { closeSheet.invoke() }
+                closeSheet = { closeSheet.invoke() },
+                onNameChange = {
+                    query = it
+                }
             )
         },
         content = {
@@ -98,7 +100,7 @@ fun CasesScreen(
                         viewModel = viewModel,
                         params = params,
                         onAddNewCase = {
-                            caseName = it
+                            query = it
                             openSheet.invoke()
                         },
                         onQuery = {

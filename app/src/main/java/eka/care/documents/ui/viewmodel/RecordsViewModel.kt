@@ -232,6 +232,17 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
         }
     }
 
+    fun updateCase(businessId: String, caseId: String, name: String, type: String) {
+        viewModelScope.launch {
+            recordsManager.updateEncounter(
+                caseId = caseId,
+                name = name,
+                type = type
+            )
+            recordsManager.syncRecords(businessId)
+        }
+    }
+
     fun getCaseDetails(caseId: String) {
         viewModelScope.launch {
             val caseDetails = recordsManager.getCaseWithRecords(caseId = caseId)

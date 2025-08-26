@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.pager.PagerState
 import com.google.gson.Gson
-import com.google.gson.JsonObject
 import eka.care.documents.ui.activity.AddRecordParams
 import eka.care.documents.ui.activity.CaseDetailsActivity
 import eka.care.documents.ui.activity.CaseListActivity
@@ -12,6 +11,7 @@ import eka.care.documents.ui.model.TabItem
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.screens.TabConstants
 import eka.care.records.client.model.CaseModel
+import org.json.JSONObject
 
 class RecordsAction {
     companion object {
@@ -34,10 +34,10 @@ class RecordsAction {
             context: Context,
             params: MedicalRecordsNavModel
         ) {
-            val paramsJson = JsonObject().apply {
-                addProperty(AddRecordParams.BUSINESS_ID.key, params.businessId)
-                addProperty(AddRecordParams.OWNER_ID.key, params.ownerId)
-                addProperty(AddRecordParams.LINKS.key, params.links)
+            val paramsJson = JSONObject().apply {
+                put(AddRecordParams.BUSINESS_ID.key, params.businessId)
+                put(AddRecordParams.OWNER_ID.key, params.ownerId)
+                put(AddRecordParams.LINKS.key, params.links)
             }
             Intent(context, CaseListActivity::class.java).apply {
                 putExtra(AddRecordParams.PARAMS_KEY, Gson().toJson(paramsJson))
@@ -51,11 +51,11 @@ class RecordsAction {
             params: MedicalRecordsNavModel,
             caseItem: CaseModel
         ) {
-            val paramsJson = JsonObject().apply {
-                addProperty(AddRecordParams.BUSINESS_ID.key, params.businessId)
-                addProperty(AddRecordParams.OWNER_ID.key, params.ownerId)
-                addProperty(AddRecordParams.LINKS.key, params.links)
-                addProperty(AddRecordParams.CASE_ID.key, caseItem.id)
+            val paramsJson = JSONObject().apply {
+                put(AddRecordParams.BUSINESS_ID.key, params.businessId)
+                put(AddRecordParams.OWNER_ID.key, params.ownerId)
+                put(AddRecordParams.LINKS.key, params.links)
+                put(AddRecordParams.CASE_ID.key, caseItem.id)
             }
             Intent(context, CaseDetailsActivity::class.java).apply {
                 putExtra(AddRecordParams.PARAMS_KEY, Gson().toJson(paramsJson))

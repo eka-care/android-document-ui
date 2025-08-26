@@ -39,7 +39,6 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.gson.Gson
-import com.google.gson.JsonObject
 import com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult
 import eka.care.documents.ui.activity.AddRecordParams
 import eka.care.documents.ui.activity.AddRecordPreviewActivity
@@ -57,6 +56,7 @@ import eka.care.records.client.model.RecordModel
 import eka.care.records.client.utils.MediaPickerManager
 import eka.care.records.client.utils.PhotoPickerHost
 import eka.care.records.client.utils.Records
+import org.json.JSONObject
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
@@ -137,11 +137,11 @@ fun RecordsScreenContent(
     val mediaPickerLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(3)) { images ->
             val intent = Intent(context, AddRecordPreviewActivity::class.java)
-            val paramsJson = JsonObject().apply {
-                images.let { addProperty(AddRecordParams.IMAGE_URIS.key, images.joinToString(",")) }
-                addProperty(AddRecordParams.BUSINESS_ID.key, params.businessId)
-                addProperty(AddRecordParams.OWNER_ID.key, params.ownerId)
-                addProperty(AddRecordParams.CASE_ID.key, caseId)
+            val paramsJson = JSONObject().apply {
+                images.let { put(AddRecordParams.IMAGE_URIS.key, images.joinToString(",")) }
+                put(AddRecordParams.BUSINESS_ID.key, params.businessId)
+                put(AddRecordParams.OWNER_ID.key, params.ownerId)
+                put(AddRecordParams.CASE_ID.key, caseId)
             }
             intent.putExtra(AddRecordParams.PARAMS_KEY, Gson().toJson(paramsJson))
             addRecordResultLauncher.launch(intent)
@@ -152,11 +152,11 @@ fun RecordsScreenContent(
         onResult = { uri ->
             uri?.let {
                 val intent = Intent(context, AddRecordPreviewActivity::class.java)
-                val paramsJson = JsonObject().apply {
-                    addProperty(AddRecordParams.PDF_URI.key, it.toString())
-                    addProperty(AddRecordParams.BUSINESS_ID.key, params.businessId)
-                    addProperty(AddRecordParams.OWNER_ID.key, params.ownerId)
-                    addProperty(AddRecordParams.CASE_ID.key, caseId)
+                val paramsJson = JSONObject().apply {
+                    put(AddRecordParams.PDF_URI.key, it.toString())
+                    put(AddRecordParams.BUSINESS_ID.key, params.businessId)
+                    put(AddRecordParams.OWNER_ID.key, params.ownerId)
+                    put(AddRecordParams.CASE_ID.key, caseId)
                 }
                 intent.putExtra(AddRecordParams.PARAMS_KEY, Gson().toJson(paramsJson))
                 addRecordResultLauncher.launch(intent)
@@ -171,15 +171,15 @@ fun RecordsScreenContent(
                     GmsDocumentScanningResult.fromActivityResultIntent(result.data)
                 data?.pages?.let { pages ->
                     val intent = Intent(context, AddRecordPreviewActivity::class.java)
-                    val paramsJson = JsonObject().apply {
+                    val paramsJson = JSONObject().apply {
                         pages.let {
-                            addProperty(
+                            put(
                                 AddRecordParams.IMAGE_URIS.key,
                                 pages.joinToString(",") { it.imageUri.toString() })
                         }
-                        addProperty(AddRecordParams.BUSINESS_ID.key, params.businessId)
-                        addProperty(AddRecordParams.OWNER_ID.key, params.ownerId)
-                        addProperty(AddRecordParams.CASE_ID.key, caseId)
+                        put(AddRecordParams.BUSINESS_ID.key, params.businessId)
+                        put(AddRecordParams.OWNER_ID.key, params.ownerId)
+                        put(AddRecordParams.CASE_ID.key, caseId)
                     }
                     intent.putExtra(AddRecordParams.PARAMS_KEY, Gson().toJson(paramsJson))
                     addRecordResultLauncher.launch(intent)
@@ -193,11 +193,11 @@ fun RecordsScreenContent(
         if (result.resultCode == Activity.RESULT_OK) {
             viewModel.photoUri.value?.let { uri ->
                 val intent = Intent(context, AddRecordPreviewActivity::class.java)
-                val paramsJson = JsonObject().apply {
-                    addProperty(AddRecordParams.IMAGE_URIS.key, uri.toString())
-                    addProperty(AddRecordParams.BUSINESS_ID.key, params.businessId)
-                    addProperty(AddRecordParams.OWNER_ID.key, params.ownerId)
-                    addProperty(AddRecordParams.CASE_ID.key, caseId)
+                val paramsJson = JSONObject().apply {
+                    put(AddRecordParams.IMAGE_URIS.key, uri.toString())
+                    put(AddRecordParams.BUSINESS_ID.key, params.businessId)
+                    put(AddRecordParams.OWNER_ID.key, params.ownerId)
+                    put(AddRecordParams.CASE_ID.key, caseId)
                 }
                 intent.putExtra(AddRecordParams.PARAMS_KEY, Gson().toJson(paramsJson))
                 addRecordResultLauncher.launch(intent)
@@ -333,12 +333,12 @@ fun RecordsScreenContent(
                         MediaPickerManager.pickVisualMedia()
                     },
                     onAssignCase = {
-                        val paramsJson = JsonObject().apply {
-                            addProperty(AddRecordParams.BUSINESS_ID.key, params.businessId)
-                            addProperty(AddRecordParams.OWNER_ID.key, params.ownerId)
-                            addProperty(AddRecordParams.CASE_ID.key, caseId)
-                            addProperty(AddRecordParams.RECORD_ID.key, viewModel.cardClickData.value?.id)
-                            addProperty(AddRecordParams.LINKS.key, params.links)
+                        val paramsJson = JSONObject().apply {
+                            put(AddRecordParams.BUSINESS_ID.key, params.businessId)
+                            put(AddRecordParams.OWNER_ID.key, params.ownerId)
+                            put(AddRecordParams.CASE_ID.key, caseId)
+                            put(AddRecordParams.RECORD_ID.key, viewModel.cardClickData.value?.id)
+                            put(AddRecordParams.LINKS.key, params.links)
                         }
                         Intent(context, CaseListActivity::class.java).apply {
                             putExtra(AddRecordParams.PARAMS_KEY, Gson().toJson(paramsJson))

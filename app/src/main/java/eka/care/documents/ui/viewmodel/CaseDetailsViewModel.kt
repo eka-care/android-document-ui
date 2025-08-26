@@ -17,11 +17,12 @@ class CaseDetailsViewModel(val app: Application) : AndroidViewModel(app) {
 
     var caseBottomSheet by mutableStateOf(CaseDetailsOptions.MORE)
 
-    fun deleteCase(caseId: String) {
+    fun deleteCase(businessId: String, caseId: String) {
         viewModelScope.launch {
             recordsManager.deleteEncounter(
                 encounterId = caseId,
             )
+            recordsManager.syncRecords(businessId)
         }
     }
 }

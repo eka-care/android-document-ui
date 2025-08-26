@@ -253,7 +253,7 @@ enum class CaseType(
     WELLNESS_RECORD("WellnessRecord", "Wellness Record", R.drawable.ic_scalpel);
 
     companion object {
-        fun fromId(id: String): CaseType? {
+        fun fromId(id: String?): CaseType? {
             return entries.find { it.id == id }
         }
     }

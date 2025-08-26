@@ -32,10 +32,13 @@ import eka.care.documents.ui.utility.CaseType
 @Composable
 fun CreateCaseSheetContent(
     onDismiss: () -> Unit = {},
+    caseType: String? = null,
     onCreateCase: (String, CaseType) -> Unit = { _, _ -> },
+    onNameChange: (String) -> Unit,
+    isEditable: Boolean = false,
     caseName: String = "system"
 ) {
-    var selectedCaseType by remember { mutableStateOf<CaseType?>(null) }
+    var selectedCaseType by remember { mutableStateOf(CaseType.fromId(caseType)) }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -48,7 +51,9 @@ fun CreateCaseSheetContent(
             modifier = Modifier.padding(vertical = 16.dp),
         ) {
             CreateCaseNameField(
-                caseName = caseName
+                caseName = caseName,
+                isEditable = isEditable,
+                onNameChange = onNameChange
             )
             CaseTypeGrid(
                 selectedCaseType = selectedCaseType,
@@ -58,7 +63,7 @@ fun CreateCaseSheetContent(
 
         EkaButton(
             modifier = Modifier.fillMaxWidth(),
-            label = "Create",
+            label = if(isEditable) "Save" else "Create",
             shape = EkaButtonShape.SQUARE,
             enabled = true,
             onClick = {
@@ -71,7 +76,6 @@ fun CreateCaseSheetContent(
         Spacer(modifier = Modifier.height(32.dp))
     }
 }
-
 
 @Composable
 private fun CreateCaseInfoBanner() {
@@ -104,16 +108,20 @@ private fun CreateCaseInfoBanner() {
 
 @Composable
 private fun CreateCaseNameField(
-    caseName: String
+    caseName: String,
+    isEditable: Boolean,
+    onNameChange: (String) -> Unit = {}
 ) {
     TextFieldWrapper(
         modifier = Modifier.fillMaxWidth(),
         value = caseName,
-        onChange = {},
+        onChange = {
+            onNameChange(it)
+        },
         label = "Case Name",
         placeholder = "Enter case name",
         required = true,
-        enabled = false
+        enabled = isEditable
     )
 }
 

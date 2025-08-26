@@ -7,12 +7,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import com.eka.ui.theme.EkaTheme
 import com.google.gson.Gson
-import com.google.gson.JsonObject
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.screens.CaseDetailsScreen
 import eka.care.documents.ui.theme.AppColorScheme
 import eka.care.documents.ui.viewmodel.CaseDetailsViewModel
 import eka.care.documents.ui.viewmodel.RecordsViewModel
+import org.json.JSONObject
 
 class CaseDetailsActivity: ComponentActivity() {
 
@@ -27,11 +27,11 @@ class CaseDetailsActivity: ComponentActivity() {
             Log.e("AddPreviewActivity", "Params JSON is missing!")
             return
         }
-        val params = Gson().fromJson(jsonString, JsonObject::class.java)
-        val businessId = params.get(AddRecordParams.BUSINESS_ID.key).asString
-        val ownerId = params.get(AddRecordParams.OWNER_ID.key).asString
-        val links = params.get(AddRecordParams.LINKS.key).asString
-        val caseId = params.get(AddRecordParams.CASE_ID.key).asString
+        val params = Gson().fromJson(jsonString, JSONObject::class.java)
+        val businessId = params.optString(AddRecordParams.BUSINESS_ID.key)
+        val ownerId = params.optString(AddRecordParams.OWNER_ID.key)
+        val links = params.optString(AddRecordParams.LINKS.key)
+        val caseId = params.optString(AddRecordParams.CASE_ID.key)
 
         setContent {
             EkaTheme(
