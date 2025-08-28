@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.PickVisualMediaRequest
@@ -329,7 +330,9 @@ fun RecordsScreenContent(
                     cameraLauncher = {
                         MediaPickerManager.takePhoto(
                             context = context,
-                            onPermissionDenied = {}
+                            onPermissionDenied = {
+                                navigateToAppSettings(context)
+                            }
                         )
                     },
                     pickImagesFromGallery = {
@@ -417,4 +420,15 @@ fun syncRecords(
 ) {
     val records = Records.getInstance(context = context, token = "")
     records.refreshRecords(context, businessId = businessId, ownerIds = owners)
+}
+
+fun navigateToAppSettings(context: Context) {
+    try {
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+            data = Uri.fromParts("package", context.packageName, null)
+        }
+        context.startActivity(intent)
+    } catch (e: Exception) {
+
+    }
 }
