@@ -3,9 +3,9 @@ package eka.care.documents.ui.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import eka.care.documents.ui.components.Filter
-import eka.care.documents.ui.components.LabParamResult
-import eka.care.documents.ui.components.SmartViewTab
+import eka.care.documents.ui.components.smartreport.Filter
+import eka.care.documents.ui.components.smartreport.LabParamResult
+import eka.care.documents.ui.components.smartreport.SmartViewTab
 import eka.care.documents.ui.state.DocumentPreviewState
 import eka.care.records.client.utils.Records
 import eka.care.records.data.remote.dto.response.SmartReport

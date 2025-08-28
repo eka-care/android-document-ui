@@ -10,5 +10,8 @@
         <activity
             android:name=".activity.CaseDetailsActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.RecordViewerActivity"
+            android:screenOrientation="portrait" />
     </application>
 </manifest>

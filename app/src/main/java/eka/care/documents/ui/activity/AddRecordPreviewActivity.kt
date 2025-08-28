@@ -18,6 +18,7 @@ enum class AddRecordParams(val key: String) {
     IMAGE_URIS("imageUris"),
     CASE_ID("caseId"),
     RECORD_ID("recordId"),
+    IS_SMART("isSmart"),
     LINKS("links");
 
     companion object {

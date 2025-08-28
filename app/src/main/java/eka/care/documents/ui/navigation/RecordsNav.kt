@@ -5,7 +5,3 @@ data class MedicalRecordsNavModel(
     val ownerId: String,
     val links: String? = null,
 )
-
-data class SmartReportNavModel(
-    val localId: String? = null,
-)

@@ -1,5 +1,6 @@
 package eka.care.documents.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -50,10 +51,20 @@ class CaseDetailsActivity: ComponentActivity() {
                         finish()
                     },
                     openSmartReport = {
-
+                        Intent(this, RecordViewerActivity::class.java).apply {
+                            putExtra(AddRecordParams.RECORD_ID.key, it.id)
+                            putExtra(AddRecordParams.IS_SMART.key, true)
+                        }.run {
+                            startActivity(this)
+                        }
                     },
                     openRecordViewer = {
-
+                        Intent(this, RecordViewerActivity::class.java).apply {
+                            putExtra(AddRecordParams.RECORD_ID.key, it.id)
+                            putExtra(AddRecordParams.IS_SMART.key, false)
+                        }.run {
+                            startActivity(this)
+                        }
                     }
                 )
             }

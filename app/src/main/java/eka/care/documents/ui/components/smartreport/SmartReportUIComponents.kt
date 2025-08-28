@@ -1,6 +1,6 @@
-package eka.care.documents.ui.components
+package eka.care.documents.ui.components.smartreport
 
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,8 +15,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,19 +26,26 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eka.ui.theme.EkaTheme
+import eka.care.documents.ui.theme.StyleDictionaryColor
+import eka.care.documents.ui.theme.StyleDictionaryColor.colorDanger500
+import eka.care.documents.ui.theme.StyleDictionaryColor.colorNeutral800
 import eka.care.documents.ui.viewmodel.RecordPreviewViewModel
 import eka.care.records.data.remote.dto.response.SmartReport
 import eka.care.records.data.remote.dto.response.SmartReportField
 
 
 @Composable
-fun SmartRecordInfo(onClick: () -> Unit) {
+@Preview
+fun SmartRecordInfo(onClick: () -> Unit = {}) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .background(Color(0xFFFBEFCE))
             .clickable {
                 onClick()
             }
@@ -44,21 +53,18 @@ fun SmartRecordInfo(onClick: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        Image(
-            imageVector = Icons.Default.Check,
+        Icon(
+            imageVector = Icons.Rounded.Info,
             contentDescription = "",
+            tint = Color(0xFF8E6807),
             modifier = Modifier.size(16.dp)
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = "Documented Smart Report",
+            text = "Your original document is the most reliable source of information.",
+            style = EkaTheme.typography.bodySmall,
+            color = Color(0xFF8E6807),
             modifier = Modifier.weight(1f)
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Image(
-            imageVector = Icons.Default.Check,
-            contentDescription = "",
-            modifier = Modifier.size(16.dp)
         )
     }
 }
@@ -77,21 +83,35 @@ fun SmartReportList(viewModel: RecordPreviewViewModel) {
 fun SmartReportListComponent(smartReport: SmartReportField) {
     val resultEnum = LabParamResult.entries.find { it.value == smartReport.resultId }
     val resultColor = when (resultEnum) {
-        LabParamResult.NORMAL -> EkaTheme.colors.onSurface
-        LabParamResult.HIGH, LabParamResult.VERY_HIGH, LabParamResult.CRITICALLY_HIGH -> EkaTheme.colors.onSurface
-        LabParamResult.LOW, LabParamResult.VERY_LOW, LabParamResult.CRITICALLY_LOW -> EkaTheme.colors.onSurface
-        else -> EkaTheme.colors.onSurface
+        LabParamResult.NORMAL -> StyleDictionaryColor.colorSuccess500
+        LabParamResult.HIGH, LabParamResult.VERY_HIGH, LabParamResult.CRITICALLY_HIGH -> colorDanger500
+        LabParamResult.LOW, LabParamResult.VERY_LOW, LabParamResult.CRITICALLY_LOW -> colorDanger500
+        else -> colorNeutral800
     }
 
     ListItem(
         modifier = Modifier.clickable(
             onClick = {
-
+//                if (Document.getConfiguration()?.vitalsEnabled == true && smartReport.ekaId != null) {
+//                    smartReport.ekaId?.let { ekaId ->
+//                        Document.navigateToVitalTrends(
+//                            SmartReportClickData(
+//                                ekaId = ekaId,
+//                                name = smartReport.name
+//                            )
+//                        )
+//                    }
+//                }
             }
+        ),
+        colors = ListItemDefaults.colors(
+            containerColor = Color.White
         ),
         headlineContent = {
             Text(
                 text = smartReport.name ?: "",
+                color = EkaTheme.colors.onSurface,
+                style = EkaTheme.typography.bodyLarge,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1
             )
@@ -99,6 +119,7 @@ fun SmartReportListComponent(smartReport: SmartReportField) {
         supportingContent = {
             Text(
                 text = smartReport.range ?: "NA",
+                style = EkaTheme.typography.bodySmall,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1
             )
@@ -111,14 +132,16 @@ fun SmartReportListComponent(smartReport: SmartReportField) {
             ) {
                 Text(
                     text = smartReport.displayResult ?: "",
+                    style = EkaTheme.typography.bodyLarge,
                     color = resultColor
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = smartReport.value ?: "",
+                    style = EkaTheme.typography.bodySmall,
                 )
             }
-        },
+        }
     )
 }
 
@@ -144,6 +167,7 @@ fun SmartReportFilter(smartReport: SmartReport?, viewModel: RecordPreviewViewMod
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
+            .background(Color.White)
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -155,8 +179,9 @@ fun SmartReportFilter(smartReport: SmartReport?, viewModel: RecordPreviewViewMod
                 else -> Filter.ALL
             }
             RecordFilterChip(
-                filteredText = listOfFilter[index],
-                openSortBySheet = { viewModel.updateFilter(filter, smartReport) }
+                text = listOfFilter[index],
+                isSelected = selectedFilter == filter,
+                onClick = { viewModel.updateFilter(filter, smartReport) }
             )
         }
     }

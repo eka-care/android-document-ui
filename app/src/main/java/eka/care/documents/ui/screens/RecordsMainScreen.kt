@@ -1,5 +1,6 @@
 package eka.care.documents.ui.screens
 
+import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -27,6 +28,8 @@ import com.eka.ui.fab.EkaFloatingActionButton
 import com.eka.ui.fab.FabColor
 import com.eka.ui.fab.FabType
 import com.eka.ui.theme.EkaTheme
+import eka.care.documents.ui.activity.AddRecordParams
+import eka.care.documents.ui.activity.RecordViewerActivity
 import eka.care.documents.ui.components.RecordTabs
 import eka.care.documents.ui.components.RecordsScreenContent
 import eka.care.documents.ui.components.RecordsSearchBar
@@ -48,9 +51,7 @@ import kotlinx.coroutines.launch
 fun RecordsMainScreen(
     viewModel: RecordsViewModel,
     params: MedicalRecordsNavModel,
-    onBackPressed: () -> Unit = {},
-    openSmartReport: (data: RecordModel) -> Unit,
-    openRecordViewer: (data: RecordModel) -> Unit
+    onBackPressed: () -> Unit = {}
 ) {
     EkaTheme(
         colorScheme = AppColorScheme
@@ -58,9 +59,7 @@ fun RecordsMainScreen(
         ScreenContent(
             viewModel = viewModel,
             params = params,
-            onBackPressed = onBackPressed,
-            openSmartReport = openSmartReport,
-            openRecordViewer = openRecordViewer
+            onBackPressed = onBackPressed
         )
     }
 }
@@ -69,9 +68,7 @@ fun RecordsMainScreen(
 private fun ScreenContent(
     viewModel: RecordsViewModel,
     params: MedicalRecordsNavModel,
-    onBackPressed: () -> Unit,
-    openSmartReport: (data: RecordModel) -> Unit = {},
-    openRecordViewer: (data: RecordModel) -> Unit = {},
+    onBackPressed: () -> Unit
 ) {
     val selectedItems = remember { mutableStateListOf<RecordModel>() }
     val pagerState = rememberPagerState(pageCount = { 2 })
@@ -178,8 +175,22 @@ private fun ScreenContent(
                         onSelectedItemsChange = { items ->
 
                         },
-                        openSmartReport = openSmartReport,
-                        openRecordViewer = openRecordViewer,
+                        openSmartReport = {
+                            Intent(context, RecordViewerActivity::class.java).apply {
+                                putExtra(AddRecordParams.RECORD_ID.key, it.id)
+                                putExtra(AddRecordParams.IS_SMART.key, true)
+                            }.run {
+                                context.startActivity(this)
+                            }
+                        },
+                        openRecordViewer = {
+                            Intent(context, RecordViewerActivity::class.java).apply {
+                                putExtra(AddRecordParams.RECORD_ID.key, it.id)
+                                putExtra(AddRecordParams.IS_SMART.key, false)
+                            }.run {
+                                context.startActivity(this)
+                            }
+                        },
                         onRecordAdded = {
                             Toast.makeText(context, "Record added successfully", Toast.LENGTH_SHORT)
                                 .show()

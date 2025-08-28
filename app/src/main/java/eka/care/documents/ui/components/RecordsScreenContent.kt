@@ -312,7 +312,7 @@ fun RecordsScreenContent(
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 } else {
-                                    FileSharing().shareFiles(
+                                    FileSharing.shareFiles(
                                         context,
                                         filePaths.mapNotNull { file -> file.filePath })
                                 }
