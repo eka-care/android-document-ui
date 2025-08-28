@@ -1,13 +1,10 @@
 package eka.care.documents.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue.Hidden
@@ -31,18 +28,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eka.ui.theme.EkaTheme
-import eka.care.documents.ui.R
 import eka.care.documents.ui.components.bottomSheet.CreateCaseBottomSheet
 import eka.care.documents.ui.components.recordcaseview.CaseView
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
@@ -202,53 +193,12 @@ private fun CasesSearchScreenContent(
     onAddNewCase: (caseName: String) -> Unit,
     onCaseItemClick: (CaseModel) -> Unit
 ) {
-    if (searchQuery.isNotEmpty()) {
-        CaseView(
-            modifier = Modifier.fillMaxWidth(),
-            viewModel = viewModel,
-            onCaseItemClick = onCaseItemClick,
-            onAddNewCase = onAddNewCase,
-            query = searchQuery,
-            params = params
-        )
-    } else {
-        EmptyCaseView()
-    }
-}
-
-@Composable
-@Preview
-private fun EmptyCaseView() {
-    Column(
-        modifier = Modifier
-            .background(EkaTheme.colors.surface)
-            .padding(top = 100.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Box(
-            modifier = Modifier
-                .size(100.dp)
-                .clip(RoundedCornerShape((50)))
-                .background(Color.White)
-                .padding(16.dp)
-        ) {
-            Icon(
-                modifier = Modifier
-                    .size(32.dp)
-                    .align(Alignment.Center),
-                painter = painterResource(id = R.drawable.ic_arrows_rotate_regular),
-                contentDescription = "Empty Case",
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-        Text(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 36.dp, vertical = 16.dp),
-            text = "Start typing to find or create your first medical case",
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
+    CaseView(
+        modifier = Modifier.fillMaxWidth(),
+        viewModel = viewModel,
+        onCaseItemClick = onCaseItemClick,
+        onAddNewCase = onAddNewCase,
+        query = searchQuery,
+        params = params
+    )
 }
