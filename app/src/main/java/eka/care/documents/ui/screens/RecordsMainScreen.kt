@@ -1,5 +1,6 @@
 package eka.care.documents.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -179,6 +180,10 @@ private fun ScreenContent(
                         },
                         openSmartReport = openSmartReport,
                         openRecordViewer = openRecordViewer,
+                        onRecordAdded = {
+                            Toast.makeText(context, "Record added successfully", Toast.LENGTH_SHORT)
+                                .show()
+                        }
                     )
                 } else if (page == TabConstants.MEDICAL_CASES.id) {
                     CaseView(

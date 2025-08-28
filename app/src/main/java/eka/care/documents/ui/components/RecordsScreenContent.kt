@@ -18,6 +18,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -70,6 +71,7 @@ fun RecordsScreenContent(
     onSelectedItemsChange: (List<RecordModel>) -> Unit = {},
     openSmartReport: (data: RecordModel) -> Unit,
     openRecordViewer: (data: RecordModel) -> Unit,
+    onRecordAdded: () -> Unit
 ) {
     val isRefreshing by viewModel.isRefreshing
     val recordsState by viewModel.getRecordsState.collectAsState()
@@ -77,6 +79,7 @@ fun RecordsScreenContent(
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )
+    val pullToRefreshState = rememberPullToRefreshState()
     var showDeleteDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
@@ -131,6 +134,7 @@ fun RecordsScreenContent(
                 owners = owners,
                 context = context
             )
+            onRecordAdded()
         }
     }
 
@@ -359,6 +363,7 @@ fun RecordsScreenContent(
     PullToRefreshBox(
         modifier = modifier.background(Color.White),
         isRefreshing = isRefreshing,
+        state = pullToRefreshState,
         onRefresh = onRefresh
     ) {
         Column {

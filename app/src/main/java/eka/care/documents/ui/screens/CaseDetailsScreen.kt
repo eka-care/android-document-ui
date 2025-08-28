@@ -1,5 +1,6 @@
 package eka.care.documents.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,6 +25,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,6 +47,7 @@ import eka.care.documents.ui.components.bottomSheet.CaseOptionsBottomSheet
 import eka.care.documents.ui.components.bottomSheet.UpdateCaseBottomSheet
 import eka.care.documents.ui.components.syncRecords
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
+import eka.care.documents.ui.state.CasesState
 import eka.care.documents.ui.utility.DocumentBottomSheetType
 import eka.care.documents.ui.utility.RecordsAction
 import eka.care.documents.ui.viewmodel.CaseDetailsOptions
@@ -93,6 +96,7 @@ fun CaseDetailsScreen(
             owners = owners,
             caseId = caseId
         )
+        viewModel.getCaseDetails(caseId)
     }
     val sheetState = rememberModalBottomSheetState(
         initialValue = Hidden,
@@ -145,6 +149,8 @@ fun CaseDetailsScreen(
         )
     }
 
+    val state = viewModel.getCaseDetailsState.collectAsState().value
+
     ModalBottomSheetLayout(
         sheetState = sheetState,
         sheetContent = {
@@ -171,6 +177,7 @@ fun CaseDetailsScreen(
                 viewModel = viewModel,
                 params = params,
                 caseId = caseId,
+                name = (state as? CasesState.Success)?.data?.firstOrNull()?.name ?: "",
                 openSmartReport = openSmartReport,
                 openRecordViewer = openRecordViewer,
                 onBackPressed = onBackPressed,
@@ -191,11 +198,13 @@ private fun Content(
     viewModel: RecordsViewModel,
     params: MedicalRecordsNavModel,
     caseId: String,
+    name: String,
     openSmartReport: (data: RecordModel) -> Unit,
     openRecordViewer: (data: RecordModel) -> Unit,
     onBackPressed: () -> Unit = {},
     onMoreOptionSelection: () -> Unit
 ) {
+    val context = LocalContext.current
     Scaffold(
         modifier = Modifier
             .background(EkaTheme.colors.surface)
@@ -208,7 +217,7 @@ private fun Content(
                 ),
                 title = {
                     Text(
-                        text = "Case Details",
+                        text = name,
                         style = EkaTheme.typography.titleMedium
                     )
                 },
@@ -251,7 +260,11 @@ private fun Content(
                 params = params,
                 caseId = caseId,
                 openSmartReport = openSmartReport,
-                openRecordViewer = openRecordViewer
+                openRecordViewer = openRecordViewer,
+                onRecordAdded = {
+                    Toast.makeText(context, "Record added successfully", Toast.LENGTH_SHORT).show()
+                    onBackPressed()
+                }
             )
         },
         bottomBar = {

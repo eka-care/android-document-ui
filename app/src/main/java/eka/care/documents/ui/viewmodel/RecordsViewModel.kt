@@ -123,11 +123,10 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
             documentFlow
                 .cancellable()
                 .collect { records ->
+                    isRefreshing.value = false
                     _getRecordsState.value = if (records.isEmpty()) {
-                        isRefreshing.value = false
                         RecordsState.EmptyState
                     } else {
-                        isRefreshing.value = false
                         RecordsState.Success(data = records)
                     }
                 }
@@ -188,6 +187,7 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
             WorkManager.getInstance(app.applicationContext).recordSyncFlow(businessId).collect {
                 it?.let { info ->
                     _syncing.value = it.progress.getBoolean("syncing", false)
+                    isRefreshing.value = false
                 }
             }
         }
