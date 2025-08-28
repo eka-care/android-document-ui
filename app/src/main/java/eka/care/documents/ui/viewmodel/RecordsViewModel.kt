@@ -124,6 +124,7 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
                 .cancellable()
                 .collect { records ->
                     _getRecordsState.value = if (records.isEmpty()) {
+                        isRefreshing.value = false
                         RecordsState.EmptyState
                     } else {
                         isRefreshing.value = false
