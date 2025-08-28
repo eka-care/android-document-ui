@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,11 +33,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.lazy.items
 import com.eka.ui.theme.EkaTheme
 import eka.care.documents.ui.R
+import eka.care.documents.ui.components.DatePickerWrapper
 import eka.care.documents.ui.components.common.BottomSheetContentLayout
-import eka.care.documents.ui.components.common.NativeDatePickerField
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.state.UpsertRecordState
 import eka.care.documents.ui.utility.RecordType
@@ -135,7 +135,7 @@ fun EnterDetailsBottomSheet(
 
     BottomSheetContentLayout(
         title = if (editDocument) "Edit Medical Record" else "Add Record Details",
-        height = .4f,
+        height = .35f,
         bottomStickyContent = {
             Button(
                 onClick = onAddMedicalRecord,
@@ -212,20 +212,15 @@ fun EnterDetailsBottomSheet(
                     )
                 }
                 Spacer(modifier = Modifier.width(12.dp))
-                NativeDatePickerField(
+                DatePickerWrapper(
                     selectedDate = date,
+                    label = "",
+                    datePickerState = datePickerStateRecord,
                     format = "EEE, dd MMM, yyyy",
-                    onDateSelected = { selectedDate.value = it }
+                    onDateSelected = {
+                        selectedDate.value = it
+                    }
                 )
-//                DatePickerWrapper(
-//                    selectedDate = date,
-//                    label = "",
-//                    datePickerState = datePickerStateRecord,
-//                    format = "EEE, dd MMM, yyyy",
-//                    onDateSelected = {
-//                        selectedDate.value = it
-//                    }
-//                )
             }
         }
     }
