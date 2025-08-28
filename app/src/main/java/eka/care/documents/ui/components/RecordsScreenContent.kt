@@ -329,7 +329,6 @@ fun RecordsScreenContent(
                     cameraLauncher = {
                         MediaPickerManager.takePhoto(
                             context = context,
-                            provider = "eka.care.doctor.fileprovider.new",
                             onPermissionDenied = {}
                         )
                     },

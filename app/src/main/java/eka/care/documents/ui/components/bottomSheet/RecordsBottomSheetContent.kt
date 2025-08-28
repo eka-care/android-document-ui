@@ -85,7 +85,8 @@ fun RecordsBottomSheetContent(
                     viewModel.sortBy.value = it
                     viewModel.fetchRecords(
                         owners = owners,
-                        businessId = params.businessId
+                        businessId = params.businessId,
+                        caseId = caseId
                     )
                     onClick(RecordsAction.ACTION_CLOSE_SHEET)
                 },
