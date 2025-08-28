@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.PickVisualMediaRequest
@@ -27,6 +28,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
@@ -51,6 +53,7 @@ import eka.care.documents.ui.components.recordgridview.RecordsGridView
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.utility.DocumentBottomSheetType
 import eka.care.documents.ui.utility.DocumentViewType
+import eka.care.documents.ui.utility.FileSharing
 import eka.care.documents.ui.utility.Mode
 import eka.care.documents.ui.utility.RecordsAction
 import eka.care.documents.ui.viewmodel.RecordsViewModel
@@ -58,6 +61,7 @@ import eka.care.records.client.model.RecordModel
 import eka.care.records.client.utils.MediaPickerManager
 import eka.care.records.client.utils.PhotoPickerHost
 import eka.care.records.client.utils.Records
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 @Composable
@@ -77,6 +81,7 @@ fun RecordsScreenContent(
     val isRefreshing by viewModel.isRefreshing
     val recordsState by viewModel.getRecordsState.collectAsState()
     val cameraPermissionState = rememberPermissionState(permission = Manifest.permission.CAMERA)
+    val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )
@@ -272,7 +277,7 @@ fun RecordsScreenContent(
         )
     }
 
-    if(viewModel.documentBottomSheetType != null) {
+    if (viewModel.documentBottomSheetType != null) {
         ModalBottomSheet(
             sheetState = sheetState,
             onDismissRequest = {
@@ -296,23 +301,23 @@ fun RecordsScreenContent(
                         }
                     },
                     onShare = {
-//                    scope.launch {
-//                        viewModel.getRecordDetails()
-//                        viewModel.cardClickData.value?.let { record ->
-//                            val filePaths = viewModel.cardClickData.value?.files ?: emptyList()
-//                            if (filePaths.isEmpty()) {
-//                                Toast.makeText(
-//                                    context,
-//                                    "Syncing data, please wait!",
-//                                    Toast.LENGTH_SHORT
-//                                ).show()
-//                            } else {
-//                                FileSharing().shareFiles(
-//                                    context,
-//                                    filePaths.mapNotNull { file -> file.filePath })
-//                            }
-//                        }
-//                    }
+                        scope.launch {
+                            viewModel.getRecordDetails()
+                            viewModel.cardClickData.value?.let { record ->
+                                val filePaths = viewModel.cardClickData.value?.files ?: emptyList()
+                                if (filePaths.isEmpty()) {
+                                    Toast.makeText(
+                                        context,
+                                        "Syncing data, please wait!",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else {
+                                    FileSharing().shareFiles(
+                                        context,
+                                        filePaths.mapNotNull { file -> file.filePath })
+                                }
+                            }
+                        }
                     },
                     onEditDocument = {
                         syncRecords(
