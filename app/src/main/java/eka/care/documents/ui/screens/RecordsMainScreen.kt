@@ -38,7 +38,6 @@ import eka.care.documents.ui.components.syncRecords
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.theme.AppColorScheme
 import eka.care.documents.ui.utility.DocumentBottomSheetType
-import eka.care.documents.ui.utility.Mode
 import eka.care.documents.ui.utility.RecordsAction.Companion.getTabs
 import eka.care.documents.ui.utility.RecordsAction.Companion.navigateToCaseDetails
 import eka.care.documents.ui.utility.RecordsAction.Companion.navigateToCaseList
@@ -51,6 +50,7 @@ import kotlinx.coroutines.launch
 fun RecordsMainScreen(
     viewModel: RecordsViewModel,
     params: MedicalRecordsNavModel,
+    onRecordSelection: (List<RecordModel>) -> Unit,
     onBackPressed: () -> Unit = {}
 ) {
     EkaTheme(
@@ -59,6 +59,7 @@ fun RecordsMainScreen(
         ScreenContent(
             viewModel = viewModel,
             params = params,
+            onRecordSelection = onRecordSelection,
             onBackPressed = onBackPressed
         )
     }
@@ -68,6 +69,7 @@ fun RecordsMainScreen(
 private fun ScreenContent(
     viewModel: RecordsViewModel,
     params: MedicalRecordsNavModel,
+    onRecordSelection: (List<RecordModel>) -> Unit,
     onBackPressed: () -> Unit
 ) {
     val selectedItems = remember { mutableStateListOf<RecordModel>() }
@@ -117,12 +119,14 @@ private fun ScreenContent(
                         .padding(start = 8.dp, end = 8.dp, top = 48.dp)
                 ) {
                     RecordsSearchBar(
+                        showRecordSelection = true,
                         onBackPressed = onBackPressed,
                         onSearch = {
                             navigateToCaseList(context = context, params = params)
                         },
-                        onFilter = {
-
+                        onSelection = {
+                            onRecordSelection(selectedItems)
+                            onBackPressed()
                         },
                     )
                 }
@@ -137,26 +141,29 @@ private fun ScreenContent(
             }
         },
         floatingActionButton = {
-            EkaFloatingActionButton(
-                fabType = FabType.NORMAL,
-                fabColor = FabColor.PRIMARY,
-                actionText = if (pagerState.currentPage == 0) "Add Record" else "Add Case",
-                icon = {
-                    Icon(
-                        modifier = Modifier.size(24.dp),
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Add Icon",
-                        tint = EkaTheme.colors.onPrimary
-                    )
-                },
-                onClick = {
-                    if (pagerState.currentPage == TabConstants.ALL_FILES.id) {
-                        viewModel.documentBottomSheetType = DocumentBottomSheetType.DocumentUpload
-                    } else {
-                        navigateToCaseList(context = context, params = params)
+            if (params.isUploadEnabled) {
+                EkaFloatingActionButton(
+                    fabType = FabType.NORMAL,
+                    fabColor = FabColor.PRIMARY,
+                    actionText = if (pagerState.currentPage == 0) "Add Record" else "Add Case",
+                    icon = {
+                        Icon(
+                            modifier = Modifier.size(24.dp),
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Add Icon",
+                            tint = EkaTheme.colors.onPrimary
+                        )
+                    },
+                    onClick = {
+                        if (pagerState.currentPage == TabConstants.ALL_FILES.id) {
+                            viewModel.documentBottomSheetType =
+                                DocumentBottomSheetType.DocumentUpload
+                        } else {
+                            navigateToCaseList(context = context, params = params)
+                        }
                     }
-                }
-            )
+                )
+            }
         },
         content = { paddingValues ->
             HorizontalPager(
@@ -170,10 +177,11 @@ private fun ScreenContent(
                     RecordsScreenContent(
                         viewModel = viewModel,
                         params = params,
-                        mode = Mode.VIEW,
+                        mode = params.mode,
                         selectedItems = selectedItems,
                         onSelectedItemsChange = { items ->
-
+                            selectedItems.clear()
+                            selectedItems.addAll(items)
                         },
                         openSmartReport = {
                             Intent(context, RecordViewerActivity::class.java).apply {
