@@ -42,6 +42,7 @@ import com.rizzi.bouquet.ResourceType
 import com.rizzi.bouquet.VerticalPDFReader
 import com.rizzi.bouquet.rememberVerticalPdfReaderState
 import eka.care.documents.ui.state.DocumentPreviewState
+import eka.care.records.client.utils.Document
 import java.io.File
 
 @Composable
@@ -109,7 +110,7 @@ fun RecordSuccessState(
             record?.data?.files?.firstOrNull()?.filePath?.let { pdfUriString ->
                 val uri: Uri = FileProvider.getUriForFile(
                     context,
-                    "eka.care.doctor.fileprovider.new",
+                    Document.getConfiguration().provider,
                     File(file.absolutePath)
                 )
 

@@ -11,6 +11,7 @@ import android.util.Log
 import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.core.content.FileProvider
+import eka.care.records.client.utils.Document
 import java.io.File
 
 
@@ -39,7 +40,7 @@ class FileSharing {
                     // Generate a URI for each file
                     val uri = FileProvider.getUriForFile(
                         context,
-                        eka.care.records.client.utils.Document.getConfiguration().provider,
+                        Document.getConfiguration().provider,
                         file
                     )
                     uris.add(uri)
