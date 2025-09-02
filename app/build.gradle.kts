@@ -7,11 +7,10 @@ plugins {
 
 android {
     namespace = "eka.care.documents.ui"
-    compileSdk = 36
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 23
-        targetSdk = 36
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
