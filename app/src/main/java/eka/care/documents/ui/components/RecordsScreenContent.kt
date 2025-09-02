@@ -146,15 +146,17 @@ fun RecordsScreenContent(
 
     val mediaPickerLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(3)) { images ->
-            val intent = Intent(context, AddRecordPreviewActivity::class.java)
-            val paramsJson = JSONObject().apply {
-                images.let { put(AddRecordParams.IMAGE_URIS.key, images.joinToString(",")) }
-                put(AddRecordParams.BUSINESS_ID.key, params.businessId)
-                put(AddRecordParams.OWNER_ID.key, params.ownerId)
-                put(AddRecordParams.CASE_ID.key, caseId)
+            if(images.isNotEmpty()) {
+                val intent = Intent(context, AddRecordPreviewActivity::class.java)
+                val paramsJson = JSONObject().apply {
+                    images.let { put(AddRecordParams.IMAGE_URIS.key, images.joinToString(",")) }
+                    put(AddRecordParams.BUSINESS_ID.key, params.businessId)
+                    put(AddRecordParams.OWNER_ID.key, params.ownerId)
+                    put(AddRecordParams.CASE_ID.key, caseId)
+                }
+                intent.putExtra(AddRecordParams.PARAMS_KEY, Gson().toJson(paramsJson))
+                addRecordResultLauncher.launch(intent)
             }
-            intent.putExtra(AddRecordParams.PARAMS_KEY, Gson().toJson(paramsJson))
-            addRecordResultLauncher.launch(intent)
         }
 
     val pdfPickerLauncher = rememberLauncherForActivityResult(
