@@ -87,7 +87,7 @@ fun RecordViewerScreen(
                         }
                     ) {
                         Icon(
-                            modifier = Modifier.size(36.dp),
+                            modifier = Modifier.size(24.dp),
                             painter = painterResource(R.drawable.ic_download),
                             contentDescription = "More",
                             tint = MaterialTheme.colorScheme.onSurface

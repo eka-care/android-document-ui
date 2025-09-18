@@ -48,7 +48,8 @@ import kotlinx.coroutines.launch
 fun SmartReportViewComponent(
     viewModel: RecordPreviewViewModel,
     id: String,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onClick: (id: String, name: String) -> Unit
 ) {
 
     LaunchedEffect(id) { viewModel.getDocument(id = id) }
@@ -58,8 +59,6 @@ fun SmartReportViewComponent(
     val pagerState = rememberPagerState(initialPage = SmartViewTab.SMART_REPORT.ordinal, pageCount = { 2 })
     var selectedUri by remember { mutableStateOf<Uri?>(null) }
     val document by viewModel.document.collectAsState()
-//    val record = (document as DocumentPreviewState.Success).data
-//    if (record.documentDate != null) getDocumentDate(record.documentDate!!) else
     Scaffold(
         topBar = {
             TopAppBar(
@@ -98,7 +97,7 @@ fun SmartReportViewComponent(
                         }
                     ) {
                         Icon(
-                            modifier = Modifier.size(36.dp),
+                            modifier = Modifier.size(24.dp),
                             painter = painterResource(R.drawable.ic_download),
                             contentDescription = "More",
                             tint = MaterialTheme.colorScheme.onSurface
@@ -163,7 +162,7 @@ fun SmartReportViewComponent(
                                             }
                                         })
                                         SmartReportFilter(smartReport, viewModel = viewModel)
-                                        SmartReportList(viewModel = viewModel)
+                                        SmartReportList(viewModel = viewModel, onClick = onClick)
                                     }
                                 }
                             }

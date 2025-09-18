@@ -370,23 +370,32 @@ fun RecordsScreenContent(
     }
 
     PullToRefreshBox(
-        modifier = modifier.background(Color.White),
+        modifier = modifier.background(EkaTheme.colors.surface),
         isRefreshing = isRefreshing,
         state = pullToRefreshState,
         onRefresh = onRefresh
     ) {
-        Column {
+        Column(
+            modifier = Modifier.background(EkaTheme.colors.surface)
+        ) {
             if (viewModel.syncing.collectAsState().value) {
                 LinearProgressIndicator(
                     modifier = Modifier.fillMaxWidth(),
                     color = EkaTheme.colors.primary
                 )
             }
-            RecordSortSection(
+            RecordFilter(
                 viewModel = viewModel,
-                openSheet = {
+                onSortClick = {
                     viewModel.documentBottomSheetType =
                         DocumentBottomSheetType.DocumentSort
+                },
+                onFilterApplied = {
+                    viewModel.fetchRecords(
+                        businessId = params.businessId,
+                        owners = owners,
+                        caseId = null
+                    )
                 }
             )
             when (viewModel.documentViewType) {

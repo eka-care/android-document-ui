@@ -45,6 +45,7 @@ class CaseDetailsActivity: ComponentActivity() {
                     params = MedicalRecordsNavModel(
                         businessId = businessId,
                         ownerId = ownerId,
+                        ownerName = "",
                         links = links
                     ),
                     onBackPressed = {

@@ -1,5 +1,6 @@
 package eka.care.documents.ui.components.recordgridview
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -63,11 +64,12 @@ fun RecordsGridItem(
     onMoreOptionsClick: () -> Unit,
 ) {
     Card(
-        colors = CardDefaults.cardColors(EkaTheme.colors.surface),
+        colors = CardDefaults.cardColors(Color.White),
+        border = BorderStroke(1.dp, Color(0xFFEDEDED)),
         onClick = if (record.uiState == RecordUiState.SYNC_FAILED) onRetry else onClick
     ) {
         Column(
-            modifier = Modifier.padding(8.dp),
+            modifier = Modifier.background(Color.White).padding(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Row(
@@ -161,7 +163,7 @@ fun RecordsGridItem(
                         .data(record.thumbnail)
                         .crossfade(700)
                         .build(),
-                    contentScale = ContentScale.FillWidth,
+                    contentScale = ContentScale.FillBounds,
                     alignment = Alignment.TopCenter,
                     fallback = painterResource(R.drawable.ic_record_placeholder_custom),
                     contentDescription = record.updatedAt.toString(),

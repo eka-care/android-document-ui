@@ -3,7 +3,6 @@ package eka.care.documents.ui.screens
 import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -31,13 +30,14 @@ import com.eka.ui.theme.EkaTheme
 import eka.care.documents.ui.activity.AddRecordParams
 import eka.care.documents.ui.activity.RecordViewerActivity
 import eka.care.documents.ui.components.RecordTabs
+import eka.care.documents.ui.components.RecordsHeader
 import eka.care.documents.ui.components.RecordsScreenContent
-import eka.care.documents.ui.components.RecordsSearchBar
 import eka.care.documents.ui.components.recordcaseview.CaseView
 import eka.care.documents.ui.components.syncRecords
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.theme.AppColorScheme
 import eka.care.documents.ui.utility.DocumentBottomSheetType
+import eka.care.documents.ui.utility.Mode
 import eka.care.documents.ui.utility.RecordsAction.Companion.getTabs
 import eka.care.documents.ui.utility.RecordsAction.Companion.navigateToCaseDetails
 import eka.care.documents.ui.utility.RecordsAction.Companion.navigateToCaseList
@@ -91,6 +91,7 @@ private fun ScreenContent(
     }
 
     LaunchedEffect(params) {
+        viewModel.updateDocumentType(params.documentType)
         syncRecords(
             businessId = params.businessId,
             owners = owners,
@@ -110,26 +111,25 @@ private fun ScreenContent(
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
-            .background(EkaTheme.colors.surface),
+            .background(Color.White),
         topBar = {
-            Column {
-                Box(
-                    modifier = Modifier
-                        .background(EkaTheme.colors.surface)
-                        .padding(start = 8.dp, end = 8.dp, top = 48.dp)
-                ) {
-                    RecordsSearchBar(
-                        showRecordSelection = true,
-                        onBackPressed = onBackPressed,
-                        onSearch = {
-                            navigateToCaseList(context = context, params = params)
-                        },
-                        onSelection = {
-                            onRecordSelection(selectedItems)
-                            onBackPressed()
-                        },
-                    )
-                }
+            Column(
+                modifier = Modifier
+                    .background(Color.White)
+                    .padding(start = 8.dp, end = 8.dp)
+            ) {
+                RecordsHeader(
+                    text = params.ownerName,
+                    showRecordSelection = params.mode == Mode.SELECTION,
+                    onBackPressed = onBackPressed,
+                    onSearch = {
+                        navigateToCaseList(context = context, params = params)
+                    },
+                    onSelection = {
+                        onRecordSelection(selectedItems)
+                        onBackPressed()
+                    },
+                )
                 RecordTabs(
                     tabs = getTabs(pagerState = pagerState),
                     onTabClick = { tabId ->
@@ -170,7 +170,7 @@ private fun ScreenContent(
                 state = pagerState,
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.White)
+                    .background(Color(0xFFF2F4F7))
                     .padding(paddingValues)
             ) { page ->
                 if (page == TabConstants.ALL_FILES.id) {

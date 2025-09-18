@@ -15,6 +15,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eka.ui.theme.EkaTheme
@@ -25,8 +27,8 @@ import eka.care.documents.ui.model.TabItem
 fun RecordTabs(
     modifier: Modifier = Modifier,
     tabs: List<TabItem> = listOf(
-        TabItem(id = 0, title = "All Files", isSelected = false),
-        TabItem(id = 1, title = "Medical Cases", isSelected = true)
+        TabItem(id = 0, title = "All Medical Records", isSelected = false),
+        TabItem(id = 1, title = "All Encounters", isSelected = true)
     ),
     onTabClick: (Int) -> Unit = {}
 ) {
@@ -35,7 +37,7 @@ fun RecordTabs(
     TabRow(
         selectedTabIndex = selectedTabIndex,
         modifier = modifier.fillMaxWidth(),
-        containerColor = EkaTheme.colors.surface,
+        containerColor = Color.White,
         divider = {
             HorizontalDivider(
                 modifier = Modifier.fillMaxWidth(),
@@ -67,12 +69,13 @@ fun RecordTabs(
                 text = {
                     Text(
                         text = tab.title,
-                        style = EkaTheme.typography.titleSmall,
+                        style = EkaTheme.typography.titleMedium,
                         color = if (tab.isSelected) {
                             EkaTheme.colors.primary
                         } else {
                             EkaTheme.colors.onSurfaceVariant
-                        }
+                        },
+                        fontWeight = FontWeight.W600
                     )
                 }
             )

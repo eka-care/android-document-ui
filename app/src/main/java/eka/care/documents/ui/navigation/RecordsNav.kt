@@ -6,6 +6,8 @@ data class MedicalRecordsNavModel(
     val businessId: String,
     val ownerId: String,
     val links: String? = null,
+    val ownerName: String = "",
+    val documentType: String? = null,
     val mode : Mode = Mode.VIEW,
     val isUploadEnabled: Boolean = false
 )

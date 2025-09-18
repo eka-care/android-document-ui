@@ -70,17 +70,17 @@ fun SmartRecordInfo(onClick: () -> Unit = {}) {
 }
 
 @Composable
-fun SmartReportList(viewModel: RecordPreviewViewModel) {
+fun SmartReportList(viewModel: RecordPreviewViewModel, onClick: (id: String, name: String) -> Unit) {
     val filteredList by viewModel.filteredSmartReport.collectAsState()
     LazyColumn {
         items(filteredList) { reportField ->
-            SmartReportListComponent(smartReport = reportField)
+            SmartReportListComponent(smartReport = reportField, onClick = onClick)
         }
     }
 }
 
 @Composable
-fun SmartReportListComponent(smartReport: SmartReportField) {
+fun SmartReportListComponent(smartReport: SmartReportField, onClick: (id: String, name: String) -> Unit) {
     val resultEnum = LabParamResult.entries.find { it.value == smartReport.resultId }
     val resultColor = when (resultEnum) {
         LabParamResult.NORMAL -> StyleDictionaryColor.colorSuccess500
@@ -92,16 +92,7 @@ fun SmartReportListComponent(smartReport: SmartReportField) {
     ListItem(
         modifier = Modifier.clickable(
             onClick = {
-//                if (Document.getConfiguration()?.vitalsEnabled == true && smartReport.ekaId != null) {
-//                    smartReport.ekaId?.let { ekaId ->
-//                        Document.navigateToVitalTrends(
-//                            SmartReportClickData(
-//                                ekaId = ekaId,
-//                                name = smartReport.name
-//                            )
-//                        )
-//                    }
-//                }
+                onClick(smartReport.vitalId ?: "", smartReport.name ?: "")
             }
         ),
         colors = ListItemDefaults.colors(

@@ -11,7 +11,7 @@ fun RecordSortBottomSheet(
     onClick: (SortOrder) -> Unit
 ) {
     BottomSheetContentLayout(
-        height = 0.1f * SortOrder.entries.size,
+        height = 0.08f * SortOrder.entries.size,
         title = "Sort by"
     ) {
         SortOrder.entries.map { item ->

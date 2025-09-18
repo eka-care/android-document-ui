@@ -10,8 +10,8 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.eka.ui.theme.EkaTheme
 import eka.care.documents.ui.utility.Mode
 import eka.care.records.client.model.RecordModel
 
@@ -30,7 +30,7 @@ fun RecordsGrid(
         contentPadding = PaddingValues(top = 16.dp, bottom = 80.dp, start = 12.dp, end = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = Modifier.fillMaxHeight().background(Color.White)
+        modifier = Modifier.fillMaxHeight().background(EkaTheme.colors.surface)
     ) {
         items(records) { record ->
             RecordsGridItem(

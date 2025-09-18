@@ -34,6 +34,9 @@ class RecordViewerActivity: ComponentActivity() {
                         id = recordId,
                         onBackClick = {
                             finish()
+                        },
+                        onClick = { _, _ ->
+                            finish()
                         }
                     )
                 } else {
