@@ -60,8 +60,6 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
         documentType.value = type
     }
 
-    var isRefreshing = mutableStateOf(false)
-
     var documentBottomSheetType by mutableStateOf<DocumentBottomSheetType?>(null)
 
     var documentViewType by mutableStateOf(DocumentViewType.GridView)
@@ -112,7 +110,6 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
         job?.cancel()
         _getRecordsState.value = RecordsState.Loading
         job = viewModelScope.launch {
-            isRefreshing.value = true
             val documentFlow = recordsManager.getRecords(
                 businessId = businessId,
                 ownerIds = owners,
@@ -123,7 +120,6 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
             documentFlow
                 .cancellable()
                 .collect { records ->
-                    isRefreshing.value = false
                     _getRecordsState.value = if (records.isEmpty()) {
                         RecordsState.EmptyState
                     } else {
@@ -187,7 +183,6 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
             WorkManager.getInstance(app.applicationContext).recordSyncFlow(businessId).collect {
                 it?.let { info ->
                     _syncing.value = it.progress.getBoolean("syncing", false)
-                    isRefreshing.value = false
                 }
             }
         }

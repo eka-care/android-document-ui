@@ -90,6 +90,12 @@ private fun ScreenContent(
         }
     }
 
+    LaunchedEffect(Unit) {
+        if (params.triggerUpload) {
+            viewModel.documentBottomSheetType = DocumentBottomSheetType.DocumentUpload
+        }
+    }
+
     LaunchedEffect(params) {
         viewModel.updateDocumentType(params.documentType)
         syncRecords(

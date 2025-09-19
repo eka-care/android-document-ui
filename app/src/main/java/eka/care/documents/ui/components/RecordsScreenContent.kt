@@ -78,7 +78,6 @@ fun RecordsScreenContent(
     openRecordViewer: (data: RecordModel) -> Unit,
     onRecordAdded: () -> Unit
 ) {
-    val isRefreshing by viewModel.isRefreshing
     val recordsState by viewModel.getRecordsState.collectAsState()
     val cameraPermissionState = rememberPermissionState(permission = Manifest.permission.CAMERA)
     val scope = rememberCoroutineScope()
@@ -118,6 +117,11 @@ fun RecordsScreenContent(
             businessId = params.businessId,
             owners = owners,
             context = context
+        )
+        viewModel.fetchRecords(
+            businessId = params.businessId,
+            owners = owners,
+            caseId = caseId
         )
     }
 
@@ -371,7 +375,7 @@ fun RecordsScreenContent(
 
     PullToRefreshBox(
         modifier = modifier.background(EkaTheme.colors.surface),
-        isRefreshing = isRefreshing,
+        isRefreshing = viewModel.syncing.collectAsState().value,
         state = pullToRefreshState,
         onRefresh = onRefresh
     ) {
