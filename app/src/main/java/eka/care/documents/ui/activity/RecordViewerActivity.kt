@@ -10,16 +10,16 @@ import eka.care.documents.ui.screens.RecordViewerScreen
 import eka.care.documents.ui.theme.AppColorScheme
 import eka.care.documents.ui.viewmodel.RecordPreviewViewModel
 
-class RecordViewerActivity: ComponentActivity() {
+class RecordViewerActivity : ComponentActivity() {
 
-    private val viewModel: RecordPreviewViewModel by  viewModels()
+    private val viewModel: RecordPreviewViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val isSmart = intent.getBooleanExtra(AddRecordParams.IS_SMART.key, false)
         val recordId = intent.getStringExtra(AddRecordParams.RECORD_ID.key)
 
-        if(recordId.isNullOrEmpty()) {
+        if (recordId.isNullOrEmpty()) {
             finish()
             return
         }
@@ -28,14 +28,18 @@ class RecordViewerActivity: ComponentActivity() {
             EkaTheme(
                 colorScheme = AppColorScheme
             ) {
-                if(isSmart) {
+                if (isSmart) {
                     SmartReportViewComponent(
                         viewModel = viewModel,
                         id = recordId,
                         onBackClick = {
                             finish()
                         },
-                        onClick = { _, _ ->
+                        onClick = { id: String, name: String ->
+                            setResult(
+                                RESULT_OK,
+                                intent.putExtra("ekaId", id).putExtra("name", name)
+                            )
                             finish()
                         }
                     )
