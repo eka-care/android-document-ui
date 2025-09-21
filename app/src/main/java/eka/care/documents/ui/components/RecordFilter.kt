@@ -31,6 +31,7 @@ import eka.care.documents.ui.R
 import eka.care.documents.ui.utility.DocumentViewType
 import eka.care.documents.ui.utility.RecordType
 import eka.care.documents.ui.viewmodel.RecordsViewModel
+import eka.care.records.client.model.SortOrder
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -75,7 +76,7 @@ fun RecordFilter(
                     onClick = onSortClick,
                     label = {
                         Text(
-                            text = "Sort by: ${viewModel.sortBy.value.name}",
+                            text = "Sort by: ${getSortOrderChipText(viewModel.sortBy.value)}",
                             style = EkaTheme.typography.labelLarge
                         )
                     },
@@ -160,4 +161,15 @@ fun RecordFilterChip(
         trailingIcon = trailingIcon,
         shape = RoundedCornerShape(8.dp)
     )
+}
+
+fun getSortOrderChipText(order: SortOrder): String {
+    return when (order) {
+        SortOrder.CREATED_AT_ASC -> "Upload date"
+        SortOrder.CREATED_AT_DSC -> "Upload date"
+        SortOrder.DOC_DATE_ASC -> "Document date"
+        SortOrder.DOC_DATE_DSC -> "Document date"
+        SortOrder.UPDATED_AT_ASC -> "Updated date"
+        SortOrder.UPDATED_AT_DSC -> "Updated date"
+    }
 }

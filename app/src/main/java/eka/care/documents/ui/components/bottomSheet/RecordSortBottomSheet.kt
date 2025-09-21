@@ -11,7 +11,7 @@ fun RecordSortBottomSheet(
     onClick: (SortOrder) -> Unit
 ) {
     BottomSheetContentLayout(
-        height = 0.08f * SortOrder.entries.size,
+        height = 0.07f * SortOrder.entries.size,
         title = "Sort by"
     ) {
         SortOrder.entries.map { item ->
@@ -28,11 +28,11 @@ fun RecordSortBottomSheet(
 
 fun getSortOrderTitle(order: SortOrder): String {
     return when (order) {
-        SortOrder.CREATED_AT_ASC -> "Created at low to high"
-        SortOrder.CREATED_AT_DSC -> "Created at high to low"
-        SortOrder.DOC_DATE_ASC -> "Document date low to high"
-        SortOrder.DOC_DATE_DSC -> "Document date high to low"
-        SortOrder.UPDATED_AT_ASC -> "Updated at low to high"
-        SortOrder.UPDATED_AT_DSC -> "Updated at high to low"
+        SortOrder.CREATED_AT_ASC -> "Oldest by creation date"
+        SortOrder.CREATED_AT_DSC -> "Newest by creation date"
+        SortOrder.DOC_DATE_ASC -> "Earliest document date"
+        SortOrder.DOC_DATE_DSC -> "Latest document date"
+        SortOrder.UPDATED_AT_ASC -> "Least recently updated"
+        SortOrder.UPDATED_AT_DSC -> "Most recently updated"
     }
 }
