@@ -1,6 +1,7 @@
 package eka.care.documents.ui.screens
 
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
@@ -241,42 +242,58 @@ fun PreviewComponent(
 
 fun loadOptimizedBitmap(filePath: String): Bitmap? {
     return try {
-        val options = BitmapFactory.Options().apply {
-            inJustDecodeBounds = true
-        }
+        val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
         BitmapFactory.decodeFile(filePath, options)
+        val (imageWidth, imageHeight) = options.outWidth to options.outHeight
+        if (imageWidth <= 0 || imageHeight <= 0) return null
 
-        val imageWidth = options.outWidth
-        val imageHeight = options.outHeight
+        val displayMetrics = Resources.getSystem().displayMetrics
+        val reqWidth = displayMetrics.widthPixels
+        val reqHeight = displayMetrics.heightPixels
+
         val maxCanvasSize = 32768
-        val estimatedBytes = imageWidth * imageHeight * 4
+        val maxBytes = 80_000_000 // ~80 MB safe threshold
 
-        if (estimatedBytes > 100 * 1024 * 1024 || imageWidth > maxCanvasSize || imageHeight > maxCanvasSize) {
-            options.inSampleSize = calculateInSampleSize(options)
-            options.inPreferredConfig = Bitmap.Config.RGB_565
+        val inSampleSize = calculateInSampleSize(
+            imageWidth,
+            imageHeight,
+            reqWidth.coerceAtMost(maxCanvasSize),
+            reqHeight.coerceAtMost(maxCanvasSize),
+            maxBytes
+        )
+
+        val decodeOptions = BitmapFactory.Options().apply {
+            this.inSampleSize = inSampleSize
+            inPreferredConfig = Bitmap.Config.RGB_565 // saves memory (2 bytes/pixel)
         }
+        val bitmap = BitmapFactory.decodeFile(filePath, decodeOptions) ?: return null
 
-        options.inJustDecodeBounds = false
-        val bitmap = BitmapFactory.decodeFile(filePath, options)
-        bitmap?.let { fixImageOrientation(it, filePath) }
+        fixImageOrientation(bitmap, filePath)
     } catch (e: Exception) {
         e.printStackTrace()
         null
     }
 }
 
-private fun calculateInSampleSize(options: BitmapFactory.Options): Int {
-    val height = options.outHeight
-    val width = options.outWidth
+private fun calculateInSampleSize(
+    width: Int,
+    height: Int,
+    maxWidth: Int,
+    maxHeight: Int,
+    maxBytes: Int
+): Int {
     var inSampleSize = 1
+    while (true) {
+        val scaledWidth = width / inSampleSize
+        val scaledHeight = height / inSampleSize
+        val estimatedBytes = scaledWidth * scaledHeight * 2 // RGB_565 = 2 bytes/pixel
 
-    if (height > 800 || width > 600) {
-        val halfHeight = height / 2
-        val halfWidth = width / 2
+        if (scaledWidth <= maxWidth &&
+            scaledHeight <= maxHeight &&
+            estimatedBytes <= maxBytes
+        ) break
 
-        while (halfHeight / inSampleSize >= 800 && halfWidth / inSampleSize >= 600) {
-            inSampleSize *= 2
-        }
+        inSampleSize *= 2
     }
     return inSampleSize
 }
@@ -297,13 +314,16 @@ fun fixImageOrientation(bitmap: Bitmap, filePath: String): Bitmap {
             else -> return bitmap
         }
 
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+        val rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+        if (rotatedBitmap != bitmap) {
+            bitmap.recycle()
+        }
+        return rotatedBitmap
     } catch (e: IOException) {
         e.printStackTrace()
+        return bitmap
     }
-    return bitmap
 }
-
 
 @Composable
 fun CircularImageComponent(image: ImageVector, modifier: Modifier, onClick: () -> Unit, action: String) {
