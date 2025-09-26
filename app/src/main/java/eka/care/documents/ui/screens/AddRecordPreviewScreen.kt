@@ -186,8 +186,7 @@ fun PreviewComponent(
                             .padding(horizontal = 32.dp, vertical = 16.dp)
                     ) {
                         items(filePreviewList) { file ->
-                            val bitmap = BitmapFactory.decodeFile(file.path)
-                                ?.let { fixImageOrientation(it, file.path) }
+                            val bitmap = loadOptimizedBitmap(file.path)
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -238,6 +237,48 @@ fun PreviewComponent(
             }
         }
     )
+}
+
+fun loadOptimizedBitmap(filePath: String): Bitmap? {
+    return try {
+        val options = BitmapFactory.Options().apply {
+            inJustDecodeBounds = true
+        }
+        BitmapFactory.decodeFile(filePath, options)
+
+        val imageWidth = options.outWidth
+        val imageHeight = options.outHeight
+        val maxCanvasSize = 32768
+        val estimatedBytes = imageWidth * imageHeight * 4
+
+        if (estimatedBytes > 100 * 1024 * 1024 || imageWidth > maxCanvasSize || imageHeight > maxCanvasSize) {
+            options.inSampleSize = calculateInSampleSize(options)
+            options.inPreferredConfig = Bitmap.Config.RGB_565
+        }
+
+        options.inJustDecodeBounds = false
+        val bitmap = BitmapFactory.decodeFile(filePath, options)
+        bitmap?.let { fixImageOrientation(it, filePath) }
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    }
+}
+
+private fun calculateInSampleSize(options: BitmapFactory.Options): Int {
+    val height = options.outHeight
+    val width = options.outWidth
+    var inSampleSize = 1
+
+    if (height > 800 || width > 600) {
+        val halfHeight = height / 2
+        val halfWidth = width / 2
+
+        while (halfHeight / inSampleSize >= 800 && halfWidth / inSampleSize >= 600) {
+            inSampleSize *= 2
+        }
+    }
+    return inSampleSize
 }
 
 fun fixImageOrientation(bitmap: Bitmap, filePath: String): Bitmap {
