@@ -252,7 +252,7 @@ fun loadOptimizedBitmap(filePath: String): Bitmap? {
         val reqHeight = displayMetrics.heightPixels
 
         val maxCanvasSize = 32768
-        val maxBytes = 80_000_000 // ~80 MB safe threshold
+        val maxBytes = 80000000 // ~80 MB safe threshold
 
         val inSampleSize = calculateInSampleSize(
             imageWidth,
