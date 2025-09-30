@@ -1,5 +1,6 @@
 package eka.care.documents.ui.screens
 
+import android.app.Activity
 import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -51,7 +52,8 @@ fun RecordsMainScreen(
     viewModel: RecordsViewModel,
     params: MedicalRecordsNavModel,
     onRecordSelection: (List<RecordModel>) -> Unit,
-    onBackPressed: () -> Unit = {}
+    onBackPressed: () -> Unit = {},
+    activity: Activity
 ) {
     EkaTheme(
         colorScheme = AppColorScheme
@@ -60,7 +62,8 @@ fun RecordsMainScreen(
             viewModel = viewModel,
             params = params,
             onRecordSelection = onRecordSelection,
-            onBackPressed = onBackPressed
+            onBackPressed = onBackPressed,
+            activity = activity
         )
     }
 }
@@ -70,7 +73,8 @@ private fun ScreenContent(
     viewModel: RecordsViewModel,
     params: MedicalRecordsNavModel,
     onRecordSelection: (List<RecordModel>) -> Unit,
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
+    activity: Activity
 ) {
     val selectedItems = remember { mutableStateListOf<RecordModel>() }
     val pagerState = rememberPagerState(pageCount = { 2 })
@@ -208,7 +212,8 @@ private fun ScreenContent(
                         onRecordAdded = {
                             Toast.makeText(context, "Record added successfully", Toast.LENGTH_SHORT)
                                 .show()
-                        }
+                        },
+                        activity = activity
                     )
                 } else if (page == TabConstants.MEDICAL_CASES.id) {
                     CaseView(

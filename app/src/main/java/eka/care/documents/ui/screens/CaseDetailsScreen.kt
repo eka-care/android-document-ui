@@ -1,5 +1,6 @@
 package eka.care.documents.ui.screens
 
+import android.app.Activity
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -65,7 +66,8 @@ fun CaseDetailsScreen(
     caseId: String,
     openSmartReport: (data: RecordModel) -> Unit,
     openRecordViewer: (data: RecordModel) -> Unit,
-    onBackPressed: () -> Unit = {}
+    onBackPressed: () -> Unit = {},
+    activity: Activity
 ) {
     val context = LocalContext.current
     val owners = mutableListOf<String>().apply {
@@ -184,7 +186,8 @@ fun CaseDetailsScreen(
                 onMoreOptionSelection = {
                     caseDetailsViewModel.caseBottomSheet = CaseDetailsOptions.MORE
                     openSheet.invoke()
-                }
+                },
+                activity = activity
             )
         },
         sheetBackgroundColor = Color.White,
@@ -202,7 +205,8 @@ private fun Content(
     openSmartReport: (data: RecordModel) -> Unit,
     openRecordViewer: (data: RecordModel) -> Unit,
     onBackPressed: () -> Unit = {},
-    onMoreOptionSelection: () -> Unit
+    onMoreOptionSelection: () -> Unit,
+    activity: Activity
 ) {
     val context = LocalContext.current
     Scaffold(
@@ -264,7 +268,8 @@ private fun Content(
                 onRecordAdded = {
                     Toast.makeText(context, "Record added successfully", Toast.LENGTH_SHORT).show()
                     onBackPressed()
-                }
+                },
+                activity = activity
             )
         },
         bottomBar = {
