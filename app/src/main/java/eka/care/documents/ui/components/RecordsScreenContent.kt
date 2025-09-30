@@ -76,7 +76,8 @@ fun RecordsScreenContent(
     onSelectedItemsChange: (List<RecordModel>) -> Unit = {},
     openSmartReport: (data: RecordModel) -> Unit,
     openRecordViewer: (data: RecordModel) -> Unit,
-    onRecordAdded: () -> Unit
+    onRecordAdded: () -> Unit,
+    activity: Activity
 ) {
     val recordsState by viewModel.getRecordsState.collectAsState()
     val cameraPermissionState = rememberPermissionState(permission = Manifest.permission.CAMERA)
@@ -336,7 +337,7 @@ fun RecordsScreenContent(
                         MediaPickerManager.pickPdf()
                     },
                     scanDocument = {
-                        MediaPickerManager.scanDocument(context)
+                        MediaPickerManager.scanDocument(context = activity)
                     },
                     cameraLauncher = {
                         MediaPickerManager.takePhoto(

@@ -66,7 +66,8 @@ class CaseDetailsActivity: ComponentActivity() {
                         }.run {
                             startActivity(this)
                         }
-                    }
+                    },
+                    activity = this
                 )
             }
         }
