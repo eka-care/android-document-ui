@@ -1,5 +1,6 @@
 package eka.care.documents.ui.screens
 
+import android.R.attr.bitmap
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Bitmap
@@ -7,6 +8,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -49,6 +51,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.rizzi.bouquet.ResourceType
 import com.rizzi.bouquet.VerticalPDFReader
 import com.rizzi.bouquet.rememberVerticalPdfReaderState
@@ -251,7 +254,7 @@ fun loadOptimizedBitmap(filePath: String): Bitmap? {
         val reqWidth = displayMetrics.widthPixels
         val reqHeight = displayMetrics.heightPixels
 
-        val maxCanvasSize = 32768
+        val maxCanvasSize = 8192
         val maxBytes = 80000000
 
         val inSampleSize = calculateInSampleSize(
