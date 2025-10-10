@@ -108,6 +108,20 @@ fun RecordsBottomSheetContent(
             )
         }
 
+        DocumentBottomSheetType.TagsFilter -> {
+            TagsBottomSheet(
+                viewModel = viewModel,
+                onTagsUpdated = {
+                    viewModel.tags.value = it
+                    viewModel.fetchRecords(
+                        owners = owners,
+                        businessId = params.businessId,
+                        caseId = caseId
+                    )
+                }
+            )
+        }
+
         null -> {}
     }
 }

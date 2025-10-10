@@ -24,7 +24,7 @@ fun RecordsList(
         verticalArrangement = Arrangement.spacedBy(2.dp),
         contentPadding = PaddingValues(top = 16.dp, bottom = 80.dp, start = 12.dp, end = 12.dp)
     ) {
-        items(records) { record ->
+        items(records, key = { it.id }) { record ->
             RecordsListItem(
                 record = record,
                 onClick = { onClick(record) },

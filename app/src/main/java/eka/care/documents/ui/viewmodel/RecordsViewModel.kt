@@ -2,6 +2,7 @@ package eka.care.documents.ui.viewmodel
 
 import android.app.Application
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -11,6 +12,7 @@ import androidx.work.WorkManager
 import eka.care.documents.ui.state.CasesState
 import eka.care.documents.ui.state.RecordsCountByType
 import eka.care.documents.ui.state.RecordsState
+import eka.care.documents.ui.state.TagsState
 import eka.care.documents.ui.state.UpsertRecordState
 import eka.care.documents.ui.utility.DocumentBottomSheetType
 import eka.care.documents.ui.utility.DocumentViewType
@@ -34,10 +36,15 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
     private var job: Job? = null
     private var recordsCountJob: Job? = null
     private var caseJob: Job? = null
+    private var tagsJob: Job? = null
+
     val cardClickData = mutableStateOf<RecordModel?>(null)
 
     private val _getRecordsState = MutableStateFlow<RecordsState>(RecordsState.Loading)
     val getRecordsState: StateFlow<RecordsState> = _getRecordsState
+
+    private val _tagsState = MutableStateFlow<TagsState>(TagsState.Loading)
+    val tagsState: StateFlow<TagsState> = _tagsState
 
     private val _getCasesState = MutableStateFlow<CasesState>(CasesState.Loading)
     val getCasesState: StateFlow<CasesState> = _getCasesState
@@ -56,6 +63,8 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
 
     val sortBy = mutableStateOf(SortOrder.CREATED_AT_DSC)
     var documentType = mutableStateOf<String?>(null)
+    var tags = mutableStateOf<List<String>>(emptyList())
+
     val updateDocumentType = { type: String? ->
         documentType.value = type
     }
@@ -108,14 +117,14 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
 
     fun fetchRecords(owners: List<String>, businessId: String, caseId: String? = null) {
         job?.cancel()
-        _getRecordsState.value = RecordsState.Loading
         job = viewModelScope.launch {
             val documentFlow = recordsManager.getRecords(
                 businessId = businessId,
                 ownerIds = owners,
                 caseId = caseId,
                 sortOrder = sortBy.value,
-                documentType = documentType.value
+                documentType = documentType.value,
+                tags = tags.value
             )
             documentFlow
                 .cancellable()
@@ -257,6 +266,20 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
                 recordId = recordId,
                 caseId = caseId
             )
+        }
+    }
+
+    fun getTags(businessId: String, owners: List<String>) {
+        tagsJob?.cancel()
+        tagsJob = viewModelScope.launch {
+            recordsManager.getTags(
+                businessId = businessId,
+                ownerIds = owners
+            ).cancellable()
+                .collect { tags ->
+                    _tagsState.value = TagsState.Success(data = tags)
+                    Log.d("Tags", tags.toString())
+                }
         }
     }
 }

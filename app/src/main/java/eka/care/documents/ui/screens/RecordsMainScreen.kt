@@ -102,6 +102,7 @@ private fun ScreenContent(
 
     LaunchedEffect(params) {
         viewModel.updateDocumentType(params.documentType)
+        viewModel.tags.value = emptyList()
         syncRecords(
             businessId = params.businessId,
             owners = owners,
@@ -110,6 +111,10 @@ private fun ScreenContent(
         viewModel.fetchRecordsCount(
             businessId = params.businessId,
             owners = owners,
+        )
+        viewModel.getTags(
+            businessId = params.businessId,
+            owners = owners
         )
         viewModel.fetchRecords(
             businessId = params.businessId,

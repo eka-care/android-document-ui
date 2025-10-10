@@ -38,6 +38,7 @@ import eka.care.records.client.model.SortOrder
 fun RecordFilter(
     viewModel: RecordsViewModel,
     onSortClick: () -> Unit,
+    onTagsClick: () -> Unit,
     onFilterApplied: () -> Unit
 ) {
     val documentType by viewModel.documentType
@@ -103,6 +104,37 @@ fun RecordFilter(
                 )
             }
             item {
+                FilterChip(
+                    onClick = onTagsClick,
+                    label = {
+                        Text(
+                            text = "Tags",
+                            style = EkaTheme.typography.labelLarge
+                        )
+                    },
+                    border = FilterChipDefaults.filterChipBorder(
+                        selected = false,
+                        enabled = true,
+                        borderColor = EkaTheme.colors.outlineVariant,
+                        selectedBorderColor = EkaTheme.colors.primary
+                    ),
+                    trailingIcon = {
+                        Icon(
+                            imageVector = Icons.Rounded.ArrowDropDown,
+                            tint = EkaTheme.colors.onSurfaceVariant,
+                            modifier = Modifier.size(16.dp),
+                            contentDescription = "selected"
+                        )
+                    },
+                    selected = false,
+                    shape = RoundedCornerShape(8.dp),
+                    colors = FilterChipDefaults.filterChipColors(
+                        containerColor = Color.White,
+                        labelColor = EkaTheme.colors.onSurfaceVariant
+                    )
+                )
+            }
+            item {
                 RecordFilterChip(
                     text = "All ($totalCount)",
                     isSelected = documentType == null,
@@ -112,7 +144,6 @@ fun RecordFilter(
                     }
                 )
             }
-
             items(recordsCountByType.data) { recordsInfo ->
                 val name = RecordType.entries.find { it.code == recordsInfo.documentType }?.title
                 RecordFilterChip(

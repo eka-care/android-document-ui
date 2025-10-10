@@ -395,6 +395,10 @@ fun RecordsScreenContent(
                     viewModel.documentBottomSheetType =
                         DocumentBottomSheetType.DocumentSort
                 },
+                onTagsClick = {
+                    viewModel.documentBottomSheetType =
+                        DocumentBottomSheetType.TagsFilter
+                },
                 onFilterApplied = {
                     viewModel.fetchRecords(
                         businessId = params.businessId,

@@ -4,12 +4,19 @@ import androidx.annotation.Keep
 import eka.care.records.client.model.CaseModel
 import eka.care.records.client.model.DocumentTypeCount
 import eka.care.records.client.model.RecordModel
+import eka.care.records.client.model.TagModel
 
 sealed class RecordsState {
     data object Loading : RecordsState()
     data class Error(val error: String?) : RecordsState()
     data class Success(val data: List<RecordModel>) : RecordsState()
     data object EmptyState : RecordsState()
+}
+
+sealed class TagsState {
+    data object Loading : TagsState()
+    data class Error(val error: String?) : TagsState()
+    data class Success(val data: List<TagModel>) : TagsState()
 }
 
 @Keep

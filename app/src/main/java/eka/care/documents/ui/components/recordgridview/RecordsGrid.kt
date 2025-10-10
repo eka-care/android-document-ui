@@ -32,7 +32,7 @@ fun RecordsGrid(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier.fillMaxHeight().background(EkaTheme.colors.surface)
     ) {
-        items(records) { record ->
+        items(records, key = { it.id }) { record ->
             RecordsGridItem(
                 record = record,
                 mode = mode,

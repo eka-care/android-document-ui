@@ -17,9 +17,8 @@ fun RecordsListView(
         is RecordsState.EmptyState -> RecordEmptyState(onClick = onUploadRecordClick)
         is RecordsState.Error -> {}
         is RecordsState.Success -> {
-            val records = (state as? RecordsState.Success)?.data ?: emptyList()
             RecordsList(
-                records = records,
+                records = state.data,
                 onClick = onRecordClick,
                 onMoreOptionsClick = onMoreOptionsClick
             )

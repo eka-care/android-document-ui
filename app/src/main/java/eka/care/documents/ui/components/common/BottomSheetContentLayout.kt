@@ -19,9 +19,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.eka.ui.theme.EkaTheme
 
 @Composable
 fun BottomSheetContentLayout(
@@ -58,6 +60,9 @@ fun BottomSheetContentLayout(
                     item {
                         Text(
                             text = title,
+                            style = EkaTheme.typography.titleLarge,
+                            color = EkaTheme.colors.onSurface,
+                            fontWeight = FontWeight.W500,
                             modifier = Modifier.padding(start = 16.dp, bottom = 16.dp),
                         )
                     }
@@ -71,19 +76,16 @@ fun BottomSheetContentLayout(
     )
 }
 
-
 @Composable
 fun SheetTopBar() {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
+        modifier = Modifier.fillMaxWidth().padding(16.dp),
         verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.Center
     ) {
         Box(
             modifier = Modifier
-                .clip(RoundedCornerShape(100.dp))
+                .clip(RoundedCornerShape(50))
                 .width(32.dp)
                 .height(4.dp)
         )
