@@ -1,6 +1,7 @@
 package eka.care.documents.ui.components.recordListView
 
 import androidx.compose.runtime.Composable
+import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.state.RecordsState
 import eka.care.records.client.model.RecordModel
 import eka.care.records.ui.presentation.screens.RecordEmptyState
@@ -8,6 +9,7 @@ import eka.care.records.ui.presentation.screens.RecordEmptyState
 @Composable
 fun RecordsListView(
     state: RecordsState,
+    documentTypes : List<MedicalRecordsNavModel.DocumentType> = emptyList(),
     onUploadRecordClick: () -> Unit,
     onRecordClick: (record: RecordModel) -> Unit,
     onMoreOptionsClick: (record: RecordModel) -> Unit,
@@ -20,7 +22,8 @@ fun RecordsListView(
             RecordsList(
                 records = state.data,
                 onClick = onRecordClick,
-                onMoreOptionsClick = onMoreOptionsClick
+                onMoreOptionsClick = onMoreOptionsClick,
+                documentTypes = documentTypes
             )
         }
     }

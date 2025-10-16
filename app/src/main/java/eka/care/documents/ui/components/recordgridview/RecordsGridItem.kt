@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -44,21 +43,18 @@ import coil.request.ImageRequest
 import com.eka.ui.theme.EkaTheme
 import eka.care.documents.ui.R
 import eka.care.documents.ui.components.SmartTag
+import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.utility.DocumentUtility.Companion.getDocumentDate
-import eka.care.documents.ui.utility.DocumentUtility.Companion.getTitleById
-import eka.care.documents.ui.utility.GetIconById
 import eka.care.documents.ui.utility.Mode
-import eka.care.documents.ui.utility.RecordType
-import eka.care.documents.ui.utility.TagState
 import eka.care.records.client.model.RecordModel
 import eka.care.records.client.model.RecordUiState
 
 @Composable
 fun RecordsGridItem(
     record: RecordModel,
+    documentTypes : List<MedicalRecordsNavModel.DocumentType> = emptyList(),
     mode: Mode,
     isSelected: Boolean,
-    tagState: TagState? = null,
     onClick: () -> Unit,
     onRetry: () -> Unit,
     onMoreOptionsClick: () -> Unit,
@@ -82,23 +78,13 @@ fun RecordsGridItem(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Box(modifier = Modifier.padding(3.dp)) {
-                        RecordType.entries.find { it.code == record.documentType }?.let {
-                            GetIconById(
-                                type = it,
-                                padding = 3.dp,
-                                iconSize = 12.dp,
-                                boundingBoxSize = 18.dp,
-                                roundedCorner = 4.dp,
-                            )
-                        }
-                    }
                     Column {
                         Text(
                             modifier = Modifier.padding(end = 12.dp),
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
-                            text = getTitleById(record.documentType),
+                            text = documentTypes.firstOrNull { it.id == record.documentType }?.name
+                                ?: "Unknown",
                             style = EkaTheme.typography.titleSmall,
                             color = EkaTheme.colors.onSurface
                         )
@@ -309,15 +295,14 @@ fun RecordsGridItem(
 @Composable
 fun MedicalRecordsGridItemPreview() {
     LazyVerticalGrid(columns = GridCells.Fixed(2)) {
-        items(RecordType.entries) {
+        items(5) {
             RecordsGridItem(
-                tagState = TagState.GENERATING,
-                mode = Mode.SELECTION,
+                mode = Mode.VIEW,
                 onClick = {},
                 record = RecordModel(
                     id = "hhh",
                     thumbnail = null,
-                    uiState = RecordUiState.SYNC_FAILED,
+                    uiState = RecordUiState.NONE,
                     createdAt = 0L,
                     updatedAt = 0L,
                     documentDate = 0L,

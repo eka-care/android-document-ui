@@ -12,12 +12,14 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.eka.ui.theme.EkaTheme
+import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.utility.Mode
 import eka.care.records.client.model.RecordModel
 
 @Composable
 fun RecordsGrid(
     records: List<RecordModel>,
+    documentTypes : List<MedicalRecordsNavModel.DocumentType> = emptyList(),
     mode : Mode,
     onClick: (record: RecordModel) -> Unit,
     onRetry: (record: RecordModel) -> Unit,
@@ -35,6 +37,7 @@ fun RecordsGrid(
         items(records, key = { it.id }) { record ->
             RecordsGridItem(
                 record = record,
+                documentTypes = documentTypes,
                 mode = mode,
                 onClick = {
                     if (mode == Mode.SELECTION) {

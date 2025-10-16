@@ -153,11 +153,13 @@ fun RecordsScreenContent(
         rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(3)) { images ->
             if(images.isNotEmpty()) {
                 val intent = Intent(context, AddRecordPreviewActivity::class.java)
+                val gson = Gson()
                 val paramsJson = JSONObject().apply {
                     images.let { put(AddRecordParams.IMAGE_URIS.key, images.joinToString(",")) }
                     put(AddRecordParams.BUSINESS_ID.key, params.businessId)
                     put(AddRecordParams.OWNER_ID.key, params.ownerId)
                     put(AddRecordParams.CASE_ID.key, caseId)
+                    put(AddRecordParams.DOCUMENT_TYPE.key, gson.toJson(params.documentTypes))
                 }
                 intent.putExtra(AddRecordParams.PARAMS_KEY, Gson().toJson(paramsJson))
                 addRecordResultLauncher.launch(intent)
@@ -169,11 +171,13 @@ fun RecordsScreenContent(
         onResult = { uri ->
             uri?.let {
                 val intent = Intent(context, AddRecordPreviewActivity::class.java)
+                val gson = Gson()
                 val paramsJson = JSONObject().apply {
                     put(AddRecordParams.PDF_URI.key, it.toString())
                     put(AddRecordParams.BUSINESS_ID.key, params.businessId)
                     put(AddRecordParams.OWNER_ID.key, params.ownerId)
                     put(AddRecordParams.CASE_ID.key, caseId)
+                    put(AddRecordParams.DOCUMENT_TYPE.key, gson.toJson(params.documentTypes))
                 }
                 intent.putExtra(AddRecordParams.PARAMS_KEY, Gson().toJson(paramsJson))
                 addRecordResultLauncher.launch(intent)
@@ -184,6 +188,7 @@ fun RecordsScreenContent(
     val scannerLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
+                val gson = Gson()
                 val data =
                     GmsDocumentScanningResult.fromActivityResultIntent(result.data)
                 data?.pages?.let { pages ->
@@ -197,6 +202,7 @@ fun RecordsScreenContent(
                         put(AddRecordParams.BUSINESS_ID.key, params.businessId)
                         put(AddRecordParams.OWNER_ID.key, params.ownerId)
                         put(AddRecordParams.CASE_ID.key, caseId)
+                        put(AddRecordParams.DOCUMENT_TYPE.key, gson.toJson(params.documentTypes))
                     }
                     intent.putExtra(AddRecordParams.PARAMS_KEY, Gson().toJson(paramsJson))
                     addRecordResultLauncher.launch(intent)
@@ -209,12 +215,14 @@ fun RecordsScreenContent(
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             viewModel.photoUri.value?.let { uri ->
+                val gson = Gson()
                 val intent = Intent(context, AddRecordPreviewActivity::class.java)
                 val paramsJson = JSONObject().apply {
                     put(AddRecordParams.IMAGE_URIS.key, uri.toString())
                     put(AddRecordParams.BUSINESS_ID.key, params.businessId)
                     put(AddRecordParams.OWNER_ID.key, params.ownerId)
                     put(AddRecordParams.CASE_ID.key, caseId)
+                    put(AddRecordParams.DOCUMENT_TYPE.key, gson.toJson(params.documentTypes))
                 }
                 intent.putExtra(AddRecordParams.PARAMS_KEY, Gson().toJson(paramsJson))
                 addRecordResultLauncher.launch(intent)
@@ -391,6 +399,7 @@ fun RecordsScreenContent(
             }
             RecordFilter(
                 viewModel = viewModel,
+                documentTypes = params.documentTypes,
                 onSortClick = {
                     viewModel.documentBottomSheetType =
                         DocumentBottomSheetType.DocumentSort
@@ -410,6 +419,7 @@ fun RecordsScreenContent(
             when (viewModel.documentViewType) {
                 DocumentViewType.GridView -> RecordsGridView(
                     state = recordsState,
+                    documentTypes = params.documentTypes,
                     mode = mode,
                     selectedItems = selectedItems,
                     onSelectedItemsChange = onSelectedItemsChange,
@@ -426,6 +436,7 @@ fun RecordsScreenContent(
 
                 DocumentViewType.ListView -> RecordsListView(
                     state = recordsState,
+                    documentTypes = params.documentTypes,
                     onRecordClick = handleRecordClick,
                     onUploadRecordClick = handleRecordUploadClick,
                     onMoreOptionsClick = { record ->

@@ -20,9 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.eka.ui.theme.EkaTheme
 import eka.care.documents.ui.R
 import eka.care.documents.ui.components.SmartTag
-import eka.care.documents.ui.utility.DocumentUtility.Companion.getTitleById
-import eka.care.documents.ui.utility.GetIconById
-import eka.care.documents.ui.utility.RecordType
+import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.utility.TagState
 import eka.care.records.client.model.RecordModel
 import eka.care.records.client.model.RecordUiState
@@ -31,6 +29,7 @@ import eka.care.records.client.model.RecordUiState
 @Composable
 fun RecordsListItem(
     record: RecordModel,
+    documentTypes: List<MedicalRecordsNavModel.DocumentType>,
     subtitle: String? = null,
     tagState: TagState? = null,
     onClick: () -> Unit,
@@ -45,7 +44,8 @@ fun RecordsListItem(
         ),
         headlineContent = {
             Text(
-                text = getTitleById(record.documentType),
+                text = documentTypes.firstOrNull { it.id == record.documentType }?.name
+                    ?: "Unknown",
                 style = EkaTheme.typography.bodyLarge,
                 color = EkaTheme.colors.onSurface
             )
@@ -82,17 +82,6 @@ fun RecordsListItem(
             }
 
         },
-        leadingContent = {
-            RecordType.entries.find { it.code == record.documentType }?.let {
-                GetIconById(
-                    type = it,
-                    padding = 3.dp,
-                    iconSize = 12.dp,
-                    boundingBoxSize = 18.dp,
-                    roundedCorner = 4.dp,
-                )
-            }
-        },
         trailingContent = {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -125,7 +114,7 @@ fun RecordsListItem(
 @Composable
 fun RecordsListItemPreview() {
     Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-        RecordType.entries.map {
+        repeat(5) {
             RecordsListItem(
                 tagState = TagState.SMART_REPORT,
                 subtitle = "17th Oct",
@@ -142,7 +131,8 @@ fun RecordsListItemPreview() {
                     smartReport = "",
                     files = emptyList(),
                 ),
-                onMoreOptionsClick = {}
+                onMoreOptionsClick = {},
+                documentTypes = listOf()
             )
         }
     }

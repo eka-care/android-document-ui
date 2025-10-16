@@ -10,12 +10,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.utility.DocumentUtility.Companion.getDocumentDate
 import eka.care.records.client.model.RecordModel
 
 @Composable
 fun RecordsList(
     records: List<RecordModel>,
+    documentTypes: List<MedicalRecordsNavModel.DocumentType>,
     onClick: (record: RecordModel) -> Unit,
     onMoreOptionsClick: (record: RecordModel) -> Unit,
 ) {
@@ -30,6 +32,7 @@ fun RecordsList(
                 onClick = { onClick(record) },
                 subtitle = if (record.documentDate != null) getDocumentDate(record.documentDate!!) else null,
                 onMoreOptionsClick = { onMoreOptionsClick(record) },
+                documentTypes = documentTypes
             )
         }
     }

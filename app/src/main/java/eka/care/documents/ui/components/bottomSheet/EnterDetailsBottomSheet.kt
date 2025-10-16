@@ -2,7 +2,6 @@ package eka.care.documents.ui.components.bottomSheet
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,13 +32,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.eka.ui.theme.EkaTheme
 import eka.care.documents.ui.R
 import eka.care.documents.ui.components.DatePickerWrapper
 import eka.care.documents.ui.components.common.BottomSheetContentLayout
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.state.UpsertRecordState
-import eka.care.documents.ui.utility.RecordType
 import eka.care.documents.ui.utility.formatLocalDateToCustomFormat
 import eka.care.documents.ui.utility.timestampToLong
 import eka.care.documents.ui.viewmodel.RecordsViewModel
@@ -53,8 +50,8 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EnterDetailsBottomSheet(
-    onClick: () -> Unit,
     viewModel: RecordsViewModel,
+    onClick: () -> Unit,
     caseId: String? = null,
     fileList: ArrayList<File>,
     paramsModel: MedicalRecordsNavModel,
@@ -70,7 +67,11 @@ fun EnterDetailsBottomSheet(
     val sdf = SimpleDateFormat("EEE, dd MMM, yyyy", Locale.getDefault())
 
     val date = if (editDocument) {
-        if (selectedDate.value.length > 1) selectedDate.value else Date(dateInMillis).run { sdf.format(this) } ?: "Add Date"
+        if (selectedDate.value.length > 1) selectedDate.value else Date(dateInMillis).run {
+            sdf.format(
+                this
+            )
+        } ?: "Add Date"
     } else {
         if (selectedDate.value.length > 1) selectedDate.value else "Add Date"
     }
@@ -83,7 +84,11 @@ fun EnterDetailsBottomSheet(
 
             is UpsertRecordState.Error -> {
                 loadingState = false
-                Toast.makeText(context, (state as? UpsertRecordState.Error)?.error, Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    (state as? UpsertRecordState.Error)?.error,
+                    Toast.LENGTH_SHORT
+                ).show()
             }
 
             is UpsertRecordState.Success -> {
@@ -165,27 +170,19 @@ fun EnterDetailsBottomSheet(
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Box(contentAlignment = Alignment.TopEnd) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_file_regular),
-                        contentDescription = "File",
-                        tint = EkaTheme.colors.onPrimary,
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Text(
-                        text = "*",
-                        color = EkaTheme.colors.error,
-                        modifier = Modifier.padding(start = 16.dp, bottom = 22.dp)
-                    )
-                }
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_file_regular),
+                    contentDescription = "File",
+                    modifier = Modifier.size(16.dp)
+                )
                 Spacer(modifier = Modifier.width(12.dp))
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    items(RecordType.entries) { recordInfo ->
+                    items(paramsModel.documentTypes) { recordInfo ->
                         InputChip(
-                            selected = selectedChip == recordInfo.code,
-                            onClick = { selectedChip = recordInfo.code },
+                            selected = selectedChip == recordInfo.id,
+                            onClick = { selectedChip = recordInfo.id },
                             label = {
-                                Text(text = recordInfo.title)
+                                Text(text = recordInfo.name)
                             }
                         )
                     }
@@ -198,19 +195,11 @@ fun EnterDetailsBottomSheet(
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Box(contentAlignment = Alignment.TopEnd) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_calendar_regular),
-                        contentDescription = "File",
-                        tint = EkaTheme.colors.onPrimary,
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Text(
-                        text = "*",
-                        color = EkaTheme.colors.error,
-                        modifier = Modifier.padding(start = 16.dp, bottom = 22.dp)
-                    )
-                }
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_calendar_regular),
+                    contentDescription = "File",
+                    modifier = Modifier.size(24.dp)
+                )
                 Spacer(modifier = Modifier.width(12.dp))
                 DatePickerWrapper(
                     selectedDate = date,

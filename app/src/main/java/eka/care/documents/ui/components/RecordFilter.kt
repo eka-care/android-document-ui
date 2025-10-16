@@ -28,8 +28,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.eka.ui.theme.EkaTheme
 import eka.care.documents.ui.R
+import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.utility.DocumentViewType
-import eka.care.documents.ui.utility.RecordType
 import eka.care.documents.ui.viewmodel.RecordsViewModel
 import eka.care.records.client.model.SortOrder
 
@@ -37,6 +37,7 @@ import eka.care.records.client.model.SortOrder
 @Composable
 fun RecordFilter(
     viewModel: RecordsViewModel,
+    documentTypes: List<MedicalRecordsNavModel.DocumentType> = emptyList(),
     onSortClick: () -> Unit,
     onTagsClick: () -> Unit,
     onFilterApplied: () -> Unit
@@ -145,7 +146,7 @@ fun RecordFilter(
                 )
             }
             items(recordsCountByType.data) { recordsInfo ->
-                val name = RecordType.entries.find { it.code == recordsInfo.documentType }?.title
+                val name = documentTypes.firstOrNull { it.id == recordsInfo.documentType }?.name ?: "Unknown"
                 RecordFilterChip(
                     text = "$name (${recordsInfo.count})",
                     isSelected = documentType == recordsInfo.documentType,

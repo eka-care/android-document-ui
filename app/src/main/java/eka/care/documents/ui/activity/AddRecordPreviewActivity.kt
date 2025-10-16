@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import com.google.gson.Gson
 import eka.care.documents.ui.navigation.AddRecordPreviewNavModel
+import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.screens.AddRecordPreviewScreen
 import eka.care.documents.ui.viewmodel.RecordsViewModel
 import org.json.JSONObject
@@ -19,7 +20,8 @@ enum class AddRecordParams(val key: String) {
     CASE_ID("caseId"),
     RECORD_ID("recordId"),
     IS_SMART("isSmart"),
-    LINKS("links");
+    LINKS("links"),
+    DOCUMENT_TYPE("documentType");
 
     companion object {
         const val PARAMS_KEY = "params"
@@ -45,7 +47,11 @@ class AddRecordPreviewActivity : ComponentActivity() {
             imageUris = if (params.has(AddRecordParams.IMAGE_URIS.key)) params.getString(AddRecordParams.IMAGE_URIS.key) else null,
             businessId = params.getString(AddRecordParams.BUSINESS_ID.key),
             ownerId = params.getString(AddRecordParams.OWNER_ID.key),
-            caseId = if (params.has(AddRecordParams.CASE_ID.key)) params.getString(AddRecordParams.CASE_ID.key) else null
+            caseId = if (params.has(AddRecordParams.CASE_ID.key)) params.getString(AddRecordParams.CASE_ID.key) else null,
+            documentTypes = if(params.has(AddRecordParams.DOCUMENT_TYPE.key)) {
+                val a = params.getString(AddRecordParams.DOCUMENT_TYPE.key)
+                Gson().fromJson(a, Array<MedicalRecordsNavModel.DocumentType>::class.java).toList()
+            } else  emptyList()
         )
 
         setContent {
