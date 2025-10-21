@@ -122,7 +122,8 @@ fun AddRecordPreviewScreen(
                 paramsModel = MedicalRecordsNavModel(
                     businessId = navData.businessId,
                     ownerId = navData.ownerId,
-                    documentTypes = navData.documentTypes
+                    documentTypes = navData.documentTypes,
+                    isAbhaEnabled = navData.isAbhaEnabled
                 ),
                 editDocument = false
             )

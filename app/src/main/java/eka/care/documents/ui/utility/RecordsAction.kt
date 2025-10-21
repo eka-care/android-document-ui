@@ -38,6 +38,7 @@ class RecordsAction {
                 put(AddRecordParams.BUSINESS_ID.key, params.businessId)
                 put(AddRecordParams.OWNER_ID.key, params.ownerId)
                 put(AddRecordParams.LINKS.key, params.links)
+                put(AddRecordParams.IS_ABHA_ENABLED.key, params.isAbhaEnabled)
             }
             Intent(context, CaseListActivity::class.java).apply {
                 putExtra(AddRecordParams.PARAMS_KEY, Gson().toJson(paramsJson))
@@ -56,6 +57,7 @@ class RecordsAction {
                 put(AddRecordParams.OWNER_ID.key, params.ownerId)
                 put(AddRecordParams.LINKS.key, params.links)
                 put(AddRecordParams.CASE_ID.key, caseItem.id)
+                put(AddRecordParams.IS_ABHA_ENABLED.key, params.isAbhaEnabled)
             }
             Intent(context, CaseDetailsActivity::class.java).apply {
                 putExtra(AddRecordParams.PARAMS_KEY, Gson().toJson(paramsJson))

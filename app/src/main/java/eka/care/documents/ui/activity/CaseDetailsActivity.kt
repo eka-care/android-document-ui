@@ -33,6 +33,7 @@ class CaseDetailsActivity: ComponentActivity() {
         val ownerId = params.optString(AddRecordParams.OWNER_ID.key)
         val links = params.optString(AddRecordParams.LINKS.key)
         val caseId = params.optString(AddRecordParams.CASE_ID.key)
+        val isAbhaEnabled = params.optBoolean(AddRecordParams.IS_ABHA_ENABLED.key, false)
 
         setContent {
             EkaTheme(
@@ -46,7 +47,8 @@ class CaseDetailsActivity: ComponentActivity() {
                         businessId = businessId,
                         ownerId = ownerId,
                         ownerName = "",
-                        links = links
+                        links = links,
+                        isAbhaEnabled = isAbhaEnabled
                     ),
                     onBackPressed = {
                         finish()
