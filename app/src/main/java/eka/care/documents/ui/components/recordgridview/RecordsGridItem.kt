@@ -45,7 +45,9 @@ import eka.care.documents.ui.R
 import eka.care.documents.ui.components.SmartTag
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.utility.DocumentUtility.Companion.getDocumentDate
+import eka.care.documents.ui.utility.GetIconById
 import eka.care.documents.ui.utility.Mode
+import eka.care.documents.ui.utility.RecordType
 import eka.care.records.client.model.RecordModel
 import eka.care.records.client.model.RecordUiState
 
@@ -65,7 +67,9 @@ fun RecordsGridItem(
         onClick = if (record.uiState == RecordUiState.SYNC_FAILED) onRetry else onClick
     ) {
         Column(
-            modifier = Modifier.background(Color.White).padding(8.dp),
+            modifier = Modifier
+                .background(Color.White)
+                .padding(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Row(
@@ -78,6 +82,17 @@ fun RecordsGridItem(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    Box(modifier = Modifier.padding(3.dp)) {
+                        RecordType.entries.find { it.code == record.documentType }?.let {
+                            GetIconById(
+                                type = it.code,
+                                padding = 3.dp,
+                                iconSize = 12.dp,
+                                boundingBoxSize = 18.dp,
+                                roundedCorner = 4.dp,
+                            )
+                        }
+                    }
                     Column {
                         Text(
                             modifier = Modifier.padding(end = 12.dp),
@@ -118,7 +133,9 @@ fun RecordsGridItem(
                         },
                         content = {
                             Icon(
-                                modifier = Modifier.size(24.dp).padding(4.dp),
+                                modifier = Modifier
+                                    .size(24.dp)
+                                    .padding(4.dp),
                                 painter = painterResource(id =R.drawable.ic_ellipsis_vertical_regular),
                                 contentDescription = "More",
                                 tint = EkaTheme.colors.onSurface
@@ -164,7 +181,11 @@ fun RecordsGridItem(
                         .fillMaxWidth()
                         .height(80.dp)
                         .background(
-                            if (record.uiState !in listOf(RecordUiState.NONE, RecordUiState.SYNC_SUCCESS)) {
+                            if (record.uiState !in listOf(
+                                    RecordUiState.NONE,
+                                    RecordUiState.SYNC_SUCCESS
+                                )
+                            ) {
                                 Color.White.copy(alpha = 0.9f)
                             } else {
                                 Color.Black.copy(alpha = 0.2f)
@@ -209,7 +230,8 @@ fun RecordsGridItem(
                                 contentDescription = "Upload",
                                 modifier = Modifier
                                     .align(Alignment.CenterHorizontally)
-                                    .padding(top = 8.dp).size(24.dp),
+                                    .padding(top = 8.dp)
+                                    .size(24.dp),
                                 tint = EkaTheme.colors.onSurface
                             )
                             Spacer(Modifier.height(6.dp))
@@ -233,7 +255,8 @@ fun RecordsGridItem(
                                 contentDescription = "Upload",
                                 modifier = Modifier
                                     .align(Alignment.CenterHorizontally)
-                                    .padding(top = 8.dp).size(24.dp),
+                                    .padding(top = 8.dp)
+                                    .size(24.dp),
                                 tint = EkaTheme.colors.onSurface
                             )
                             Spacer(Modifier.height(6.dp))
@@ -257,7 +280,8 @@ fun RecordsGridItem(
                                 contentDescription = "Upload",
                                 modifier = Modifier
                                     .align(Alignment.CenterHorizontally)
-                                    .padding(top = 8.dp).size(24.dp),
+                                    .padding(top = 8.dp)
+                                    .size(24.dp),
                                 tint = EkaTheme.colors.onSurface
                             )
                             Spacer(Modifier.height(6.dp))

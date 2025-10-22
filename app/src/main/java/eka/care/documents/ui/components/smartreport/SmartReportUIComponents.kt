@@ -92,7 +92,7 @@ fun SmartReportListComponent(smartReport: SmartReportField, onClick: (id: String
     ListItem(
         modifier = Modifier.clickable(
             onClick = {
-                onClick(smartReport.vitalId ?: "", smartReport.name ?: "")
+                onClick(smartReport.ekaId ?: "", smartReport.name ?: "")
             }
         ),
         colors = ListItemDefaults.colors(
