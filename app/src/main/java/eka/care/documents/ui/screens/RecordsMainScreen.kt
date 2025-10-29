@@ -3,6 +3,8 @@ package eka.care.documents.ui.screens
 import android.app.Activity
 import android.content.Intent
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -53,6 +55,7 @@ fun RecordsMainScreen(
     params: MedicalRecordsNavModel,
     onRecordSelection: (List<RecordModel>) -> Unit,
     onBackPressed: () -> Unit = {},
+    onVitalClicked: (id: String, name: String) -> Unit,
     activity: Activity
 ) {
     EkaTheme(
@@ -63,7 +66,8 @@ fun RecordsMainScreen(
             params = params,
             onRecordSelection = onRecordSelection,
             onBackPressed = onBackPressed,
-            activity = activity
+            activity = activity,
+            onVitalClicked = onVitalClicked
         )
     }
 }
@@ -74,6 +78,7 @@ private fun ScreenContent(
     params: MedicalRecordsNavModel,
     onRecordSelection: (List<RecordModel>) -> Unit,
     onBackPressed: () -> Unit,
+    onVitalClicked: (id: String, name: String) -> Unit,
     activity: Activity
 ) {
     val selectedItems = remember { mutableStateListOf<RecordModel>() }
@@ -81,6 +86,17 @@ private fun ScreenContent(
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
+    val vitalResultLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val id = result.data?.getStringExtra(AddRecordParams.RECORD_ID.key)
+                ?: return@rememberLauncherForActivityResult
+            val name =
+                result.data?.getStringExtra("name") ?: return@rememberLauncherForActivityResult
+            onVitalClicked(id, name)
+        }
+    }
 
     val owners = mutableListOf<String>().apply {
         if (params.ownerId.isNotEmpty()) {
@@ -199,12 +215,11 @@ private fun ScreenContent(
                             selectedItems.addAll(items)
                         },
                         openSmartReport = {
-                            Intent(context, RecordViewerActivity::class.java).apply {
+                            val intent = Intent(context, RecordViewerActivity::class.java).apply {
                                 putExtra(AddRecordParams.RECORD_ID.key, it.id)
                                 putExtra(AddRecordParams.IS_SMART.key, true)
-                            }.run {
-                                context.startActivity(this)
                             }
+                            vitalResultLauncher.launch(intent)
                         },
                         openRecordViewer = {
                             Intent(context, RecordViewerActivity::class.java).apply {

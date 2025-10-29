@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -31,7 +33,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import com.eka.ui.theme.EkaTheme
 import eka.care.documents.ui.R
 import eka.care.documents.ui.components.DatePickerWrapper
 import eka.care.documents.ui.components.common.BottomSheetContentLayout
@@ -100,6 +104,8 @@ fun EnterDetailsBottomSheet(
         }
     }
 
+    var isAbhaEnabled by remember { mutableStateOf(paramsModel.isAbhaEnabled) }
+
     val onAddMedicalRecord = {
         if (editDocument) {
             viewModel.updateRecord(
@@ -115,6 +121,7 @@ fun EnterDetailsBottomSheet(
                     businessId = paramsModel.businessId,
                     ownerId = paramsModel.ownerId,
                     caseId = caseId,
+                    isAbhaLinked = isAbhaEnabled,
                     documentType = selectedChip ?: "ot",
                     documentDate = timestampToLong(date)
                 )
@@ -140,7 +147,7 @@ fun EnterDetailsBottomSheet(
 
     BottomSheetContentLayout(
         title = if (editDocument) "Edit Medical Record" else "Add Record Details",
-        height = .35f,
+        height = .50f,
         bottomStickyContent = {
             Button(
                 onClick = onAddMedicalRecord,
@@ -210,6 +217,30 @@ fun EnterDetailsBottomSheet(
                         selectedDate.value = it
                     }
                 )
+            }
+            if(paramsModel.isAbhaEnabled) {
+                Row(
+                    Modifier.fillMaxWidth()
+                        .toggleable(
+                            value = isAbhaEnabled,
+                            onValueChange = {
+                                isAbhaEnabled = it
+                            },
+                            role = Role.Checkbox
+                        )
+                        .padding(horizontal = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Checkbox(
+                        checked = isAbhaEnabled,
+                        onCheckedChange = null
+                    )
+                    Text(
+                        text = "Link record with my ABHA account",
+                        style = EkaTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(start = 16.dp)
+                    )
+                }
             }
         }
     }

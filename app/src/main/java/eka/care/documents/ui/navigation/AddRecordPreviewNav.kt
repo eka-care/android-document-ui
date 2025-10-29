@@ -6,5 +6,6 @@ data class AddRecordPreviewNavModel(
     val businessId: String,
     val ownerId: String,
     val caseId: String? = null,
+    val isAbhaEnabled : Boolean = false,
     val documentTypes: List<MedicalRecordsNavModel.DocumentType>
 )

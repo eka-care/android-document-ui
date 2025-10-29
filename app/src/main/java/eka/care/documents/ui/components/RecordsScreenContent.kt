@@ -159,6 +159,7 @@ fun RecordsScreenContent(
                     put(AddRecordParams.BUSINESS_ID.key, params.businessId)
                     put(AddRecordParams.OWNER_ID.key, params.ownerId)
                     put(AddRecordParams.CASE_ID.key, caseId)
+                    put(AddRecordParams.IS_ABHA_ENABLED.key, params.isAbhaEnabled)
                     put(AddRecordParams.DOCUMENT_TYPE.key, gson.toJson(params.documentTypes))
                 }
                 intent.putExtra(AddRecordParams.PARAMS_KEY, Gson().toJson(paramsJson))
@@ -177,6 +178,7 @@ fun RecordsScreenContent(
                     put(AddRecordParams.BUSINESS_ID.key, params.businessId)
                     put(AddRecordParams.OWNER_ID.key, params.ownerId)
                     put(AddRecordParams.CASE_ID.key, caseId)
+                    put(AddRecordParams.IS_ABHA_ENABLED.key, params.isAbhaEnabled)
                     put(AddRecordParams.DOCUMENT_TYPE.key, gson.toJson(params.documentTypes))
                 }
                 intent.putExtra(AddRecordParams.PARAMS_KEY, Gson().toJson(paramsJson))
@@ -202,6 +204,7 @@ fun RecordsScreenContent(
                         put(AddRecordParams.BUSINESS_ID.key, params.businessId)
                         put(AddRecordParams.OWNER_ID.key, params.ownerId)
                         put(AddRecordParams.CASE_ID.key, caseId)
+                        put(AddRecordParams.IS_ABHA_ENABLED.key, params.isAbhaEnabled)
                         put(AddRecordParams.DOCUMENT_TYPE.key, gson.toJson(params.documentTypes))
                     }
                     intent.putExtra(AddRecordParams.PARAMS_KEY, Gson().toJson(paramsJson))
@@ -222,6 +225,7 @@ fun RecordsScreenContent(
                     put(AddRecordParams.BUSINESS_ID.key, params.businessId)
                     put(AddRecordParams.OWNER_ID.key, params.ownerId)
                     put(AddRecordParams.CASE_ID.key, caseId)
+                    put(AddRecordParams.IS_ABHA_ENABLED.key, params.isAbhaEnabled)
                     put(AddRecordParams.DOCUMENT_TYPE.key, gson.toJson(params.documentTypes))
                 }
                 intent.putExtra(AddRecordParams.PARAMS_KEY, Gson().toJson(paramsJson))

@@ -21,7 +21,8 @@ enum class AddRecordParams(val key: String) {
     RECORD_ID("recordId"),
     IS_SMART("isSmart"),
     LINKS("links"),
-    DOCUMENT_TYPE("documentType");
+    DOCUMENT_TYPE("documentType"),
+    IS_ABHA_ENABLED("isAbhaEnabled");
 
     companion object {
         const val PARAMS_KEY = "params"
@@ -48,6 +49,7 @@ class AddRecordPreviewActivity : ComponentActivity() {
             businessId = params.getString(AddRecordParams.BUSINESS_ID.key),
             ownerId = params.getString(AddRecordParams.OWNER_ID.key),
             caseId = if (params.has(AddRecordParams.CASE_ID.key)) params.getString(AddRecordParams.CASE_ID.key) else null,
+            isAbhaEnabled = if(params.has(AddRecordParams.IS_ABHA_ENABLED.key)) params.getBoolean(AddRecordParams.IS_ABHA_ENABLED.key) else false,
             documentTypes = if(params.has(AddRecordParams.DOCUMENT_TYPE.key)) {
                 val a = params.getString(AddRecordParams.DOCUMENT_TYPE.key)
                 Gson().fromJson(a, Array<MedicalRecordsNavModel.DocumentType>::class.java).toList()

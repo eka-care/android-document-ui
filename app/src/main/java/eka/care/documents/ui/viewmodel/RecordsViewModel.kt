@@ -152,6 +152,7 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
         caseId: String?,
         documentType: String,
         documentDate: Long?,
+        isAbhaLinked : Boolean = true,
     ) {
         _upsertRecordsState.value = UpsertRecordState.Loading
         viewModelScope.launch {
@@ -162,6 +163,7 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
                 caseId = caseId,
                 documentType = documentType,
                 documentDate = documentDate,
+                isAbhaLinked = isAbhaLinked
             )
             _upsertRecordsState.value = if (recordId != null) {
                 UpsertRecordState.Success(recordId)

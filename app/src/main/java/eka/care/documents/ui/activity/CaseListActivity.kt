@@ -29,6 +29,7 @@ class CaseListActivity : ComponentActivity() {
         val ownerId = params.getString(AddRecordParams.OWNER_ID.key)
         val recordId = params.optString(AddRecordParams.RECORD_ID.key).takeIf { it.isNotEmpty() }
         val links = params.optString(AddRecordParams.LINKS.key).takeIf { it.isNotEmpty() }
+        val isAbhaEnabled = params.optBoolean(AddRecordParams.IS_ABHA_ENABLED.key, false)
 
         setContent {
             CasesScreen(
@@ -49,7 +50,8 @@ class CaseListActivity : ComponentActivity() {
                             params = MedicalRecordsNavModel(
                                 businessId = businessId,
                                 ownerId = ownerId,
-                                links = links
+                                links = links,
+                                isAbhaEnabled = isAbhaEnabled
                             ),
                             caseItem = it
                         )

@@ -12,6 +12,7 @@ data class MedicalRecordsNavModel(
     val triggerUpload: Boolean = false,
     val mode : Mode = Mode.VIEW,
     val isUploadEnabled: Boolean = false,
+    val isAbhaEnabled : Boolean = false,
     val documentTypes: List<DocumentType> = emptyList()
 ) {
     data class DocumentType(

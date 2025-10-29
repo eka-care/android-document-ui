@@ -21,6 +21,8 @@ import com.eka.ui.theme.EkaTheme
 import eka.care.documents.ui.R
 import eka.care.documents.ui.components.SmartTag
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
+import eka.care.documents.ui.utility.GetIconById
+import eka.care.documents.ui.utility.RecordType
 import eka.care.documents.ui.utility.TagState
 import eka.care.records.client.model.RecordModel
 import eka.care.records.client.model.RecordUiState
@@ -81,6 +83,17 @@ fun RecordsListItem(
                 }
             }
 
+        },
+        leadingContent = {
+            RecordType.entries.find { it.code == record.documentType }?.let {
+                GetIconById(
+                    type = it.code,
+                    padding = 3.dp,
+                    iconSize = 12.dp,
+                    boundingBoxSize = 18.dp,
+                    roundedCorner = 4.dp,
+                )
+            }
         },
         trailingContent = {
             Row(
