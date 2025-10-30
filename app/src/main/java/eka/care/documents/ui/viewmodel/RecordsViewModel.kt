@@ -40,6 +40,8 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
     private val _getRecordsState = MutableStateFlow<RecordsState>(RecordsState.Loading)
     val getRecordsState: StateFlow<RecordsState> = _getRecordsState
 
+    val searchActive = mutableStateOf(false)
+
     private val _tagsState = MutableStateFlow<TagsState>(TagsState.Loading)
     val tagsState: StateFlow<TagsState> = _tagsState
 
@@ -112,6 +114,14 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
         }
     }
 
+    fun enableRecordSearch() {
+        searchActive.value = true
+    }
+
+    fun disableRecordSearch() {
+        searchActive.value = false
+    }
+
     fun fetchRecords(owners: List<String>, businessId: String, caseId: String? = null) {
         job?.cancel()
         job = viewModelScope.launch {
@@ -132,6 +142,30 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
                         RecordsState.Success(data = records)
                     }
                 }
+        }
+    }
+
+    fun searchRecords(
+        businessId: String,
+        owners: List<String>,
+        query: String,
+    ) {
+        if (query.isEmpty()) {
+            RecordsState.EmptyState
+            return
+        }
+        job?.cancel()
+        job = viewModelScope.launch {
+            val records = recordsManager.searchRecords(
+                businessId = businessId,
+                ownerIds = owners,
+                query = query
+            )
+            _getRecordsState.value = if (records.isEmpty()) {
+                RecordsState.EmptyState
+            } else {
+                RecordsState.Success(data = records)
+            }
         }
     }
 
