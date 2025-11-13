@@ -3,6 +3,8 @@ package eka.care.documents.ui.screens
 import android.app.Activity
 import android.content.Intent
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -137,6 +139,15 @@ private fun ScreenContent(
             viewModel.documentBottomSheetType = DocumentBottomSheetType.DocumentUpload
         }
     }
+    val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current
+
+    BackHandler {
+        if (viewModel.searchActive.value) {
+            viewModel.disableRecordSearch()
+        } else {
+            backPressedDispatcher?.onBackPressedDispatcher?.onBackPressed()
+        }
+    }
 
     LaunchedEffect(params) {
         viewModel.updateDocumentType(params.documentType)
@@ -160,30 +171,6 @@ private fun ScreenContent(
             caseId = null
         )
     }
-
-//    onSelectedItemsChange = { items ->
-//        selectedItems.clear()
-//        selectedItems.addAll(items)
-//    },
-//    openSmartReport = {
-//        val intent = Intent(context, RecordViewerActivity::class.java).apply {
-//            putExtra(AddRecordParams.RECORD_ID.key, it.id)
-//            putExtra(AddRecordParams.IS_SMART.key, true)
-//        }
-//        vitalResultLauncher.launch(intent)
-//    },
-//    openRecordViewer = {
-//        Intent(context, RecordViewerActivity::class.java).apply {
-//            putExtra(AddRecordParams.RECORD_ID.key, it.id)
-//            putExtra(AddRecordParams.IS_SMART.key, false)
-//        }.run {
-//            context.startActivity(this)
-//        }
-//    },
-//    onRecordAdded = {
-//        Toast.makeText(context, "Record added successfully", Toast.LENGTH_SHORT)
-//            .show()
-//    },
 
     var searchText by remember { mutableStateOf("") }
     val focusRequester = remember { FocusRequester() }
@@ -226,7 +213,7 @@ private fun ScreenContent(
                             owners = owners
                         )
                     },
-                    placeholder = { Text("Search or add your medical cases...") },
+                    placeholder = { Text("Search records...") },
                     singleLine = true,
                     leadingIcon = {
                         IconButton(onClick = {
@@ -325,7 +312,7 @@ private fun ScreenContent(
                         showRecordSelection = params.mode == Mode.SELECTION,
                         onBackPressed = onBackPressed,
                         onSearch = {
-                            if (pagerState.currentPage == TabConstants.ALL_FILES.id) {
+                            if (pagerState.currentPage == TabConstants.ALL_FILES.id && eka.care.records.client.utils.Document.getConfiguration().enableSearch) {
                                 viewModel.enableRecordSearch()
                             } else {
                                 navigateToCaseList(context = context, params = params)

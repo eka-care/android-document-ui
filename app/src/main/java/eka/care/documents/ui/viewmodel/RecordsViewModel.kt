@@ -24,6 +24,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.cancellable
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -151,20 +152,27 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
         query: String,
     ) {
         if (query.isEmpty()) {
-            RecordsState.EmptyState
+            fetchRecords(
+                businessId = businessId,
+                owners = owners
+            )
             return
         }
         job?.cancel()
         job = viewModelScope.launch {
-            val records = recordsManager.searchRecords(
+            val searchResult = recordsManager.searchRecords(
                 businessId = businessId,
                 ownerIds = owners,
                 query = query
             )
-            _getRecordsState.value = if (records.isEmpty()) {
-                RecordsState.EmptyState
-            } else {
-                RecordsState.Success(data = records)
+            searchResult.onSuccess { records ->
+                _getRecordsState.value = if (records.isEmpty()) {
+                    RecordsState.EmptyState
+                } else {
+                    RecordsState.Success(data = records)
+                }
+            }.onFailure {
+                _getRecordsState.value = RecordsState.EmptyState
             }
         }
     }
@@ -259,7 +267,9 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
             recordsManager.readCases(
                 businessId = businessId,
                 ownerId = ownerId
-            ).cancellable()
+            ).onStart {
+                _getCasesState.value = CasesState.Loading
+            }.cancellable()
                 .collect { cases ->
                     _getCasesState.value = if (cases.isEmpty()) {
                         CasesState.EmptyState
