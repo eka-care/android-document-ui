@@ -46,6 +46,7 @@ import eka.care.documents.ui.utility.RecordsAction.Companion.navigateToCaseDetai
 import eka.care.documents.ui.utility.RecordsAction.Companion.navigateToCaseList
 import eka.care.documents.ui.viewmodel.RecordsViewModel
 import eka.care.records.client.model.RecordModel
+import eka.care.records.client.utils.Records
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -160,6 +161,11 @@ private fun ScreenContent(
                         onRecordSelection(selectedItems)
                         onBackPressed()
                     },
+                    onRefresh = {
+                        Records.getInstance(context = context).syncRecords(
+                            businessId = params.businessId
+                        )
+                    }
                 )
                 RecordTabs(
                     tabs = getTabs(pagerState = pagerState),

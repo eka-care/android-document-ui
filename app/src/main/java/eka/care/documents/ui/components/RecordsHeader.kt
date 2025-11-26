@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.rounded.Done
+import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -28,6 +29,7 @@ fun RecordsHeader(
     text: String,
     showRecordSelection: Boolean = false,
     onSearch: () -> Unit = {},
+    onRefresh: () -> Unit = {},
     onSelection: () -> Unit = {},
     onBackPressed: () -> Unit = {}
 ) {
@@ -55,6 +57,16 @@ fun RecordsHeader(
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.W500
             )
+            IconButton(onClick = onRefresh) {
+                Icon(
+                    modifier = Modifier
+                        .size(24.dp)
+                        .padding(2.dp),
+                    imageVector = Icons.Rounded.Refresh,
+                    contentDescription = "Multi View",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
             IconButton(onClick = onSearch) {
                 Icon(
                     modifier = Modifier

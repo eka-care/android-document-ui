@@ -458,7 +458,7 @@ fun syncRecords(
     businessId: String,
     context: Context,
 ) {
-    val records = Records.getInstance(context = context, token = "")
+    val records = Records.getInstance(context = context)
     records.refreshRecords(context, businessId = businessId, ownerIds = owners)
 }
 
