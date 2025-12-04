@@ -1,6 +1,6 @@
 [versions]
 agp = "8.11.1"
-ekaUiKit = "1.0.1"
+ekaUiKit = "1.0.3"
 kotlin = "2.0.0"
 coreKtx = "1.13.1"
 appcompat = "1.7.1"
