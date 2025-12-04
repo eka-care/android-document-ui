@@ -7,7 +7,9 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
@@ -17,6 +19,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
@@ -144,6 +147,9 @@ private fun ScreenContent(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White),
+        contentWindowInsets = ScaffoldDefaults.contentWindowInsets.only(
+            sides = WindowInsetsSides.Top
+        ),
         topBar = {
             Column(
                 modifier = Modifier
@@ -208,7 +214,7 @@ private fun ScreenContent(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color(0xFFF2F4F7))
-                    .padding(paddingValues)
+                    .padding(top = paddingValues.calculateTopPadding())
             ) { page ->
                 if (page == TabConstants.ALL_FILES.id) {
                     RecordsScreenContent(
