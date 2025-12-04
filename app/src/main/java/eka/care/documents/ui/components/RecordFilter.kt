@@ -9,9 +9,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.rounded.ArrowDropDown
+//import androidx.compose.material.icons.Icons
+//import androidx.compose.material.icons.filled.Check
+//import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
@@ -90,10 +90,10 @@ fun RecordFilter(
                     ),
                     trailingIcon = {
                         Icon(
-                            imageVector = Icons.Rounded.ArrowDropDown,
+                            painter = painterResource(R.drawable.ic_solid_dropdown),
                             tint = EkaTheme.colors.onSurfaceVariant,
                             modifier = Modifier.size(16.dp),
-                            contentDescription = "selected"
+                            contentDescription = "selected",
                         )
                     },
                     selected = false,
@@ -121,7 +121,7 @@ fun RecordFilter(
                     ),
                     trailingIcon = {
                         Icon(
-                            imageVector = Icons.Rounded.ArrowDropDown,
+                            painter = painterResource(R.drawable.ic_solid_dropdown),
                             tint = EkaTheme.colors.onSurfaceVariant,
                             modifier = Modifier.size(16.dp),
                             contentDescription = "selected"
@@ -179,7 +179,7 @@ fun RecordFilterChip(
         leadingIcon = if (isSelected) {
             {
                 Icon(
-                    imageVector = Icons.Default.Check,
+                    painter = painterResource(R.drawable.ic_check_regular),
                     tint = EkaTheme.colors.onSurfaceVariant,
                     modifier = Modifier.size(16.dp),
                     contentDescription = "selected"

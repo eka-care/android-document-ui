@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Icon
@@ -85,7 +83,7 @@ fun RecordSortSection(viewModel: RecordsViewModel, openSheet: () -> Unit) {
                 },
                 trailingIcon = {
                     Icon(
-                        imageVector = Icons.Default.ArrowDropDown,
+                        painter = painterResource(R.drawable.ic_solid_dropdown),
                         contentDescription = "Sort options",
                         modifier = Modifier.size(AssistChipDefaults.IconSize),
                     )
