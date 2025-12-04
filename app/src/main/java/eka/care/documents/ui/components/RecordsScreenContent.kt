@@ -32,6 +32,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import com.eka.ui.buttons.EkaButton
@@ -72,6 +73,7 @@ fun RecordsScreenContent(
     params: MedicalRecordsNavModel,
     caseId: String? = null,
     mode: Mode = Mode.VIEW,
+    searchActive: Boolean = false,
     selectedItems: SnapshotStateList<RecordModel>? = null,
     onSelectedItemsChange: (List<RecordModel>) -> Unit = {},
     openSmartReport: (data: RecordModel) -> Unit,
@@ -386,6 +388,144 @@ fun RecordsScreenContent(
         )
     }
 
+    var searchText by remember { mutableStateOf("") }
+    val focusRequester = remember { FocusRequester() }
+//    if(searchActive) {
+//        SearchBar(
+//            colors = SearchBarDefaults.colors(
+//                containerColor = EkaTheme.colors.surface,
+//                dividerColor = EkaTheme.colors.onPrimary,
+//                inputFieldColors = SearchBarDefaults.inputFieldColors(
+//                    cursorColor = EkaTheme.colors.primary,
+//                )
+//            ),
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .focusRequester(focusRequester),
+//            query = searchText,
+//            placeholder = {
+//                Text(
+//                    text = "Search / Add patients",
+//                    style = EkaTheme.typography.bodyMedium,
+//                    color = EkaTheme.colors.onSurfaceVariant
+//                )
+//            },
+//            onQueryChange = {
+//                searchText = it
+//                viewModel.searchRecords(
+//                    businessId = params.businessId,
+//                    owners = owners,
+//                    query = it
+//                )
+//            },
+//            onSearch = {
+//                searchText = it
+//                viewModel.searchRecords(
+//                    businessId = params.businessId,
+//                    owners = owners,
+//                    query = it
+//                )
+//            },
+//            active = true,
+//            onActiveChange = {},
+//            leadingIcon = {
+//                IconButton(
+//                    onClick = {
+//                        viewModel.disableRecordSearch()
+//                    },
+//                    modifier = Modifier.padding(start = 8.dp)
+//                ) {
+//                    Icon(
+//                        modifier = Modifier
+//                            .size(24.dp)
+//                            .padding(2.dp),
+//                        imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+//                        contentDescription = "Back",
+//                        tint = MaterialTheme.colorScheme.onSurface
+//                    )
+//                }
+//            },
+//            trailingIcon = {
+//                IconButton(
+//                    content = {
+//                        Icon(
+//                            painter = painterResource(R.drawable.ic_circle_xmark_solid),
+//                            contentDescription = "Clear",
+//                            tint = EkaTheme.colors.onSurface,
+//                        )
+//                    },
+//                    onClick = {
+//                        viewModel.searchRecords(
+//                            businessId = params.businessId,
+//                            owners = owners,
+//                            query = ""
+//                        )
+//                    }
+//                )
+//            },
+//        ) {
+//            Column(
+//                modifier = Modifier.background(EkaTheme.colors.surface)
+//            ) {
+////                if (viewModel.syncing.collectAsState().value) {
+////                    LinearProgressIndicator(
+////                        modifier = Modifier.fillMaxWidth(),
+////                        color = EkaTheme.colors.primary
+////                    )
+////                }
+////                RecordFilter(
+////                    viewModel = viewModel,
+////                    documentTypes = params.documentTypes,
+////                    onSortClick = {
+////                        viewModel.documentBottomSheetType =
+////                            DocumentBottomSheetType.DocumentSort
+////                    },
+////                    onTagsClick = {
+////                        viewModel.documentBottomSheetType =
+////                            DocumentBottomSheetType.TagsFilter
+////                    },
+////                    onFilterApplied = {
+////                        viewModel.fetchRecords(
+////                            businessId = params.businessId,
+////                            owners = owners,
+////                            caseId = null
+////                        )
+////                    }
+////                )
+//                when (viewModel.documentViewType) {
+//                    DocumentViewType.GridView -> RecordsGridView(
+//                        state = recordsState,
+//                        documentTypes = params.documentTypes,
+//                        mode = mode,
+//                        selectedItems = selectedItems,
+//                        onSelectedItemsChange = onSelectedItemsChange,
+//                        onRecordClick = handleRecordClick,
+//                        onRetry = {
+//                            onRefresh.invoke()
+//                        },
+//                        onUploadRecordClick = handleRecordUploadClick,
+//                        onMoreOptionsClick = { record ->
+//                            viewModel.documentBottomSheetType =
+//                                DocumentBottomSheetType.DocumentOptions
+//                            viewModel.cardClickData.value = record
+//                        }
+//                    )
+//
+//                    DocumentViewType.ListView -> RecordsListView(
+//                        state = recordsState,
+//                        documentTypes = params.documentTypes,
+//                        onRecordClick = handleRecordClick,
+//                        onUploadRecordClick = handleRecordUploadClick,
+//                        onMoreOptionsClick = { record ->
+//                            viewModel.documentBottomSheetType =
+//                                DocumentBottomSheetType.DocumentOptions
+//                            viewModel.cardClickData.value = record
+//                        }
+//                    )
+//                }
+//            }
+//        }
+//    } else {
     PullToRefreshBox(
         modifier = modifier.background(EkaTheme.colors.surface),
         isRefreshing = viewModel.syncing.collectAsState().value,
@@ -433,7 +573,8 @@ fun RecordsScreenContent(
                     },
                     onUploadRecordClick = handleRecordUploadClick,
                     onMoreOptionsClick = { record ->
-                        viewModel.documentBottomSheetType = DocumentBottomSheetType.DocumentOptions
+                        viewModel.documentBottomSheetType =
+                            DocumentBottomSheetType.DocumentOptions
                         viewModel.cardClickData.value = record
                     }
                 )
@@ -444,13 +585,15 @@ fun RecordsScreenContent(
                     onRecordClick = handleRecordClick,
                     onUploadRecordClick = handleRecordUploadClick,
                     onMoreOptionsClick = { record ->
-                        viewModel.documentBottomSheetType = DocumentBottomSheetType.DocumentOptions
+                        viewModel.documentBottomSheetType =
+                            DocumentBottomSheetType.DocumentOptions
                         viewModel.cardClickData.value = record
                     }
                 )
             }
+            }
         }
-    }
+//    }
 }
 
 fun syncRecords(

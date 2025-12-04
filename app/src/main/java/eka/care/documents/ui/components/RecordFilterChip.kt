@@ -2,20 +2,20 @@ package eka.care.documents.ui.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eka.ui.theme.EkaTheme
+import eka.care.documents.ui.R
 import eka.care.documents.ui.theme.StyleDictionaryColor
 
 @Preview
@@ -52,7 +52,7 @@ fun RecordFilterChip(
         },
         trailingIcon = {
             Icon(
-                imageVector = Icons.Default.ArrowDropDown,
+                painter = painterResource(R.drawable.ic_solid_dropdown),
                 contentDescription = "Sort options",
                 modifier = Modifier.size(AssistChipDefaults.IconSize),
             )

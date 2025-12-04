@@ -23,7 +23,9 @@ import eka.care.records.sync.recordSyncFlow
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.cancellable
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -39,6 +41,11 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
 
     private val _getRecordsState = MutableStateFlow<RecordsState>(RecordsState.Loading)
     val getRecordsState: StateFlow<RecordsState> = _getRecordsState
+
+    private val _searchState = MutableStateFlow<RecordsState>(RecordsState.Loading)
+    val searchState = _searchState.asStateFlow()
+
+    val searchActive = mutableStateOf(false)
 
     private val _tagsState = MutableStateFlow<TagsState>(TagsState.Loading)
     val tagsState: StateFlow<TagsState> = _tagsState
@@ -112,6 +119,14 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
         }
     }
 
+    fun enableRecordSearch() {
+        searchActive.value = true
+    }
+
+    fun disableRecordSearch() {
+        searchActive.value = false
+    }
+
     fun fetchRecords(owners: List<String>, businessId: String, caseId: String? = null) {
         job?.cancel()
         job = viewModelScope.launch {
@@ -132,6 +147,39 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
                         RecordsState.Success(data = records)
                     }
                 }
+        }
+    }
+
+    fun removeSearchResults() {
+        _searchState.value = RecordsState.EmptyState
+    }
+
+    fun searchRecords(
+        businessId: String,
+        owners: List<String>,
+        query: String,
+    ) {
+        if (query.isEmpty()) {
+            _searchState.value = RecordsState.EmptyState
+            return
+        }
+        job?.cancel()
+        job = viewModelScope.launch {
+            _searchState.value = RecordsState.Loading
+            val searchResult = recordsManager.searchRecords(
+                businessId = businessId,
+                ownerIds = owners,
+                query = query
+            )
+            searchResult.onSuccess { records ->
+                _searchState.value = if (records.isEmpty()) {
+                    RecordsState.EmptyState
+                } else {
+                    RecordsState.Success(data = records)
+                }
+            }.onFailure {
+                _searchState.value = RecordsState.EmptyState
+            }
         }
     }
 
@@ -225,7 +273,9 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
             recordsManager.readCases(
                 businessId = businessId,
                 ownerId = ownerId
-            ).cancellable()
+            ).onStart {
+                _getCasesState.value = CasesState.Loading
+            }.cancellable()
                 .collect { cases ->
                     _getCasesState.value = if (cases.isEmpty()) {
                         CasesState.EmptyState

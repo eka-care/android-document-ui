@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -61,7 +62,15 @@ fun CaseView(
 
     val state by viewModel.getCasesState.collectAsState()
     when (state) {
-        is CasesState.Loading -> {}
+        is CasesState.Loading -> {
+            Box(modifier = Modifier.fillMaxSize()) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(24.dp)
+                        .align(Alignment.Center),
+                )
+            }
+        }
         is CasesState.EmptyState -> {
             if (query.isNotEmpty()) {
                 NewCasePrompt(
