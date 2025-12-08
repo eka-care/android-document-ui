@@ -433,7 +433,8 @@ fun RecordsScreenContent(
                     },
                     onUploadRecordClick = handleRecordUploadClick,
                     onMoreOptionsClick = { record ->
-                        viewModel.documentBottomSheetType = DocumentBottomSheetType.DocumentOptions
+                        viewModel.documentBottomSheetType =
+                            DocumentBottomSheetType.DocumentOptions
                         viewModel.cardClickData.value = record
                     }
                 )
@@ -444,13 +445,14 @@ fun RecordsScreenContent(
                     onRecordClick = handleRecordClick,
                     onUploadRecordClick = handleRecordUploadClick,
                     onMoreOptionsClick = { record ->
-                        viewModel.documentBottomSheetType = DocumentBottomSheetType.DocumentOptions
+                        viewModel.documentBottomSheetType =
+                            DocumentBottomSheetType.DocumentOptions
                         viewModel.cardClickData.value = record
                     }
                 )
             }
+            }
         }
-    }
 }
 
 fun syncRecords(

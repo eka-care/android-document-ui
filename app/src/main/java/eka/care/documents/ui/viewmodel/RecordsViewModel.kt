@@ -20,10 +20,19 @@ import eka.care.records.client.model.RecordModel
 import eka.care.records.client.model.SortOrder
 import eka.care.records.client.utils.Records
 import eka.care.records.sync.recordSyncFlow
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.cancellable
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -34,12 +43,19 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
     private var recordsCountJob: Job? = null
     private var caseJob: Job? = null
     private var tagsJob: Job? = null
+    private var searchJob: Job? = null
 
     val cardClickData = mutableStateOf<RecordModel?>(null)
 
     private val _getRecordsState = MutableStateFlow<RecordsState>(RecordsState.Loading)
     val getRecordsState: StateFlow<RecordsState> = _getRecordsState
 
+    private val _searchState = MutableStateFlow<RecordsState>(RecordsState.Loading)
+    val searchState = _searchState.asStateFlow()
+
+    val searchActive = mutableStateOf(false)
+
+    private val searchQueryChannel = MutableSharedFlow<String>(extraBufferCapacity = 1)
     private val _tagsState = MutableStateFlow<TagsState>(TagsState.Loading)
     val tagsState: StateFlow<TagsState> = _tagsState
 
@@ -112,6 +128,18 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
         }
     }
 
+    fun enableRecordSearch(
+        businessId: String,
+        ownerIds: List<String>,
+    ) {
+        observeSearchQueryFlow(businessId = businessId, ownerIds = ownerIds)
+        searchActive.value = true
+    }
+
+    fun disableRecordSearch() {
+        searchActive.value = false
+    }
+
     fun fetchRecords(owners: List<String>, businessId: String, caseId: String? = null) {
         job?.cancel()
         job = viewModelScope.launch {
@@ -133,6 +161,35 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
                     }
                 }
         }
+    }
+
+    fun removeSearchResults() {
+        _searchState.value = RecordsState.EmptyState
+    }
+
+    @OptIn(FlowPreview::class)
+    fun observeSearchQueryFlow(
+        businessId: String,
+        ownerIds: List<String>,
+    ) {
+        searchJob?.cancel()
+        searchJob = searchQueryChannel
+            .filter { it.length > 2 }
+            .debounce(timeoutMillis = 400)
+            .distinctUntilChanged()
+            .onEach { query ->
+                searchRecords(
+                    businessId = businessId,
+                    owners = ownerIds,
+                    query = query
+                )
+            }.launchIn(viewModelScope)
+    }
+
+    fun searchDocuments(
+        query: String,
+    ) {
+        searchQueryChannel.tryEmit(query)
     }
 
     suspend fun getRecordDetails() {
@@ -225,7 +282,9 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
             recordsManager.readCases(
                 businessId = businessId,
                 ownerId = ownerId
-            ).cancellable()
+            ).onStart {
+                _getCasesState.value = CasesState.Loading
+            }.cancellable()
                 .collect { cases ->
                     _getCasesState.value = if (cases.isEmpty()) {
                         CasesState.EmptyState
@@ -279,6 +338,35 @@ class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
                     _tagsState.value = TagsState.Success(data = tags)
                     Log.d("Tags", tags.toString())
                 }
+        }
+    }
+
+    private fun searchRecords(
+        businessId: String,
+        owners: List<String>,
+        query: String,
+    ) {
+        if (query.isEmpty()) {
+            _searchState.value = RecordsState.EmptyState
+            return
+        }
+        job?.cancel()
+        job = viewModelScope.launch {
+            _searchState.value = RecordsState.Loading
+            val searchResult = recordsManager.searchRecords(
+                businessId = businessId,
+                ownerIds = owners,
+                query = query
+            )
+            searchResult.onSuccess { records ->
+                _searchState.value = if (records.isEmpty()) {
+                    RecordsState.EmptyState
+                } else {
+                    RecordsState.Success(data = records)
+                }
+            }.onFailure {
+                _searchState.value = RecordsState.EmptyState
+            }
         }
     }
 }
