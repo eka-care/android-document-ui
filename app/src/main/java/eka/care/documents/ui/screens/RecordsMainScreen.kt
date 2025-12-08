@@ -163,7 +163,10 @@ private fun ScreenContent(
     val onSearchEnable = {
         searchText = ""
         viewModel.removeSearchResults()
-        viewModel.enableRecordSearch()
+        viewModel.enableRecordSearch(
+            businessId = params.businessId,
+            ownerIds = owners.toList()
+        )
         focusRequester.requestFocus()
     }
 
@@ -381,10 +384,8 @@ private fun ScreenContent(
                         value = searchText,
                         onValueChange = {
                             searchText = it
-                            viewModel.searchRecords(
-                                query = it,
-                                businessId = params.businessId,
-                                owners = owners
+                            viewModel.searchDocuments(
+                                query = it
                             )
                         },
                         placeholder = { Text("Search records...") },
