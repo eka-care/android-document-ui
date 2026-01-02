@@ -15,9 +15,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class RecordPreviewViewModel(val app: Application) : AndroidViewModel(app) {
-
-    private val recordsManager = Records.getInstance(context = app.applicationContext)
-
+    private val recordsManager by lazy {
+        Records.getInstance(context = app.applicationContext)
+    }
     private val _selectedTab = MutableStateFlow(SmartViewTab.SMART_REPORT)
     fun updateSelectedTab(newTab: SmartViewTab) {
         _selectedTab.value = newTab

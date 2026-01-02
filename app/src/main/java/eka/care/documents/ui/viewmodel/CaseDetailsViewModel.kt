@@ -10,7 +10,9 @@ import eka.care.records.client.utils.Records
 import kotlinx.coroutines.launch
 
 class CaseDetailsViewModel(val app: Application) : AndroidViewModel(app) {
-    private val recordsManager = Records.getInstance(context = app.applicationContext)
+    private val recordsManager by lazy {
+        Records.getInstance(context = app.applicationContext)
+    }
 
     var caseBottomSheet by mutableStateOf(CaseDetailsOptions.MORE)
 
