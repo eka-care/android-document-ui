@@ -37,7 +37,9 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 class RecordsViewModel(val app: Application) : AndroidViewModel(app) {
-    private val recordsManager = Records.getInstance(context = app.applicationContext)
+    private val recordsManager by lazy {
+        Records.getInstance(context = app.applicationContext)
+    }
 
     private var job: Job? = null
     private var recordsCountJob: Job? = null
