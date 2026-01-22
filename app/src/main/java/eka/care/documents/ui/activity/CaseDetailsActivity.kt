@@ -34,6 +34,10 @@ class CaseDetailsActivity: ComponentActivity() {
         val links = params.optString(AddRecordParams.LINKS.key)
         val caseId = params.optString(AddRecordParams.CASE_ID.key)
         val isAbhaEnabled = params.optBoolean(AddRecordParams.IS_ABHA_ENABLED.key, false)
+        val documentTypes = if(params.has(AddRecordParams.DOCUMENT_TYPE.key)) {
+            val a = params.getString(AddRecordParams.DOCUMENT_TYPE.key)
+            Gson().fromJson(a, Array<MedicalRecordsNavModel.DocumentType>::class.java).toList()
+        } else  emptyList()
 
         setContent {
             EkaTheme(
@@ -48,7 +52,8 @@ class CaseDetailsActivity: ComponentActivity() {
                         ownerId = ownerId,
                         ownerName = "",
                         links = links,
-                        isAbhaEnabled = isAbhaEnabled
+                        isAbhaEnabled = isAbhaEnabled,
+                        documentTypes = documentTypes
                     ),
                     onBackPressed = {
                         finish()
