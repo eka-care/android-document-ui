@@ -1,11 +1,14 @@
 package eka.care.documents.ui.screens
 
+import android.R.attr.bitmap
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -48,6 +51,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.rizzi.bouquet.ResourceType
 import com.rizzi.bouquet.VerticalPDFReader
 import com.rizzi.bouquet.rememberVerticalPdfReaderState
@@ -188,8 +192,7 @@ fun PreviewComponent(
                             .padding(horizontal = 32.dp, vertical = 16.dp)
                     ) {
                         items(filePreviewList) { file ->
-                            val bitmap = BitmapFactory.decodeFile(file.path)
-                                ?.let { fixImageOrientation(it, file.path) }
+                            val bitmap = loadOptimizedBitmap(file.path)
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -242,6 +245,64 @@ fun PreviewComponent(
     )
 }
 
+fun loadOptimizedBitmap(filePath: String): Bitmap? {
+    return try {
+        val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        BitmapFactory.decodeFile(filePath, options)
+        val (imageWidth, imageHeight) = options.outWidth to options.outHeight
+        if (imageWidth <= 0 || imageHeight <= 0) return null
+
+        val displayMetrics = Resources.getSystem().displayMetrics
+        val reqWidth = displayMetrics.widthPixels
+        val reqHeight = displayMetrics.heightPixels
+
+        val maxCanvasSize = 8192
+        val maxBytes = 80000000
+
+        val inSampleSize = calculateInSampleSize(
+            imageWidth,
+            imageHeight,
+            reqWidth.coerceAtMost(maxCanvasSize),
+            reqHeight.coerceAtMost(maxCanvasSize),
+            maxBytes
+        )
+
+        val decodeOptions = BitmapFactory.Options().apply {
+            this.inSampleSize = inSampleSize
+            inPreferredConfig = Bitmap.Config.RGB_565
+        }
+        val bitmap = BitmapFactory.decodeFile(filePath, decodeOptions) ?: return null
+
+        fixImageOrientation(bitmap, filePath)
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    }
+}
+
+private fun calculateInSampleSize(
+    width: Int,
+    height: Int,
+    maxWidth: Int,
+    maxHeight: Int,
+    maxBytes: Int
+): Int {
+    var inSampleSize = 1
+    while (true) {
+        val scaledWidth = width / inSampleSize
+        val scaledHeight = height / inSampleSize
+        val estimatedBytes = scaledWidth * scaledHeight * 2 // RGB_565 = 2 bytes/pixel
+
+        if (scaledWidth <= maxWidth &&
+            scaledHeight <= maxHeight &&
+            estimatedBytes <= maxBytes
+        ) break
+
+        inSampleSize *= 2
+    }
+    return inSampleSize
+}
+
 fun fixImageOrientation(bitmap: Bitmap, filePath: String): Bitmap {
     try {
         val exif = ExifInterface(filePath)
@@ -258,13 +319,16 @@ fun fixImageOrientation(bitmap: Bitmap, filePath: String): Bitmap {
             else -> return bitmap
         }
 
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+        val rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+        if (rotatedBitmap != bitmap) {
+            bitmap.recycle()
+        }
+        return rotatedBitmap
     } catch (e: IOException) {
         e.printStackTrace()
+        return bitmap
     }
-    return bitmap
 }
-
 
 @Composable
 fun CircularImageComponent(image: ImageVector, modifier: Modifier, onClick: () -> Unit, action: String) {
