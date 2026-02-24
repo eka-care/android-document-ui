@@ -30,6 +30,10 @@ class CaseListActivity : ComponentActivity() {
         val recordId = params.optString(AddRecordParams.RECORD_ID.key).takeIf { it.isNotEmpty() }
         val links = params.optString(AddRecordParams.LINKS.key).takeIf { it.isNotEmpty() }
         val isAbhaEnabled = params.optBoolean(AddRecordParams.IS_ABHA_ENABLED.key, false)
+        val documentTypes = if(params.has(AddRecordParams.DOCUMENT_TYPE.key)) {
+            val a = params.getString(AddRecordParams.DOCUMENT_TYPE.key)
+            Gson().fromJson(a, Array<MedicalRecordsNavModel.DocumentType>::class.java).toList()
+        } else  emptyList()
 
         setContent {
             CasesScreen(
@@ -37,7 +41,8 @@ class CaseListActivity : ComponentActivity() {
                 params = MedicalRecordsNavModel(
                     businessId = businessId,
                     ownerId = ownerId,
-                    links = links
+                    links = links,
+                    documentTypes = documentTypes
                 ),
                 onCaseItemClick = {
                     if(recordId != null) {
@@ -51,7 +56,8 @@ class CaseListActivity : ComponentActivity() {
                                 businessId = businessId,
                                 ownerId = ownerId,
                                 links = links,
-                                isAbhaEnabled = isAbhaEnabled
+                                isAbhaEnabled = isAbhaEnabled,
+                                documentTypes = documentTypes
                             ),
                             caseItem = it
                         )
@@ -61,7 +67,8 @@ class CaseListActivity : ComponentActivity() {
                             params = MedicalRecordsNavModel(
                                 businessId = businessId,
                                 ownerId = ownerId,
-                                links = links
+                                links = links,
+                                documentTypes = documentTypes
                             ),
                             caseItem = it
                         )
