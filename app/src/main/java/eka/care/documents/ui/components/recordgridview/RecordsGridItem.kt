@@ -57,9 +57,10 @@ fun RecordsGridItem(
     documentTypes : List<MedicalRecordsNavModel.DocumentType> = emptyList(),
     mode: Mode,
     isSelected: Boolean,
+    showMoreOptions: Boolean = true,
     onClick: () -> Unit,
     onRetry: () -> Unit,
-    onMoreOptionsClick: () -> Unit,
+    onMoreOptionsClick: (() -> Unit)? = null,
 ) {
     Card(
         colors = CardDefaults.cardColors(Color.White),
@@ -126,7 +127,7 @@ fun RecordsGridItem(
                             )
                             .padding(2.dp)
                     )
-                } else {
+                } else if (showMoreOptions && onMoreOptionsClick != null) {
                     IconButton(
                         onClick = {
                             onMoreOptionsClick.invoke()
