@@ -113,12 +113,11 @@ fun AddRecordPreviewScreen(
                 },
                 viewModel = recordsViewModel,
                 caseId = navData.caseId,
-                fileList = if (pdfUriString != null) arrayListOf(
-                    uriToFile(
-                        context,
-                        pdfUriString.toUri()
-                    )
-                ) else filesPreviewList,
+                fileList = if (pdfUriString != null) {
+                    uriToFile(context, pdfUriString.toUri())?.let { arrayListOf(it) } ?: arrayListOf()
+                } else {
+                    filesPreviewList
+                },
                 paramsModel = MedicalRecordsNavModel(
                     businessId = navData.businessId,
                     ownerId = navData.ownerId,
@@ -294,13 +293,13 @@ fun CircularImageComponent(image: ImageVector, modifier: Modifier, onClick: () -
     }
 }
 
-private fun uriToFile(context: Context, uri: Uri): File {
+private fun uriToFile(context: Context, uri: Uri): File? {
     val fileName = "temp_pdf_${System.currentTimeMillis()}.pdf"
     val file = File(context.cacheDir, fileName)
 
     return try {
         val inputStream = context.applicationContext.contentResolver.openInputStream(uri)
-            ?: throw IOException("Unable to open input stream for URI: $uri")
+            ?: return null
         val outputStream = file.outputStream()
         inputStream.use { input ->
             outputStream.use { output ->
@@ -310,7 +309,11 @@ private fun uriToFile(context: Context, uri: Uri): File {
         file
     } catch (e: Exception) {
         e.printStackTrace()
-        throw IOException("Failed to convert URI to file: ${e.message}", e)
+        try {
+            if (file.exists()) file.delete()
+        } catch (_: Exception) {
+        }
+        null
     }
 }
 
