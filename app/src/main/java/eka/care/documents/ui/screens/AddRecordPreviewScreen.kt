@@ -38,7 +38,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -56,7 +61,9 @@ import eka.care.documents.ui.navigation.AddRecordPreviewNavModel
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
 import eka.care.documents.ui.utility.DocumentUtility
 import eka.care.documents.ui.viewmodel.RecordsViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
 
@@ -69,12 +76,11 @@ fun AddRecordPreviewScreen(
     onUploadSuccess: () -> Unit
 ) {
     val context = LocalContext.current
-    val filesPreviewList = arrayListOf<File>()
     val pdfUriString = navData.pdfUriString
     val imageUriString = navData.imageUris
 
     val imageUris = imageUriString?.split(",") ?: emptyList()
-
+    val filesPreviewList = arrayListOf<File>()
     if (imageUris.isNotEmpty()) {
         for (uriString in imageUris) {
             val imageUri = uriString.toUri()
@@ -85,6 +91,19 @@ fun AddRecordPreviewScreen(
             }
         }
     }
+
+    // uriToFile must run off the main thread — the content URI from the scanner
+    // app is no longer valid once its Activity finishes, so opening the stream
+    // inside Composition (main thread) would throw and crash.
+    var resolvedPdfFile by remember { mutableStateOf<File?>(null) }
+    LaunchedEffect(pdfUriString) {
+        if (pdfUriString != null) {
+            resolvedPdfFile = withContext(Dispatchers.IO) {
+                uriToFile(context, pdfUriString.toUri())
+            }
+        }
+    }
+
     val sheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
         skipHalfExpanded = false
@@ -114,7 +133,7 @@ fun AddRecordPreviewScreen(
                 viewModel = recordsViewModel,
                 caseId = navData.caseId,
                 fileList = if (pdfUriString != null) {
-                    uriToFile(context, pdfUriString.toUri())?.let { arrayListOf(it) } ?: arrayListOf()
+                    resolvedPdfFile?.let { arrayListOf(it) } ?: arrayListOf()
                 } else {
                     filesPreviewList
                 },
@@ -299,7 +318,9 @@ private fun uriToFile(context: Context, uri: Uri): File? {
 
     return try {
         val inputStream = context.applicationContext.contentResolver.openInputStream(uri)
-            ?: return null
+            ?: run {
+                return null
+            }
         val outputStream = file.outputStream()
         inputStream.use { input ->
             outputStream.use { output ->
