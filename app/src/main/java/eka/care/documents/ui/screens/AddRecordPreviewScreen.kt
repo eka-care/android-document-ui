@@ -33,9 +33,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -80,16 +82,37 @@ fun AddRecordPreviewScreen(
     val imageUriString = navData.imageUris
 
     val imageUris = imageUriString?.split(",") ?: emptyList()
-    val filesPreviewList = arrayListOf<File>()
-    if (imageUris.isNotEmpty()) {
+    val (filesPreviewList, hasLargeImage) = remember(imageUris) {
+        val list = arrayListOf<File>()
+        var tooLarge = false
         for (uriString in imageUris) {
             val imageUri = uriString.toUri()
             val cameraPic = DocumentUtility.loadFromUri(context, imageUri)
             cameraPic?.let {
                 val file = getFileFromUri(context, imageUri)
-                file?.let { f -> filesPreviewList.add(f) }
+                file?.let { f ->
+                    if (isBitmapTooLargeToRender(f.path)) {
+                        tooLarge = true
+                    } else {
+                        list.add(f)
+                    }
+                }
             }
         }
+        Pair(list, tooLarge)
+    }
+
+    if (hasLargeImage) {
+        AlertDialog(
+            onDismissRequest = onBackClick,
+            title = { Text("Image too large") },
+            text = { Text("This image is too large to upload. Please select a smaller image.") },
+            confirmButton = {
+                TextButton(onClick = onBackClick) {
+                    Text("OK")
+                }
+            }
+        )
     }
 
     // uriToFile must run off the main thread — the content URI from the scanner
@@ -336,6 +359,13 @@ private fun uriToFile(context: Context, uri: Uri): File? {
         }
         null
     }
+}
+
+private fun isBitmapTooLargeToRender(filePath: String): Boolean {
+    val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+    BitmapFactory.decodeFile(filePath, options)
+    val estimatedBytes = options.outWidth.toLong() * options.outHeight * 4
+    return estimatedBytes > 100 * 1024 * 1024 // 100MB
 }
 
 private fun getFileFromUri(context: Context, uri: Uri): File? {
