@@ -11,6 +11,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -249,16 +250,20 @@ fun PreviewComponent(
                         }
                     }
                 } else {
-                    val pdfVerticalReaderState = rememberVerticalPdfReaderState(
-                        resource = ResourceType.Local(pdfUriString.toUri()),
-                        isZoomEnable = true
-                    )
-                    VerticalPDFReader(
-                        state = pdfVerticalReaderState,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(color = Color.Gray)
-                    )
+                    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+                        if (constraints.maxWidth > 0) {
+                            val pdfVerticalReaderState = rememberVerticalPdfReaderState(
+                                resource = ResourceType.Local(pdfUriString.toUri()),
+                                isZoomEnable = true
+                            )
+                            VerticalPDFReader(
+                                state = pdfVerticalReaderState,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(color = Color.Gray)
+                            )
+                        }
+                    }
                 }
             }
         },
