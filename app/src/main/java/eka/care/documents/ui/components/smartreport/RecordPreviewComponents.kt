@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -116,16 +117,20 @@ fun RecordSuccessState(
 
                 onUriSelected(uri)
 
-                val pdfVerticalReaderState = rememberVerticalPdfReaderState(
-                    resource = ResourceType.Local(uri),
-                    isZoomEnable = true
-                )
-                VerticalPDFReader(
-                    state = pdfVerticalReaderState,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(color = Color.Gray)
-                )
+                BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+                    if (constraints.maxWidth > 0) {
+                        val pdfVerticalReaderState = rememberVerticalPdfReaderState(
+                            resource = ResourceType.Local(uri),
+                            isZoomEnable = true
+                        )
+                        VerticalPDFReader(
+                            state = pdfVerticalReaderState,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(color = Color.Gray)
+                        )
+                    }
+                }
             }
         }
 
