@@ -146,13 +146,13 @@ fun RecordsGridItem(
                 }
             }
             val blurModifier =
-                when (record.uiState) {
-                    RecordUiState.SYNCING -> Modifier.blur(6.dp)
-                    RecordUiState.SYNC_FAILED -> Modifier.blur(22.dp)
-                    RecordUiState.WAITING_TO_UPLOAD, RecordUiState.WAITING_FOR_NETWORK -> Modifier.blur(
-                        6.dp
-                    )
-
+                when {
+                    record.uiState == RecordUiState.SYNC_FAILED -> Modifier.blur(22.dp)
+                    record.uiState in listOf(
+                        RecordUiState.SYNCING,
+                        RecordUiState.WAITING_TO_UPLOAD,
+                        RecordUiState.WAITING_FOR_NETWORK
+                    ) || record.isAnalysing -> Modifier.blur(6.dp)
                     else -> Modifier
                 }
 
@@ -182,7 +182,7 @@ fun RecordsGridItem(
                         .fillMaxWidth()
                         .height(80.dp)
                         .background(
-                            if (record.uiState !in listOf(
+                            if (record.isAnalysing || record.uiState !in listOf(
                                     RecordUiState.NONE,
                                     RecordUiState.SYNC_SUCCESS
                                 )
@@ -296,7 +296,28 @@ fun RecordsGridItem(
                     }
 
                     else -> {
-
+                        if (record.isAnalysing) {
+                            Column(
+                                modifier = Modifier.fillMaxSize(),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier
+                                        .size(18.dp)
+                                        .align(Alignment.CenterHorizontally),
+                                    color = EkaTheme.colors.onSurface,
+                                    strokeWidth = 2.dp
+                                )
+                                Spacer(Modifier.height(6.dp))
+                                Text(
+                                    text = "Analysing",
+                                    style = EkaTheme.typography.labelSmall,
+                                    color = EkaTheme.colors.onSurface,
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+                        }
                     }
                 }
 
