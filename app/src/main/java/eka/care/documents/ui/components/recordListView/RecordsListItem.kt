@@ -73,7 +73,11 @@ fun RecordsListItem(
                 }
 
                 else -> {
-                    if (subtitle != null) {
+                    if (record.isAnalysing) {
+                        Row {
+                            Text(text = "Analysing")
+                        }
+                    } else if (subtitle != null) {
                         Text(
                             text = subtitle,
                             style = EkaTheme.typography.labelLarge,
