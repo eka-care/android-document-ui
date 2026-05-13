@@ -62,7 +62,6 @@ import com.rizzi.bouquet.rememberVerticalPdfReaderState
 import eka.care.documents.ui.components.bottomSheet.EnterDetailsBottomSheet
 import eka.care.documents.ui.navigation.AddRecordPreviewNavModel
 import eka.care.documents.ui.navigation.MedicalRecordsNavModel
-import eka.care.documents.ui.utility.DocumentUtility
 import eka.care.documents.ui.viewmodel.RecordsViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -83,13 +82,15 @@ fun AddRecordPreviewScreen(
     val imageUriString = navData.imageUris
 
     val imageUris = imageUriString?.split(",") ?: emptyList()
-    val (filesPreviewList, hasLargeImage) = remember(imageUris) {
-        val list = arrayListOf<File>()
-        var tooLarge = false
-        for (uriString in imageUris) {
-            val imageUri = uriString.toUri()
-            val cameraPic = DocumentUtility.loadFromUri(context, imageUri)
-            cameraPic?.let {
+    var filesPreviewList by remember { mutableStateOf<List<File>>(emptyList()) }
+    var hasLargeImage by remember { mutableStateOf(false) }
+    LaunchedEffect(imageUris) {
+        if (imageUris.isEmpty()) return@LaunchedEffect
+        withContext(Dispatchers.IO) {
+            val list = arrayListOf<File>()
+            var tooLarge = false
+            for (uriString in imageUris) {
+                val imageUri = uriString.toUri()
                 val file = getFileFromUri(context, imageUri)
                 file?.let { f ->
                     if (isBitmapTooLargeToRender(f.path)) {
@@ -99,8 +100,9 @@ fun AddRecordPreviewScreen(
                     }
                 }
             }
+            filesPreviewList = list
+            hasLargeImage = tooLarge
         }
-        Pair(list, tooLarge)
     }
 
     if (hasLargeImage) {
@@ -135,8 +137,10 @@ fun AddRecordPreviewScreen(
     val scope = rememberCoroutineScope()
 
     val openSheet = {
-        scope.launch {
-            sheetState.show()
+        if (pdfUriString == null || resolvedPdfFile != null) {
+            scope.launch {
+                sheetState.show()
+            }
         }
     }
     val closeSheet = {
@@ -159,7 +163,7 @@ fun AddRecordPreviewScreen(
                 fileList = if (pdfUriString != null) {
                     resolvedPdfFile?.let { arrayListOf(it) } ?: arrayListOf()
                 } else {
-                    filesPreviewList
+                    ArrayList(filesPreviewList)
                 },
                 paramsModel = MedicalRecordsNavModel(
                     businessId = navData.businessId,
@@ -230,8 +234,6 @@ fun PreviewComponent(
                             .padding(horizontal = 32.dp, vertical = 16.dp)
                     ) {
                         items(filePreviewList) { file ->
-                            val bitmap = BitmapFactory.decodeFile(file.path)
-                                ?.let { fixImageOrientation(it, file.path) }
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -239,7 +241,7 @@ fun PreviewComponent(
                                 contentAlignment = Alignment.Center
                             ) {
                                 AsyncImage(
-                                    model = bitmap,
+                                    model = file,
                                     contentDescription = null,
                                     modifier = Modifier.fillMaxWidth()
                                 )
@@ -342,7 +344,8 @@ fun CircularImageComponent(image: ImageVector, modifier: Modifier, onClick: () -
 
 private fun uriToFile(context: Context, uri: Uri): File? {
     val fileName = "temp_pdf_${System.currentTimeMillis()}.pdf"
-    val file = File(context.cacheDir, fileName)
+    val tempDir = File(context.cacheDir, "records_temp").also { it.mkdirs() }
+    val file = File(tempDir, fileName)
 
     return try {
         val inputStream = context.applicationContext.contentResolver.openInputStream(uri)
@@ -369,24 +372,32 @@ private fun uriToFile(context: Context, uri: Uri): File? {
 private fun isBitmapTooLargeToRender(filePath: String): Boolean {
     val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
     BitmapFactory.decodeFile(filePath, options)
+    if (options.outWidth <= 0 || options.outHeight <= 0) return false
     val estimatedBytes = options.outWidth.toLong() * options.outHeight * 4
     return estimatedBytes > 100 * 1024 * 1024 // 100MB
 }
 
 private fun getFileFromUri(context: Context, uri: Uri): File? {
+    val tempDir = File(context.applicationContext.cacheDir, "records_temp").also { it.mkdirs() }
+    val tempFile = File(
+        tempDir,
+        "temp_image_${System.currentTimeMillis()}.jpg"
+    )
     return try {
-        val inputStream =
-            context.applicationContext.contentResolver.openInputStream(uri)
-        val tempFile = File(
-            context.applicationContext.cacheDir,
-            "temp_image_${System.currentTimeMillis()}.jpg"
-        )
-        tempFile.outputStream().use { output ->
-            inputStream?.copyTo(output)
+        val inputStream = context.applicationContext.contentResolver.openInputStream(uri)
+            ?: return null
+        inputStream.use { input ->
+            tempFile.outputStream().use { output ->
+                input.copyTo(output)
+            }
         }
-        tempFile
+        if (tempFile.exists() && tempFile.length() > 0) tempFile else {
+            tempFile.delete()
+            null
+        }
     } catch (e: Exception) {
         e.printStackTrace()
+        try { tempFile.delete() } catch (_: Exception) {}
         null
     }
 }
