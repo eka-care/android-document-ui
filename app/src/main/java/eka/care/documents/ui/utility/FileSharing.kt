@@ -90,9 +90,9 @@ class FileSharing {
                     return
                 }
 
-                val file = File(uri.path ?: "")
+                val fileName = uri.lastPathSegment?.substringAfterLast('/') ?: "download"
 
-                if (file.extension == "pdf") {
+                if (fileName.endsWith(".pdf", true)) {
                     val intent = Intent(Intent.ACTION_VIEW)
                     intent.setDataAndType(uri, "application/pdf")
                     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
@@ -100,17 +100,47 @@ class FileSharing {
                     return
                 }
 
-                if (!file.exists()) {
-                    Toast.makeText(context, "File not found", Toast.LENGTH_SHORT).show()
-                    return
-                }
-
-                downloadFile(context = context, file = file)
+                downloadFileFromUri(context, uri, fileName)
 
             } catch (ex: Exception) {
                 ex.printStackTrace()
                 Toast.makeText(context, "Error downloading file: ${ex.message}", Toast.LENGTH_SHORT)
                     .show()
+            }
+        }
+
+        fun downloadFileFromUri(context: Context, uri: Uri, fileName: String) {
+            try {
+                val mimeType = MimeTypeMap.getSingleton()
+                    .getMimeTypeFromExtension(fileName.substringAfterLast('.', ""))
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    val contentValues = ContentValues().apply {
+                        put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+                        put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
+                        put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+                    }
+                    val destUri = context.contentResolver.insert(
+                        MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues
+                    ) ?: return
+                    context.contentResolver.openOutputStream(destUri)?.use { output ->
+                        context.contentResolver.openInputStream(uri)?.use { input ->
+                            input.copyTo(output)
+                        }
+                    }
+                } else {
+                    val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                    if (!dir.exists()) dir.mkdirs()
+                    val destFile = File(dir, fileName)
+                    context.contentResolver.openInputStream(uri)?.use { input ->
+                        destFile.outputStream().use { output ->
+                            input.copyTo(output)
+                        }
+                    }
+                }
+                Toast.makeText(context, "File downloaded successfully", Toast.LENGTH_SHORT).show()
+            } catch (ex: Exception) {
+                ex.printStackTrace()
+                Toast.makeText(context, "Error downloading file: ${ex.message}", Toast.LENGTH_SHORT).show()
             }
         }
 
