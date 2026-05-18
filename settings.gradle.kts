@@ -25,4 +25,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Documents UI"
 include(":app")
+include(":sampleapp")
  

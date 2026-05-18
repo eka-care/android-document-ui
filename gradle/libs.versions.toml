@@ -2,6 +2,7 @@
 agp = "8.11.1"
 ekaUiKit = "1.0.3"
 #ekaUiKit = "0.0.1"
+ekaNetworkAndroid = "2.0.5"
 kotlin = "2.0.0"
 coreKtx = "1.13.1"
 appcompat = "1.7.1"
@@ -20,6 +21,7 @@ desugar_jdk_libs = "2.1.2"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 eka-ui-kit = { module = "com.github.eka-care:eka-ui-kit", version.ref = "ekaUiKit" }
+eka-network-android = { module = "com.github.eka-care:eka-network-android", version.ref = "ekaNetworkAndroid" }
 #eka-ui-kit = { module = "com.eka.ui:ui", version.ref = "ekaUiKit" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "androidx.compose.material", name = "material", version.ref = "material" }
