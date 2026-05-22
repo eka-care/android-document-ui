@@ -39,16 +39,9 @@ class AddRecordPreviewActivity : ComponentActivity() {
         val jsonString = intent.getStringExtra(AddRecordParams.PARAMS_KEY)
         if (jsonString.isNullOrEmpty()) {
             Log.e("AddPreviewActivity", "Params JSON is missing!")
-            finish()
             return
         }
-        params = try {
-            JSONObject(jsonString)
-        } catch (e: Exception) {
-            Log.e("AddPreviewActivity", "Failed to parse params JSON", e)
-            finish()
-            return
-        }
+        params = Gson().fromJson(jsonString, JSONObject::class.java)
 
         val navData = AddRecordPreviewNavModel(
             pdfUriString = if (params.has(AddRecordParams.PDF_URI.key)) params.getString(AddRecordParams.PDF_URI.key) else null,
