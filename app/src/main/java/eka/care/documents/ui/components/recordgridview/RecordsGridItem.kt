@@ -152,7 +152,7 @@ fun RecordsGridItem(
                         RecordUiState.SYNCING,
                         RecordUiState.WAITING_TO_UPLOAD,
                         RecordUiState.WAITING_FOR_NETWORK
-                    ) || record.isAnalysing -> Modifier.blur(6.dp)
+                    ) -> Modifier.blur(6.dp)
                     else -> Modifier
                 }
 
@@ -182,7 +182,7 @@ fun RecordsGridItem(
                         .fillMaxWidth()
                         .height(80.dp)
                         .background(
-                            if (record.isAnalysing || record.uiState !in listOf(
+                            if (record.uiState !in listOf(
                                     RecordUiState.NONE,
                                     RecordUiState.SYNC_SUCCESS
                                 )
@@ -295,40 +295,20 @@ fun RecordsGridItem(
                         }
                     }
 
-                    else -> {
-                        if (record.isAnalysing) {
-                            Column(
-                                modifier = Modifier.fillMaxSize(),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center
-                            ) {
-                                CircularProgressIndicator(
-                                    modifier = Modifier
-                                        .size(18.dp)
-                                        .align(Alignment.CenterHorizontally),
-                                    color = EkaTheme.colors.onSurface,
-                                    strokeWidth = 2.dp
-                                )
-                                Spacer(Modifier.height(6.dp))
-                                Text(
-                                    text = "Analysing",
-                                    style = EkaTheme.typography.labelSmall,
-                                    color = EkaTheme.colors.onSurface,
-                                    textAlign = TextAlign.Center
-                                )
-                            }
-                        }
-                    }
+                    else -> {}
                 }
 
-                if (record.isSmart) {
+                if (record.isSmart || record.isAnalysing) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(4.dp)
                             .align(Alignment.BottomEnd)
                     ) {
-                        SmartTag(modifier = Modifier.align(Alignment.BottomEnd))
+                        SmartTag(
+                            modifier = Modifier.align(Alignment.BottomEnd),
+                            isAnalysing = record.isAnalysing
+                        )
                     }
                 }
             }
