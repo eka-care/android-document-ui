@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,9 +19,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eka.ui.theme.EkaTheme
 import eka.care.documents.ui.R
+
 @Preview
 @Composable
-fun SmartTag(modifier: Modifier = Modifier) {
+fun SmartTag(modifier: Modifier = Modifier, isAnalysing: Boolean = false) {
     Row(
         modifier = modifier
             .border(1.dp, EkaTheme.colors.onPrimary, RoundedCornerShape(8.dp))
@@ -29,12 +31,24 @@ fun SmartTag(modifier: Modifier = Modifier) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        Icon(
-            painter = painterResource(id = R.drawable.ic_solid_star),
-            contentDescription = "Custom Sparkle",
-            modifier = Modifier.size(16.dp),
-            tint = Color.Unspecified
+        if (isAnalysing) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(16.dp),
+                color = EkaTheme.colors.onSurface,
+                strokeWidth = 1.5.dp
+            )
+        } else {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_solid_star),
+                contentDescription = "Custom Sparkle",
+                modifier = Modifier.size(16.dp),
+                tint = Color.Unspecified
+            )
+        }
+        Text(
+            text = if (isAnalysing) "Analysing" else "Smart",
+            style = EkaTheme.typography.labelLarge,
+            color = EkaTheme.colors.onSurface
         )
-        Text(text = "Smart", style = EkaTheme.typography.labelLarge, color = EkaTheme.colors.onSurface)
     }
 }
