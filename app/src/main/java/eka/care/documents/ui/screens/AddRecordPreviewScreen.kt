@@ -53,6 +53,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.rizzi.bouquet.ResourceType
 import com.rizzi.bouquet.VerticalPDFReader
 import com.rizzi.bouquet.rememberVerticalPdfReaderState
@@ -216,7 +217,10 @@ fun PreviewComponent(
                                 contentAlignment = Alignment.Center
                             ) {
                                 AsyncImage(
-                                    model = file,
+                                    model = ImageRequest.Builder(LocalContext.current)
+                                        .data(file)
+                                        .size(2048)
+                                        .build(),
                                     contentDescription = null,
                                     modifier = Modifier.fillMaxWidth()
                                 )

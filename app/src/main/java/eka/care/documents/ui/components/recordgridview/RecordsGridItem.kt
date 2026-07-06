@@ -165,6 +165,7 @@ fun RecordsGridItem(
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(record.thumbnail)
+                        .size(512)
                         .crossfade(700)
                         .build(),
                     contentScale = ContentScale.FillBounds,
