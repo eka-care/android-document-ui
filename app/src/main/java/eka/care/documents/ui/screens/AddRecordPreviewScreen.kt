@@ -2,7 +2,6 @@ package eka.care.documents.ui.screens
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
@@ -34,11 +33,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -56,6 +53,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.rizzi.bouquet.ResourceType
 import com.rizzi.bouquet.VerticalPDFReader
 import com.rizzi.bouquet.rememberVerticalPdfReaderState
@@ -83,39 +81,17 @@ fun AddRecordPreviewScreen(
 
     val imageUris = imageUriString?.split(",") ?: emptyList()
     var filesPreviewList by remember { mutableStateOf<List<File>>(emptyList()) }
-    var hasLargeImage by remember { mutableStateOf(false) }
     LaunchedEffect(imageUris) {
         if (imageUris.isEmpty()) return@LaunchedEffect
         withContext(Dispatchers.IO) {
             val list = arrayListOf<File>()
-            var tooLarge = false
             for (uriString in imageUris) {
                 val imageUri = uriString.toUri()
                 val file = getFileFromUri(context, imageUri)
-                file?.let { f ->
-                    if (isBitmapTooLargeToRender(f.path)) {
-                        tooLarge = true
-                    } else {
-                        list.add(f)
-                    }
-                }
+                file?.let { list.add(it) }
             }
             filesPreviewList = list
-            hasLargeImage = tooLarge
         }
-    }
-
-    if (hasLargeImage) {
-        AlertDialog(
-            onDismissRequest = onBackClick,
-            title = { Text("Image too large") },
-            text = { Text("This image is too large to upload. Please select a smaller image.") },
-            confirmButton = {
-                TextButton(onClick = onBackClick) {
-                    Text("OK")
-                }
-            }
-        )
     }
 
     // uriToFile must run off the main thread — the content URI from the scanner
@@ -241,7 +217,10 @@ fun PreviewComponent(
                                 contentAlignment = Alignment.Center
                             ) {
                                 AsyncImage(
-                                    model = file,
+                                    model = ImageRequest.Builder(LocalContext.current)
+                                        .data(file)
+                                        .size(2048)
+                                        .build(),
                                     contentDescription = null,
                                     modifier = Modifier.fillMaxWidth()
                                 )
@@ -367,14 +346,6 @@ private fun uriToFile(context: Context, uri: Uri): File? {
         }
         null
     }
-}
-
-private fun isBitmapTooLargeToRender(filePath: String): Boolean {
-    val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-    BitmapFactory.decodeFile(filePath, options)
-    if (options.outWidth <= 0 || options.outHeight <= 0) return false
-    val estimatedBytes = options.outWidth.toLong() * options.outHeight * 4
-    return estimatedBytes > 100 * 1024 * 1024 // 100MB
 }
 
 private fun getFileFromUri(context: Context, uri: Uri): File? {

@@ -70,7 +70,7 @@ fun ErrorState(message: String) {
 
 
 @Composable
-fun ImagePreview(uri: Uri, modifier: Modifier) {
+fun ImagePreview(uri: Uri, modifier: Modifier, decodeSizePx: Int = 2048) {
     var scale by remember { mutableFloatStateOf(1f) }
     var offset by remember { mutableStateOf(Offset(0f, 0f)) }
     AsyncImage(
@@ -92,7 +92,10 @@ fun ImagePreview(uri: Uri, modifier: Modifier) {
                 scaleX = scale, scaleY = scale,
                 translationX = offset.x, translationY = offset.y
             ),
-        model = ImageRequest.Builder(LocalContext.current).data(uri).build(),
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(uri)
+            .size(decodeSizePx)
+            .build(),
         contentScale = ContentScale.Fit,
         contentDescription = ""
     )
@@ -173,6 +176,7 @@ fun RecordImagePreview(filePaths: List<Uri>, onSelectUri: (Uri) -> Unit) {
             items(filePaths) {
                 ImagePreview(
                     uri = it,
+                    decodeSizePx = 256,
                     modifier = Modifier
                         .size(48.dp)
                         .border(
